@@ -7,6 +7,7 @@
     "postinstall": "max setup",
     "prepare": "husky install",
     "setup": "max setup",
+    "site": "pnpm build && ssh root@123.60.20.238 rm -rf /root/website/dist-playground && scp -r ./dist root@123.60.20.238:/root/website/dist-playground",
     "start": "npm run dev"
   },
   "dependencies": {
