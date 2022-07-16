@@ -23,7 +23,7 @@ export default () => {
         onClose={() => setVisible(false)}
         {...{
           placement: 'top',
-          height: '80%',
+          height: '90%',
         }}
       >
         <Row
