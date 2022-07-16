@@ -14,6 +14,8 @@ export default function App() {
           background: '#fff',
           borderBottom: '1px solid #f2f2f2',
           padding: '0px 10px',
+          /** 原本 64 会影响内部元素高度 */
+          lineHeight: 'normal',
         }}
       >
         <HeaderInner />

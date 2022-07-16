@@ -15,7 +15,7 @@ export default function App() {
       theme="light"
       width={300}
       style={{
-        padding: 10,
+        padding: '15px 10px 15px 15px',
       }}
     >
       {mode === 'normal' ? null : <SettingForm />}

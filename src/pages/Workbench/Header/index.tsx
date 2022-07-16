@@ -1,11 +1,12 @@
-import {
-  PlayCircleTwoTone,
-  PlusCircleFilled,
-  SettingFilled,
-} from '@ant-design/icons';
+import { PlusCircleFilled, SettingFilled } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Avatar, Button, Col, Divider, Row, Space } from 'antd';
-import Logo from './Logo';
+import Logo from '../Logo';
+import APIConfigForm from './APIConfigForm';
+import { AutoSaveTag } from './AutoSaveTag';
+import CenterArea from './CenterArea';
+import CMSConfigForm from './CMSConfigForm';
+import { PlayAction } from './PlayAction';
 
 // const optionsWithDisabled = [
 //   {
@@ -28,6 +29,7 @@ const App = () => {
     <div
       style={{
         position: 'relative',
+        height: 64,
       }}
     >
       <Row
@@ -50,34 +52,23 @@ const App = () => {
             >
               组件
             </Button>
-            <Button type="text" icon={<PlusCircleFilled />}>
+            <Button disabled type="text" icon={<PlusCircleFilled />}>
               布局
             </Button>
-            <Button type="text" icon={<PlusCircleFilled />}>
+            <Button disabled type="text" icon={<PlusCircleFilled />}>
               框架
             </Button>
-            <Button type="text" icon={<PlusCircleFilled />}>
+            <Button disabled type="text" icon={<PlusCircleFilled />}>
               文本
             </Button>
+            <CMSConfigForm />
+            <APIConfigForm />
           </Space>
         </Col>
         <Col>
           <Space>
-            <Button
-              type="text"
-              icon={<PlayCircleTwoTone />}
-              onClick={() => {
-                // navigate({
-                //   pathname: '/playground',
-                //   search: createSearchParams({
-                //     id: 'xxx',
-                //   }).toString(),
-                // });
-                window.open('/playground');
-              }}
-            >
-              演示
-            </Button>
+            <AutoSaveTag />
+            <PlayAction />
             <Button type="primary">发布</Button>
             <Divider type="vertical" />
             <Button type="text" icon={<SettingFilled />}>
@@ -87,18 +78,7 @@ const App = () => {
           </Space>
         </Col>
       </Row>
-      {/* <Radio.Group
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-        options={optionsWithDisabled}
-        optionType="button"
-        buttonStyle="solid"
-        value={'设计'}
-      /> */}
+      <CenterArea />
     </div>
   );
 };

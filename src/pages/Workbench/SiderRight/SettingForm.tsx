@@ -1,9 +1,40 @@
+import { SegmentedPropsPicked } from '@/typings/SegmentedProps';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { useModel } from '@umijs/max';
-import { Form, Input, Select, Switch } from 'antd';
+import { Form, Input, Segmented, Select, Switch } from 'antd';
 import consola from 'consola';
 import React, { useEffect } from 'react';
 import styles from './SettingForm.less';
+
+export const SegmentedSwitch = ({
+  value,
+  onChange,
+  ...rest
+}: {
+  value?: boolean;
+  onChange?: (next: boolean) => void;
+} & Omit<SegmentedPropsPicked, 'value' | 'onChange' | 'options'>) => {
+  return (
+    <Segmented
+      block
+      {...rest}
+      options={[
+        {
+          label: '是',
+          value: 'true',
+        },
+        {
+          label: '否',
+          value: 'false',
+        },
+      ]}
+      value={String(value)}
+      onChange={(next) => {
+        onChange?.(next === 'true');
+      }}
+    />
+  );
+};
 
 const SettingInputs: Record<string, React.ElementType<any>> = {
   string: Input,
@@ -21,7 +52,7 @@ const SettingInput = ({
   onChange?: (next: any) => void;
 }) => {
   if (config.type === 'string') {
-    return <Input value={value} onChange={onChange} />;
+    return <Input bordered={false} value={value} onChange={onChange} />;
   }
 
   if (config.type === 'select') {
@@ -31,8 +62,13 @@ const SettingInput = ({
         value={value}
         onChange={onChange}
         options={config.options}
+        bordered={false}
       />
     );
+  }
+
+  if (config.type === 'boolean') {
+    return <SegmentedSwitch value={value} onChange={onChange} />;
   }
 
   return null;
@@ -40,12 +76,20 @@ const SettingInput = ({
 
 export const SettingForm = () => {
   const { selectNodeMeta } = useModel('selectNodeMeta');
-  const { setSettings, settings } = useModel('componentsSettings');
-  const { configs } = useModel('componentsSettingConfigs', (model) => ({
-    configs: selectNodeMeta?.type
-      ? model.componentsConfigs[selectNodeMeta.type]
-      : undefined,
-  }));
+  const { setComponentSettings, settings } = useModel('componentsSettings');
+  const { componentsConfigs } = useModel(
+    'componentsSettingConfigs',
+    (model) => {
+      consola.info('准备返回渲染配置', selectNodeMeta, model);
+      return {
+        componentsConfigs: model.componentsConfigs,
+      };
+    },
+  );
+
+  const configs = selectNodeMeta?.type
+    ? componentsConfigs[selectNodeMeta.type]
+    : undefined;
 
   const [form] = Form.useForm();
 
@@ -64,20 +108,18 @@ export const SettingForm = () => {
 
   return (
     <Form
-      size={'small'}
+      // size={'small'}
       className={styles.wrapper}
       {...{
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
+        labelCol: { span: 7 },
+        wrapperCol: { span: 17 },
       }}
       layout={'horizontal'}
       form={form}
+      requiredMark={false}
       onValuesChange={(changedValues, values) => {
         consola.success('同步修改组件配置值', values);
-        setSettings((prev) => ({
-          ...prev,
-          [selectNodeMeta.id]: values,
-        }));
+        setComponentSettings(selectNodeMeta.id, values);
       }}
     >
       {configs?.map((item) => {
@@ -90,6 +132,7 @@ export const SettingForm = () => {
             key={item.name}
             label={item.label}
             name={item.name}
+            colon={false}
           >
             <SettingInput config={item} />
           </Form.Item>

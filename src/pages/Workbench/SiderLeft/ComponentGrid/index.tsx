@@ -1,16 +1,20 @@
 import { useModel } from '@umijs/max';
-import { Card } from 'antd';
+import { useClickAway } from 'ahooks';
+import { Affix, Card, Row, Tabs, Typography } from 'antd';
 import consola from 'consola';
 import { nanoid } from 'nanoid';
+import React, { useRef } from 'react';
+
+const { TabPane } = Tabs;
 
 const gridStyle: React.CSSProperties = {
-  width: '25%',
+  width: '50%',
   textAlign: 'center',
   padding: 14,
   cursor: 'pointer',
 };
 
-const App = () => {
+const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
   const { addComponentToStage } = useModel('stageComponentsModel', (model) => ({
     addComponentToStage: model.addComponentToStage,
   }));
@@ -26,174 +30,269 @@ const App = () => {
     }),
   );
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  const { setMode } = useModel('siderLeftMode', (mode) => ({
+    setMode: mode.setMode,
+  }));
+
+  useClickAway(() => {
+    setMode('normal');
+  }, ref);
+
   return (
-    <div
-      style={{
-        padding: 10,
-      }}
-    >
-      {[
-        {
-          title: '通用',
-          type: 'group',
-          children: [
-            {
-              type: 'item',
-              name: 'button',
-              title: '按钮',
-            },
-            {
-              type: 'item',
-              name: 'icon',
-              title: '图标',
-            },
-            {
-              type: 'item',
-              name: 'typography',
-              title: '排版',
-            },
-          ],
-        },
-        {
-          title: '布局',
-          type: 'group',
-          children: [
-            { type: 'item', name: '', title: 'Divider分割线' },
-            { type: 'item', name: '', title: 'Grid栅格' },
-            { type: 'item', name: '', title: 'Layout布局' },
-            { type: 'item', name: '', title: 'Space间距' },
-          ],
-        },
-        {
-          title: '导航',
-          type: 'group',
-          children: [
-            { type: 'item', name: '', title: 'Affix固钉' },
-            { type: 'item', name: '', title: 'Breadcrumb面包屑' },
-            { type: 'item', name: '', title: 'Dropdown下拉菜单' },
-            { type: 'item', name: '', title: 'Menu导航菜单' },
-            { type: 'item', name: '', title: 'PageHeader页头' },
-            { type: 'item', name: '', title: 'Pagination分页' },
-            { type: 'item', name: '', title: 'Steps步骤条' },
-          ],
-        },
-        {
-          title: '数据录入',
-          type: 'group',
-          children: [
-            { type: 'item', name: '', title: 'AutoComplete自动完成' },
-            { type: 'item', name: '', title: 'Cascader级联选择' },
-            { type: 'item', name: '', title: 'Checkbox多选框' },
-            { type: 'item', name: '', title: 'DatePicker日期选择框' },
-            { type: 'item', name: '', title: 'Form表单' },
-            { type: 'item', name: '', title: 'Input输入框' },
-            { type: 'item', name: '', title: 'InputNumber数字输入框' },
-            { type: 'item', name: '', title: 'Mentions提及' },
-            { type: 'item', name: '', title: 'Radio单选框' },
-            { type: 'item', name: '', title: 'Rate评分' },
-            { type: 'item', name: '', title: 'Select选择器' },
-            { type: 'item', name: '', title: 'Slider滑动输入条' },
-            { type: 'item', name: '', title: 'Switch开关' },
-            { type: 'item', name: '', title: 'TimePicker时间选择框' },
-            { type: 'item', name: '', title: 'Transfer穿梭框' },
-            { type: 'item', name: '', title: 'TreeSelect树选择' },
-            { type: 'item', name: '', title: 'Upload上传' },
-          ],
-        },
-        {
-          title: '数据展示',
-          type: 'group',
-          children: [
-            { type: 'item', name: '', title: 'Avatar头像' },
-            { type: 'item', name: '', title: 'Badge徽标数' },
-            { type: 'item', name: '', title: 'Calendar日历' },
-            { type: 'item', name: '', title: 'Card卡片' },
-            { type: 'item', name: '', title: 'Carousel走马灯' },
-            { type: 'item', name: '', title: 'Collapse折叠面板' },
-            { type: 'item', name: '', title: 'Comment评论' },
-            { type: 'item', name: '', title: 'Descriptions描述列表' },
-            { type: 'item', name: '', title: 'Empty空状态' },
-            { type: 'item', name: '', title: 'Image图片' },
-            { type: 'item', name: '', title: 'List列表' },
-            { type: 'item', name: '', title: 'Popover气泡卡片' },
-            { type: 'item', name: '', title: 'Segmented分段控制器' },
-            { type: 'item', name: '', title: 'Statistic统计数值' },
-            { type: 'item', name: '', title: 'Table表格' },
-            { type: 'item', name: '', title: 'Tabs标签页' },
-            { type: 'item', name: '', title: 'Tag标签' },
-            { type: 'item', name: '', title: 'Timeline时间轴' },
-            { type: 'item', name: '', title: 'Tooltip文字提示' },
-            { type: 'item', name: '', title: 'Tree树形控件' },
-          ],
-        },
-        {
-          title: '反馈',
-          type: 'group',
-          children: [
-            { type: 'item', name: '', title: 'Alert警告提示' },
-            { type: 'item', name: '', title: 'Drawer抽屉' },
-            { type: 'item', name: '', title: 'Message全局提示' },
-            { type: 'item', name: '', title: 'Modal对话框' },
-            { type: 'item', name: '', title: 'Notification通知提醒框' },
-            { type: 'item', name: '', title: 'Popconfirm气泡确认框' },
-            { type: 'item', name: '', title: 'Progress进度条' },
-            { type: 'item', name: '', title: 'Result结果' },
-            { type: 'item', name: '', title: 'Skeleton骨架屏' },
-            { type: 'item', name: '', title: 'Spin加载中' },
-          ],
-        },
-        {
-          title: '其他',
-          type: 'group',
-          children: [
-            { type: 'item', name: '', title: 'Anchor锚点' },
-            { type: 'item', name: '', title: 'BackTop回到顶部' },
-            { type: 'item', name: '', title: 'ConfigProvider全局化配置' },
-          ],
-        },
-      ].map((group) => {
-        return (
-          <Card
-            key={group.title}
-            bordered={false}
-            title={group.title}
-            size="small"
-            style={{
-              marginBottom: 10,
-            }}
-          >
-            {group.children.map((item) => {
-              return (
-                <Card.Grid
-                  key={item.title}
-                  hoverable={false}
-                  style={gridStyle}
-                  onClick={() => {
-                    if (item.name === 'button') {
-                      const newId = nanoid();
-                      consola.info('添加新组件到舞台');
-                      addComponentToStage('button', {
-                        id: newId,
-                        display: 'inline',
-                      });
-                      consola.info('初始化新组件配置');
-                      setComponentSettings(
-                        newId,
-                        comsInitalSettings['button'] ?? {},
-                      );
-                    }
-                  }}
-                >
-                  {item.title}
-                </Card.Grid>
-              );
-            })}
-            <Card.Grid hoverable={false} style={gridStyle}>
-              ...
-            </Card.Grid>
-          </Card>
-        );
-      })}
+    <div ref={ref}>
+      <Tabs
+        style={{
+          padding: 15,
+        }}
+        key="item1"
+        defaultActiveKey="1"
+        size="small"
+        destroyInactiveTabPane
+      >
+        {[
+          {
+            title: 'Web',
+            type: 'tabs',
+            children: [
+              {
+                title: '通用',
+                type: 'group',
+                children: [
+                  {
+                    type: 'item',
+                    name: 'button',
+                    title: '按钮',
+                  },
+                  {
+                    type: 'item',
+                    name: 'icon',
+                    title: '图标',
+                  },
+                  {
+                    type: 'item',
+                    name: 'typography',
+                    title: '排版',
+                  },
+                ],
+              },
+              {
+                title: '布局',
+                type: 'group',
+                children: [
+                  { type: 'item', name: '', title: '分割线' },
+                  { type: 'item', name: '', title: '栅格' },
+                  { type: 'item', name: '', title: '布局' },
+                  { type: 'item', name: '', title: '间距' },
+                ],
+              },
+              {
+                title: '导航',
+                type: 'group',
+                children: [
+                  { type: 'item', name: '', title: '固钉' },
+                  { type: 'item', name: '', title: '面包屑' },
+                  { type: 'item', name: '', title: '下拉菜单' },
+                  { type: 'item', name: '', title: '导航菜单' },
+                  { type: 'item', name: '', title: '页头' },
+                  { type: 'item', name: '', title: '分页' },
+                  { type: 'item', name: '', title: '步骤条' },
+                ],
+              },
+              {
+                title: '数据录入',
+                type: 'group',
+                children: [
+                  { type: 'item', name: '', title: '自动完成' },
+                  { type: 'item', name: '', title: '级联选择' },
+                  { type: 'item', name: '', title: '多选框' },
+                  { type: 'item', name: '', title: '日期选择框' },
+                  { type: 'item', name: '', title: '表单' },
+                  { type: 'item', name: '', title: '输入框' },
+                  { type: 'item', name: '', title: '数字输入框' },
+                  { type: 'item', name: '', title: '提及' },
+                  { type: 'item', name: '', title: '单选框' },
+                  { type: 'item', name: '', title: '评分' },
+                  { type: 'item', name: '', title: '选择器' },
+                  { type: 'item', name: '', title: '滑动输入条' },
+                  { type: 'item', name: '', title: '开关' },
+                  { type: 'item', name: '', title: '时间选择框' },
+                  { type: 'item', name: '', title: '穿梭框' },
+                  { type: 'item', name: '', title: '树选择' },
+                  { type: 'item', name: '', title: '上传' },
+                ],
+              },
+              {
+                title: '数据展示',
+                type: 'group',
+                children: [
+                  { type: 'item', name: '', title: '头像' },
+                  { type: 'item', name: '', title: '徽标数' },
+                  { type: 'item', name: '', title: '日历' },
+                  { type: 'item', name: '', title: '卡片' },
+                  { type: 'item', name: '', title: '走马灯' },
+                  { type: 'item', name: '', title: '折叠面板' },
+                  { type: 'item', name: '', title: '评论' },
+                  { type: 'item', name: '', title: '描述列表' },
+                  { type: 'item', name: '', title: '空状态' },
+                  { type: 'item', name: '', title: '图片' },
+                  { type: 'item', name: '', title: '列表' },
+                  { type: 'item', name: '', title: '气泡卡片' },
+                  { type: 'item', name: '', title: '分段控制器' },
+                  { type: 'item', name: '', title: '统计数值' },
+                  { type: 'item', name: '', title: '表格' },
+                  { type: 'item', name: '', title: '标签页' },
+                  { type: 'item', name: '', title: '标签' },
+                  { type: 'item', name: '', title: '时间轴' },
+                  { type: 'item', name: '', title: '文字提示' },
+                  { type: 'item', name: '', title: '树形控件' },
+                ],
+              },
+              {
+                title: '反馈',
+                type: 'group',
+                children: [
+                  { type: 'item', name: '', title: '警告提示' },
+                  { type: 'item', name: '', title: '抽屉' },
+                  { type: 'item', name: '', title: '全局提示' },
+                  { type: 'item', name: '', title: '对话框' },
+                  { type: 'item', name: '', title: '通知提醒框' },
+                  { type: 'item', name: '', title: '气泡确认框' },
+                  { type: 'item', name: '', title: '进度条' },
+                  { type: 'item', name: '', title: '结果' },
+                  { type: 'item', name: '', title: '骨架屏' },
+                  { type: 'item', name: '', title: '加载中' },
+                ],
+              },
+              {
+                title: '其他',
+                type: 'group',
+                children: [
+                  { type: 'item', name: '', title: '锚点' },
+                  { type: 'item', name: '', title: '回到顶部' },
+                  { type: 'item', name: '', title: '全局化配置' },
+                ],
+              },
+            ],
+          },
+          {
+            title: '图表',
+            type: 'tabs',
+            children: [
+              {
+                title: '折线图',
+                type: 'group',
+                children: [
+                  {
+                    type: 'item',
+                    name: 'line',
+                    title: '基础折线图',
+                  },
+                  {
+                    type: 'item',
+                    name: '阶梯折线图',
+                    title: '阶梯折线图',
+                  },
+                  {
+                    type: 'item',
+                    name: '多折线图',
+                    title: '多折线图',
+                  },
+                ],
+              },
+            ],
+          },
+        ].map((tabItem) => {
+          return (
+            <TabPane tab={tabItem.title} key={tabItem.title}>
+              {tabItem.children.map((group) => {
+                return (
+                  <div key={group.title}>
+                    <Affix offsetTop={0} target={() => siderRef.current}>
+                      <Row
+                        style={{
+                          padding: `15px 5px 15px 5px`,
+                          background: '#fff',
+                        }}
+                      >
+                        <Typography.Text
+                          style={{
+                            fontSize: 14,
+                          }}
+                          strong
+                        >
+                          {group.title}
+                        </Typography.Text>
+                      </Row>
+                    </Affix>
+                    <Card
+                      key={group.title}
+                      bordered={false}
+                      size="small"
+                      style={{
+                        /** 左右空 1px 防止滚动的时候，标题挡住 */
+                        margin: '0 1px',
+                      }}
+                    >
+                      {group.children.map((item) => {
+                        return (
+                          <Card.Grid
+                            key={item.title}
+                            hoverable={false}
+                            style={gridStyle}
+                            onClick={() => {
+                              if (item.name === 'button') {
+                                const newId = nanoid();
+                                consola.info('添加新组件到舞台');
+                                addComponentToStage('button', {
+                                  id: newId,
+                                  display: 'inline',
+                                });
+                                consola.info('初始化新组件配置');
+                                setComponentSettings(
+                                  newId,
+                                  comsInitalSettings['button'] ?? {},
+                                );
+                                return;
+                              }
+                              if (item.name === 'line') {
+                                const newId = nanoid();
+                                consola.info('添加新组件到舞台');
+                                addComponentToStage('line', {
+                                  id: newId,
+                                  display: 'block',
+                                });
+                                consola.info('初始化新组件配置');
+                                setComponentSettings(
+                                  newId,
+                                  comsInitalSettings['line'] ?? {},
+                                );
+                                return;
+                              }
+                            }}
+                          >
+                            <Typography.Text
+                              style={{
+                                fontSize: 14,
+                              }}
+                            >
+                              {item.title}
+                            </Typography.Text>
+                          </Card.Grid>
+                        );
+                      })}
+                      <Card.Grid hoverable={false} style={gridStyle}>
+                        ...
+                      </Card.Grid>
+                    </Card>
+                  </div>
+                );
+              })}
+            </TabPane>
+          );
+        })}
+      </Tabs>
     </div>
   );
 };

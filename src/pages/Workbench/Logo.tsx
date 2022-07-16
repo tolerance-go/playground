@@ -1,23 +1,12 @@
-import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Space } from 'antd';
 
 const menu = (
   <Menu
     items={[
       {
-        label: '1st menu item',
+        label: '返回应用管理',
         key: '1',
-        icon: <UserOutlined />,
-      },
-      {
-        label: '2nd menu item',
-        key: '2',
-        icon: <UserOutlined />,
-      },
-      {
-        label: '3rd menu item',
-        key: '3',
-        icon: <UserOutlined />,
       },
     ]}
   />

@@ -20,7 +20,7 @@ export const AtomButton = (
       : undefined,
   }));
 
-  const { text, ...rest } = props.settings ?? {};
+  const { text, ...rest } = props.settings;
 
   return (
     <Button {...rest}>

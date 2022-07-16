@@ -23,16 +23,20 @@ export const Atom = (props: StageComponentsModelItem) => {
 
   consola.info('渲染 atom 组件', props.id);
 
-  return (
-    <AtomWrapper {...props}>
-      <Element
-        key={props.id}
-        {...{
-          settings,
-          slots,
-          slotsOrder,
-        }}
-      />
-    </AtomWrapper>
+  const el = (
+    <Element
+      key={props.id}
+      {...{
+        settings,
+        slots,
+        slotsOrder,
+      }}
+    />
   );
+
+  if (location.pathname === '/playground') {
+    return el;
+  }
+
+  return <AtomWrapper {...props}>{el}</AtomWrapper>;
 };

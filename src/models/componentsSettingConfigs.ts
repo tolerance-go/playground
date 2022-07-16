@@ -1,4 +1,5 @@
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
+import { LineConfig } from '@ant-design/plots';
 import { useState } from 'react';
 
 /**
@@ -11,10 +12,14 @@ const useComponentsSettingConfigs = () => {
       text?: string;
       type?: string;
     };
+    line?: Partial<LineConfig>;
   }>({
     button: {
       text: '按钮',
       type: 'primary',
+    },
+    line: {
+      smooth: false,
     },
   });
   const [componentsConfigs, setComponentsConfigs] = useState<
@@ -42,6 +47,13 @@ const useComponentsSettingConfigs = () => {
             value: 'ghost',
           },
         ],
+      },
+    ],
+    line: [
+      {
+        type: 'boolean',
+        name: 'smooth',
+        label: '平滑绘制',
       },
     ],
   });
