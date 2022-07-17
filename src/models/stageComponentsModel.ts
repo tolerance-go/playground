@@ -1,3 +1,4 @@
+import { SlotPosition } from '@/models/slotsInsert';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { useState } from 'react';
@@ -56,6 +57,50 @@ const useStageComponentsModel = () => {
     },
   );
 
+  /**
+   * 新增组建到插槽
+   */
+  const addComToStageSlot = useMemoizedFn(
+    (params: {
+      parentId: string;
+      newId: string;
+      slotName: string;
+      type: string;
+      display: StageComponentsModelItem['display'];
+      postion: SlotPosition;
+    }) => {
+      setStageComponentsModel((prev) => ({
+        ...prev,
+        [params.parentId]: {
+          ...(prev?.[params.parentId] as StageComponentsModelItem),
+          slots: {
+            ...prev?.[params.parentId].slots,
+            [params.slotName]:
+              params.postion === 'before'
+                ? [
+                    params.newId,
+                    ...(prev?.[params.parentId].slots?.[params.slotName] ?? []),
+                  ]
+                : [
+                    ...(prev?.[params.parentId].slots?.[params.slotName] ?? []),
+                    params.newId,
+                  ],
+          },
+          slotsOrder: {},
+        },
+        [params.newId]: {
+          id: params.newId,
+          type: params.type,
+          slots: {},
+          slotsOrder: {},
+          display: params.display,
+        },
+      }));
+
+      refreshLastAutoSaveTime();
+    },
+  );
+
   /** 获取数据，准备持久化 */
   const getData = useMemoizedFn(() => {
     return {
@@ -81,6 +126,7 @@ const useStageComponentsModel = () => {
     addComponentToStage,
     getData,
     initData,
+    addComToStageSlot,
   };
 };
 

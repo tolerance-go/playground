@@ -1,5 +1,6 @@
 import { useModel } from '@umijs/max';
-import { Col, Divider, Layout, Row, Typography } from 'antd';
+import { Alert, Col, Divider, Layout, Row, Typography } from 'antd';
+import consola from 'consola';
 import { useRef } from 'react';
 import ComponentGrid from './ComponentGrid';
 import { PageCreator } from './PageCreator';
@@ -13,16 +14,11 @@ export default function App() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const siderRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <Sider
-      ref={siderRef}
-      theme="light"
-      width={300}
-      style={{
-        overflowY: 'scroll',
-      }}
-    >
-      {mode === 'normal' ? (
+  consola.info('siderLeftMode mode 变化', mode);
+
+  const renderContent = () => {
+    if (mode === 'normal') {
+      return (
         <Row
           style={{
             flexDirection: 'column',
@@ -78,9 +74,29 @@ export default function App() {
             <PageNav />
           </Col>
         </Row>
-      ) : (
-        <ComponentGrid siderRef={siderRef} />
+      );
+    }
+
+    if (mode === 'insert' || mode === 'components') {
+      return <ComponentGrid siderRef={siderRef} />;
+    }
+
+    return null;
+  };
+
+  return (
+    <Sider
+      ref={siderRef}
+      theme="light"
+      width={300}
+      style={{
+        overflowY: 'scroll',
+      }}
+    >
+      {mode === 'insert' && (
+        <Alert showIcon banner message="当前正在填充插槽" type="info" />
       )}
+      {renderContent()}
     </Sider>
   );
 }

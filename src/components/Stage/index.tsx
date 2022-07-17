@@ -32,10 +32,12 @@ export default function Stage() {
   consola.info('渲染跟节点组件');
 
   return (
-    <ElementsCxt.Provider value={Elements}>
-      {rootNodeModels.map((model) => (
-        <Atom key={model.id} {...model} />
-      ))}
-    </ElementsCxt.Provider>
+    <div>
+      <ElementsCxt.Provider value={Elements}>
+        {rootNodeModels.map((model) => (
+          <Atom key={model.id} {...model} />
+        ))}
+      </ElementsCxt.Provider>
+    </div>
   );
 }

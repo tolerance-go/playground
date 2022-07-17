@@ -1,4 +1,4 @@
-import { PlusCircleFilled, SettingFilled } from '@ant-design/icons';
+import { PlusCircleFilled } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Avatar, Button, Col, Divider, Row, Space } from 'antd';
 import Logo from '../Logo';
@@ -7,6 +7,7 @@ import { AutoSaveTag } from './AutoSaveTag';
 import CenterArea from './CenterArea';
 import CMSConfigForm from './CMSConfigForm';
 import { PlayAction } from './PlayAction';
+import SettingsBtn from './SettingsBtn';
 
 // const optionsWithDisabled = [
 //   {
@@ -71,9 +72,7 @@ const App = () => {
             <PlayAction />
             <Button type="primary">发布</Button>
             <Divider type="vertical" />
-            <Button type="text" icon={<SettingFilled />}>
-              设置
-            </Button>
+            <SettingsBtn />
             <Avatar>User</Avatar>
           </Space>
         </Col>

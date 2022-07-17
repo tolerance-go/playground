@@ -1,7 +1,7 @@
 import { VersionControllerShow } from '@/services/server/VersionController';
 import { ExportOutlined } from '@ant-design/icons';
 import { useModel, useRequest } from '@umijs/max';
-import { Space, Tooltip } from 'antd';
+import { Divider, Space, Spin, Tooltip, Typography } from 'antd';
 
 export default () => {
   const { activeVersionId, setActiveVersionId } = useModel(
@@ -12,7 +12,7 @@ export default () => {
     }),
   );
 
-  const { data } = useRequest(
+  const { data, loading } = useRequest(
     async () => {
       if (!activeVersionId) {
         return;
@@ -26,18 +26,11 @@ export default () => {
     },
   );
 
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}
-    >
-      {data ? (
+  const renderVersion = () => {
+    if (data) {
+      return (
         <Space size={'small'}>
-          {data.name}
+          {data?.name}
           <Tooltip title="退出当前版本状态">
             <ExportOutlined
               onClick={() => {
@@ -49,7 +42,30 @@ export default () => {
             />
           </Tooltip>
         </Space>
-      ) : null}
+      );
+    }
+
+    return <span>最新版本</span>;
+  };
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
+      {
+        <Space size={'small'}>
+          <Typography.Text type="secondary">test</Typography.Text>
+          <Divider type="vertical" />
+          <Spin spinning={loading} size="small">
+            {renderVersion()}
+          </Spin>
+        </Space>
+      }
     </div>
   );
 };

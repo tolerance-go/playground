@@ -2,7 +2,7 @@ import { useModel } from '@/.umi/plugin-model';
 import { useSaveStage } from '@/hooks/useSaveStage';
 import { CloudOutlined } from '@ant-design/icons';
 import { useSearchParams } from '@umijs/max';
-import { useRequest } from 'ahooks';
+import { useRequest, useUpdateEffect } from 'ahooks';
 import { Popover, Space, Tooltip, Typography } from 'antd';
 import { TextProps } from 'antd/lib/typography/Text';
 import dayjs from 'dayjs';
@@ -17,7 +17,6 @@ const Text = (props: PropsWithChildren<TextProps>) => {
       type="secondary"
       style={{
         cursor: 'pointer',
-        fontSize: 12,
       }}
     >
       {props.children}
@@ -74,15 +73,16 @@ export const AutoSaveTag = () => {
     }
   }, []);
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     /** 空值也需要设置，恢复默认状态 */
     /** 设置版本的 pageList */
     setPageListByVersionId(activeVersionId);
 
     /** 同步 url，下次刷新页面的时候可以记住 */
-    searchParams.delete('versionId');
     if (activeVersionId) {
-      searchParams.append('versionId', String(activeVersionId));
+      searchParams.set('versionId', String(activeVersionId));
+    } else {
+      searchParams.delete('versionId');
     }
     setSearchParams(searchParams);
   }, [activeVersionId]);

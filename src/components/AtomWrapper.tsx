@@ -1,7 +1,9 @@
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
+import clsx from 'clsx';
 import consola from 'consola';
 import React from 'react';
+import styles from './AtomWrapper.less';
 
 /**
  * 舞台节点的包装组件
@@ -11,9 +13,13 @@ import React from 'react';
 export const AtomWrapper = (
   props: React.PropsWithChildren<StageComponentsModelItem>,
 ) => {
-  const { setSelectNodeMeta } = useModel('selectNodeMeta', (model) => ({
-    setSelectNodeMeta: model.setSelectNodeMeta,
-  }));
+  const { setSelectNodeId, selectNodeId } = useModel(
+    'selectNodeMeta',
+    (model) => ({
+      setSelectNodeId: model.setSelectNodeId,
+      selectNodeId: model.selectNodeId,
+    }),
+  );
 
   const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
     setMode: model.setMode,
@@ -21,22 +27,24 @@ export const AtomWrapper = (
 
   return (
     <div
+      className={clsx(styles.wrap, {
+        [styles.selected]: selectNodeId === props.id,
+      })}
       style={{
-        padding: '2px',
-        border: '1px solid blue',
+        padding: '4px',
         display: props.display === 'inline' ? 'inline-block' : 'block',
       }}
-      onClick={() => {
+      onClick={(event) => {
         consola.info('atom 被点击', props);
 
-        setSelectNodeMeta({
-          type: props.type,
-          id: props.id,
-        });
+        setSelectNodeId(props.id);
         consola.success('选中组件', props.id);
 
         setRightBarMode('settings');
         consola.success('激活右侧配置面板');
+
+        /** 防止多层级的 Atom */
+        event.stopPropagation();
       }}
     >
       {props.children}

@@ -1,10 +1,10 @@
-import Stage from '@/components/Stage';
 import { Layout } from 'antd';
+import Center from './Center';
 import HeaderInner from './Header';
 import SiderLeft from './SiderLeft';
 import SiderRight from './SiderRight';
 
-const { Header, Content } = Layout;
+const { Header } = Layout;
 
 export default function App() {
   return (
@@ -26,9 +26,7 @@ export default function App() {
         }}
       >
         <SiderLeft />
-        <Content>
-          <Stage />
-        </Content>
+        <Center />
         <SiderRight />
       </Layout>
     </Layout>

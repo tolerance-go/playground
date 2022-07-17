@@ -7,6 +7,7 @@ export type AtomComponentProps<Settings extends object = object> = {
   /** 从小到大排序 0,1,2 */
   slotsOrder?: Record<string, number[]>;
   settings: Settings;
+  id: string;
 };
 
 /**

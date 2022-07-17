@@ -27,6 +27,7 @@ export const Atom = (props: StageComponentsModelItem) => {
     <Element
       key={props.id}
       {...{
+        id: props.id,
         settings,
         slots,
         slotsOrder,

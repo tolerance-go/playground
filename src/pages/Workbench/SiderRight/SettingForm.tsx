@@ -75,13 +75,9 @@ const SettingInput = ({
 };
 
 export const SettingForm = () => {
-  const { selectNodeMeta, setSelectNodeMeta } = useModel(
-    'selectNodeMeta',
-    (model) => ({
-      selectNodeMeta: model.selectNodeMeta,
-      setSelectNodeMeta: model.setSelectNodeMeta,
-    }),
-  );
+  const { selectNodeMeta } = useModel('selectNodeMeta', (model) => ({
+    selectNodeMeta: model.selectNodeMeta,
+  }));
   const { setComponentSettings, settings } = useModel('componentsSettings');
   const { componentsConfigs } = useModel(
     'componentsSettingConfigs',
@@ -92,12 +88,6 @@ export const SettingForm = () => {
       };
     },
   );
-
-  const { activeVersionId } = useModel('versionList', (model) => {
-    return {
-      activeVersionId: model.activeVersionId,
-    };
-  });
 
   const configs = selectNodeMeta?.type
     ? componentsConfigs[selectNodeMeta.type]
@@ -110,11 +100,6 @@ export const SettingForm = () => {
       form.setFieldsValue(settings[selectNodeMeta.id]);
     }
   }, [selectNodeMeta?.id]);
-
-  /** versionId 切换的时候，清空选中的舞台组件 */
-  useEffect(() => {
-    setSelectNodeMeta(undefined);
-  }, [activeVersionId]);
 
   if (!selectNodeMeta) {
     consola.info('本次渲染，未选中元素，返回空');

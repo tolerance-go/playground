@@ -1,5 +1,4 @@
 import { useModel } from '@umijs/max';
-import { useClickAway } from 'ahooks';
 import { Affix, Card, Row, Tabs, Typography } from 'antd';
 import consola from 'consola';
 import { nanoid } from 'nanoid';
@@ -15,9 +14,22 @@ const gridStyle: React.CSSProperties = {
 };
 
 const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
-  const { addComponentToStage } = useModel('stageComponentsModel', (model) => ({
-    addComponentToStage: model.addComponentToStage,
-  }));
+  const { addComponentToStage, addComToStageSlot } = useModel(
+    'stageComponentsModel',
+    (model) => ({
+      addComponentToStage: model.addComponentToStage,
+      addComToStageSlot: model.addComToStageSlot,
+    }),
+  );
+
+  const { focusComId, focusSlotName, focusSlotPosition } = useModel(
+    'slotsInsert',
+    (model) => ({
+      focusComId: model.focusComId,
+      focusSlotName: model.focusSlotName,
+      focusSlotPosition: model.focusSlotPosition,
+    }),
+  );
 
   const { setComponentSettings } = useModel('componentsSettings', (model) => ({
     setComponentSettings: model.setComponentSettings,
@@ -30,15 +42,11 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
     }),
   );
 
-  const ref = useRef<HTMLDivElement>(null);
-
-  const { setMode } = useModel('siderLeftMode', (mode) => ({
-    setMode: mode.setMode,
+  const { mode: siderLeftMode } = useModel('siderLeftMode', (model) => ({
+    mode: model.mode,
   }));
 
-  useClickAway(() => {
-    setMode('normal');
-  }, ref);
+  const ref = useRef<HTMLDivElement>(null);
 
   return (
     <div ref={ref}>
@@ -203,6 +211,27 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
               },
             ],
           },
+          ...(siderLeftMode === 'insert'
+            ? []
+            : [
+                {
+                  title: '框架',
+                  type: 'tabs',
+                  children: [
+                    {
+                      title: '通用',
+                      type: 'group',
+                      children: [
+                        {
+                          type: 'item',
+                          name: 'admin',
+                          title: '基础管理后台',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ]),
         ].map((tabItem) => {
           return (
             <TabPane tab={tabItem.title} key={tabItem.title}>
@@ -244,11 +273,30 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                             onClick={() => {
                               if (item.name === 'button') {
                                 const newId = nanoid();
-                                consola.info('添加新组件到舞台');
-                                addComponentToStage('button', {
-                                  id: newId,
-                                  display: 'inline',
-                                });
+
+                                if (siderLeftMode === 'insert') {
+                                  if (!focusComId || !focusSlotName) {
+                                    throw new Error(
+                                      '当前 focusCom 信息异常消失',
+                                    );
+                                  }
+
+                                  addComToStageSlot({
+                                    parentId: focusComId,
+                                    newId,
+                                    slotName: focusSlotName,
+                                    type: 'button',
+                                    display: 'inline',
+                                    postion: focusSlotPosition,
+                                  });
+                                } else {
+                                  consola.info('添加新组件到舞台');
+                                  addComponentToStage('button', {
+                                    id: newId,
+                                    display: 'inline',
+                                  });
+                                }
+
                                 consola.info('初始化新组件配置');
                                 setComponentSettings(
                                   newId,

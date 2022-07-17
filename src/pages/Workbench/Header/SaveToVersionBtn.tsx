@@ -14,6 +14,10 @@ export default () => {
     pageList: model.pageList,
   }));
 
+  const { setActiveVersionId } = useModel('versionList', (model) => ({
+    setActiveVersionId: model.setActiveVersionId,
+  }));
+
   return (
     <ModalForm<{
       name: string;
@@ -41,6 +45,7 @@ export default () => {
         if (success) {
           if (data) {
             pushFromStart(data);
+            setActiveVersionId(data.id);
           }
           message.success('版本保存成功');
         }
