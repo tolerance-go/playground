@@ -306,11 +306,30 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                               }
                               if (item.name === 'line') {
                                 const newId = nanoid();
-                                consola.info('添加新组件到舞台');
-                                addComponentToStage('line', {
-                                  id: newId,
-                                  display: 'block',
-                                });
+
+                                if (siderLeftMode === 'insert') {
+                                  if (!focusComId || !focusSlotName) {
+                                    throw new Error(
+                                      '当前 focusCom 信息异常消失',
+                                    );
+                                  }
+
+                                  addComToStageSlot({
+                                    parentId: focusComId,
+                                    newId,
+                                    slotName: focusSlotName,
+                                    type: 'line',
+                                    display: 'block',
+                                    postion: focusSlotPosition,
+                                  });
+                                } else {
+                                  consola.info('添加新组件到舞台');
+                                  addComponentToStage('line', {
+                                    id: newId,
+                                    display: 'block',
+                                  });
+                                }
+
                                 consola.info('初始化新组件配置');
                                 setComponentSettings(
                                   newId,

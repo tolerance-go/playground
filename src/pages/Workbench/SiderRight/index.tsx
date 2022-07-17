@@ -1,8 +1,10 @@
+import { BranchesOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Layout } from 'antd';
+import { Button, Layout, Tabs } from 'antd';
 import consola from 'consola';
 import { useEffect } from 'react';
 import { SettingForm } from './SettingForm';
+const { TabPane } = Tabs;
 
 const { Sider } = Layout;
 
@@ -35,12 +37,46 @@ export default function App() {
   return (
     <Sider
       theme="light"
-      width={300}
+      width={320}
       style={{
         padding: '15px 10px 15px 15px',
       }}
     >
-      {mode === 'normal' ? null : <SettingForm />}
+      <Tabs
+        size="small"
+        defaultActiveKey="1"
+        type="editable-card"
+        tabBarExtraContent={
+          <Button
+            style={{
+              marginLeft: 5,
+            }}
+            shape="circle"
+            size="small"
+            icon={<BranchesOutlined />}
+          ></Button>
+        }
+      >
+        <TabPane tab="默认状态" key="1">
+          <Tabs size="small" defaultActiveKey="1">
+            <TabPane tab="配置" key="1">
+              {mode === 'normal' ? null : <SettingForm />}
+            </TabPane>
+            <TabPane tab="事件" key="2">
+              Content of Tab Pane 3
+            </TabPane>
+            <TabPane tab="外观" key="3">
+              Content of Tab Pane 3
+            </TabPane>
+          </Tabs>
+        </TabPane>
+        <TabPane tab="Tab 2" key="2">
+          Content of Tab Pane 2
+        </TabPane>
+        <TabPane tab="Tab 3" key="3">
+          Content of Tab Pane 3
+        </TabPane>
+      </Tabs>
     </Sider>
   );
 }
