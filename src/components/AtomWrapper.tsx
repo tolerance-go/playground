@@ -20,6 +20,10 @@ export const AtomWrapper = (
       selectNodeId: model.selectNodeId,
     }),
   );
+  const { hoverNodeId, setHoverNodeId } = useModel('hoverNodeId', (model) => ({
+    hoverNodeId: model.hoverNodeId,
+    setHoverNodeId: model.setHoverNodeId,
+  }));
 
   const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
     setMode: model.setMode,
@@ -29,10 +33,26 @@ export const AtomWrapper = (
     <div
       className={clsx(styles.wrap, {
         [styles.selected]: selectNodeId === props.id,
+        [styles.hover]: hoverNodeId === props.id,
       })}
       style={{
         padding: '4px',
         display: props.display === 'inline' ? 'inline-block' : 'block',
+      }}
+      onMouseEnter={() => {
+        if (props.id !== hoverNodeId) {
+          setHoverNodeId(props.id);
+        }
+      }}
+      onMouseOver={() => {
+        if (props.id !== hoverNodeId) {
+          setHoverNodeId(props.id);
+        }
+      }}
+      onMouseLeave={() => {
+        if (props.id === hoverNodeId) {
+          setHoverNodeId(undefined);
+        }
       }}
       onClick={(event) => {
         consola.info('atom 被点击', props);

@@ -7,6 +7,7 @@ specifiers:
   '@antv/s2': ^1.23.0
   '@antv/s2-react': ^1.21.0
   '@types/consola': ^2.2.5
+  '@types/lodash': ^4.14.182
   '@types/qs': ^6.9.7
   '@types/react': ^18.0.0
   '@types/react-dom': ^18.0.0
@@ -51,6 +52,7 @@ dependencies:
 
 devDependencies:
   '@types/consola': 2.2.5
+  '@types/lodash': 4.14.182
   '@types/qs': 6.9.7
   '@types/react': 18.0.15
   '@types/react-dom': 18.0.6
@@ -2956,6 +2958,10 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+
+  /@types/lodash/4.14.182:
+    resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
+    dev: true
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}

@@ -11,6 +11,9 @@ export default () => {
 
   return (
     <Content
+      style={{
+        overflow: 'auto',
+      }}
       onClick={() => {
         /** 点击舞台，回复左边栏状态 */
         setMode('normal');
