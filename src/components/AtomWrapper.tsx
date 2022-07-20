@@ -29,6 +29,10 @@ export const AtomWrapper = (
     setMode: model.setMode,
   }));
 
+  const { setSelectedKeys } = useModel('comsLayout', (model) => ({
+    setSelectedKeys: model.setSelectedKeys,
+  }));
+
   return (
     <div
       className={clsx(styles.wrap, {
@@ -36,21 +40,27 @@ export const AtomWrapper = (
         [styles.hover]: hoverNodeId === props.id,
       })}
       style={{
-        padding: '4px',
+        padding: 8,
         display: props.display === 'inline' ? 'inline-block' : 'block',
       }}
-      onMouseEnter={() => {
+      onMouseEnter={(event) => {
+        event.stopPropagation();
         if (props.id !== hoverNodeId) {
+          consola.info('hover', '进入组件', props.id);
           setHoverNodeId(props.id);
         }
       }}
-      onMouseOver={() => {
+      onMouseOver={(event) => {
+        event.stopPropagation();
         if (props.id !== hoverNodeId) {
+          consola.info('hover', '悬停组件', props.id);
           setHoverNodeId(props.id);
         }
       }}
-      onMouseLeave={() => {
+      onMouseLeave={(event) => {
+        event.stopPropagation();
         if (props.id === hoverNodeId) {
+          consola.info('hover', '离开组件', props.id);
           setHoverNodeId(undefined);
         }
       }}
@@ -58,6 +68,7 @@ export const AtomWrapper = (
         consola.info('atom 被点击', props);
 
         setSelectNodeId(props.id);
+        setSelectedKeys([props.id]);
         consola.success('选中组件', props.id);
 
         setRightBarMode('settings');

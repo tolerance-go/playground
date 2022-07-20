@@ -1,6 +1,7 @@
 import { SlotPosition } from '@/models/slotsInsert';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
+import { produce } from 'immer';
 import { useState } from 'react';
 
 export type StageComponentsModelItem = {
@@ -23,11 +24,9 @@ const useStageComponentsModel = () => {
   const [stageComponentsModel, setStageComponentsModel] =
     useState<StageComponentsModel>();
 
-  const { refreshLastAutoSaveTime } = useModel('stageAutoSave', (model) => {
-    return {
-      refreshLastAutoSaveTime: model.triggerSaveTimeChange,
-    };
-  });
+  const { removeComSettings } = useModel('componentsSettings', (model) => ({
+    removeComSettings: model.removeComSettings,
+  }));
 
   /** 新增组建到舞台 */
   const addComponentToStage = useMemoizedFn(
@@ -52,8 +51,6 @@ const useStageComponentsModel = () => {
           display: params.display,
         },
       }));
-
-      refreshLastAutoSaveTime();
     },
   );
 
@@ -96,8 +93,83 @@ const useStageComponentsModel = () => {
           display: params.display,
         },
       }));
+    },
+  );
 
-      refreshLastAutoSaveTime();
+  /** 删除组件 */
+  const removeComFromTree = useMemoizedFn(
+    (options: { comId: string; parentId: string; slotName: string }) => {
+      const { comId, parentId, slotName } = options;
+
+      /** 删除跟组件 */
+      if (parentId === 'root') {
+        setRootIds((prev) => {
+          const index = prev.findIndex((item) => item === comId);
+          prev.splice(index, 1);
+          return [...prev];
+        });
+      }
+
+      setStageComponentsModel(
+        produce((prev) => {
+          /** 删除自己在父组件中的插槽 */
+          const parent = prev?.[parentId];
+          if (parent) {
+            const targetSlots = parent.slots?.[slotName];
+            const slotIndex = targetSlots.findIndex((item) => item === comId);
+            targetSlots.splice(slotIndex, 1);
+          }
+
+          /** 删除所有子组件 */
+          let allSlots: string[] = [];
+          const collectAllSlotComIds = (id: string) => {
+            const target = stageComponentsModel?.[id];
+            if (!target) return;
+            Object.keys(target.slots).forEach((slotName) => {
+              const slotComIds = target.slots[slotName];
+              allSlots = allSlots.concat(slotComIds);
+              slotComIds.forEach((slotComId) =>
+                collectAllSlotComIds(slotComId),
+              );
+            });
+          };
+          collectAllSlotComIds(comId);
+          allSlots.forEach((slotComId) => {
+            delete prev?.[slotComId];
+            removeComSettings(slotComId);
+          });
+
+          /** 删除自身 */
+          delete prev?.[comId];
+          removeComSettings(comId);
+        }),
+      );
+    },
+  );
+
+  /** 删除插槽 */
+  const removeSlotFromTree = useMemoizedFn(
+    (options: { comId: string; slotName: string; parentId: string }) => {
+      const { comId, slotName } = options;
+
+      /** 删除插槽下面的所有组件 */
+      const slotComIds = stageComponentsModel?.[comId].slots[slotName];
+      slotComIds?.forEach((slotComId) => {
+        removeComFromTree({
+          comId: slotComId,
+          parentId: comId,
+          slotName,
+        });
+      });
+
+      setStageComponentsModel(
+        produce((prev) => {
+          /** 删除插槽自身 */
+          delete prev?.[comId].slots[slotName];
+
+          return prev;
+        }),
+      );
     },
   );
 
@@ -120,6 +192,9 @@ const useStageComponentsModel = () => {
     },
   );
 
+  window.__consola.info('model:', 'stageComponentsModel', stageComponentsModel);
+  window.__consola.info('model:', 'rootIds', rootIds);
+
   return {
     rootIds,
     stageComponentsModel,
@@ -127,6 +202,8 @@ const useStageComponentsModel = () => {
     getData,
     initData,
     addComToStageSlot,
+    removeComFromTree,
+    removeSlotFromTree,
   };
 };
 

@@ -48,6 +48,12 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
+  const { refreshLastAutoSaveTime } = useModel('stageAutoSave', (model) => {
+    return {
+      refreshLastAutoSaveTime: model.triggerSaveTimeChange,
+    };
+  });
+
   return (
     <div ref={ref}>
       <Tabs
@@ -302,6 +308,9 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                   newId,
                                   comsInitalSettings['button'] ?? {},
                                 );
+
+                                refreshLastAutoSaveTime();
+
                                 return;
                               }
                               if (item.name === 'line') {
@@ -328,6 +337,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                     id: newId,
                                     display: 'block',
                                   });
+                                  refreshLastAutoSaveTime();
                                 }
 
                                 consola.info('初始化新组件配置');

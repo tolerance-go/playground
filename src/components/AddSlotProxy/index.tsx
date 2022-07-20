@@ -1,11 +1,13 @@
 import { SLOTS_NAME } from '@/constants';
+import { joinSlotId } from '@/helps';
 import { SlotPosition } from '@/models/slotsInsert';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Button } from 'antd';
 import { useMemo } from 'react';
-import { Atom } from './Atom';
+import { Atom } from '../Atom';
+import SlotGroup from './SlotGroup';
 
 export const AddSlotBtn = ({
   comId,
@@ -58,6 +60,9 @@ export const AddSlotBtn = ({
         className="add-slot-btn"
         shape="circle"
         size="small"
+        style={{
+          margin: 4,
+        }}
         type={
           comId === focusComId &&
           slotName === focusSlotName &&
@@ -88,29 +93,31 @@ export const AddSlotBtn = ({
     <Atom key={model.id} {...model} />
   ));
 
+  const slotId = joinSlotId(comId, slotName);
+
   if (slotName === SLOTS_NAME.ADDON_BEFORE) {
     return (
-      <>
+      <SlotGroup slotGroupId={slotId} hasSlotsDom={!!slotsDom?.length}>
         {renderBtn('before')}
         {slotsDom}
-      </>
+      </SlotGroup>
     );
   }
 
   if (slotName === SLOTS_NAME.ADDON_AFTER) {
     return (
-      <>
+      <SlotGroup slotGroupId={slotId} hasSlotsDom={!!slotsDom?.length}>
         {slotsDom}
         {renderBtn('after')}
-      </>
+      </SlotGroup>
     );
   }
 
   return (
-    <>
+    <SlotGroup slotGroupId={slotId} hasSlotsDom={!!slotsDom?.length}>
       {renderBtn('before')}
       {slotsDom}
       {slotsDom ? renderBtn('after') : null}
-    </>
+    </SlotGroup>
   );
 };
