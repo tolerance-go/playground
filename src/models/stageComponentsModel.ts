@@ -5,6 +5,10 @@ import { produce } from 'immer';
 import { useState } from 'react';
 
 export type StageComponentsModelItem = {
+  /** 所在的插槽名称 */
+  slotName: string;
+  /** 父组件的 id */
+  parentId: string;
   id: string;
   type: string;
   /**
@@ -33,6 +37,8 @@ const useStageComponentsModel = () => {
     (
       type: string,
       params: {
+        parentId: string;
+        slotName: string;
         id: string;
         display: StageComponentsModelItem['display'];
       },
@@ -44,6 +50,8 @@ const useStageComponentsModel = () => {
       setStageComponentsModel((prev) => ({
         ...prev,
         [newId]: {
+          slotName: params.slotName,
+          parentId: params.parentId,
           id: newId,
           type,
           slots: {},
@@ -86,6 +94,8 @@ const useStageComponentsModel = () => {
           slotsOrder: {},
         },
         [params.newId]: {
+          slotName: params.slotName,
+          parentId: params.parentId,
           id: params.newId,
           type: params.type,
           slots: {},
@@ -225,6 +235,8 @@ const useStageComponentsModel = () => {
               comId,
             );
           }
+
+          return prev;
         }),
       );
     },
@@ -249,6 +261,10 @@ const useStageComponentsModel = () => {
     },
   );
 
+  const getLatestStageComponentsModel = useMemoizedFn(() => {
+    return stageComponentsModel;
+  });
+
   window.__consola.info('model:', 'stageComponentsModel', stageComponentsModel);
   window.__consola.info('model:', 'rootIds', rootIds);
 
@@ -262,6 +278,7 @@ const useStageComponentsModel = () => {
     removeComFromTree,
     removeSlotFromTree,
     moveComFromTree,
+    getLatestStageComponentsModel,
   };
 };
 

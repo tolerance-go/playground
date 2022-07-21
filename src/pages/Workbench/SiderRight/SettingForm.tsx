@@ -75,7 +75,7 @@ const SettingInput = ({
 };
 
 export const SettingForm = () => {
-  const { selectNodeMeta } = useModel('selectNodeMeta', (model) => ({
+  const { selectNodeMeta } = useModel('stageSelectNode', (model) => ({
     selectNodeMeta: model.selectNodeMeta,
   }));
   const { setComponentSettings, settings } = useModel('componentsSettings');

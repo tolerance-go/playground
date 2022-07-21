@@ -57,7 +57,6 @@ export const AddSlotBtn = ({
   const renderBtn = (slotPos: SlotPosition) => {
     return location.pathname === '/playground' ? null : (
       <Button
-        className="add-slot-btn"
         shape="circle"
         size="small"
         style={{

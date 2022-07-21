@@ -14,7 +14,7 @@ export const AtomWrapper = (
   props: React.PropsWithChildren<StageComponentsModelItem>,
 ) => {
   const { setSelectNodeId, selectNodeId } = useModel(
-    'selectNodeMeta',
+    'stageSelectNode',
     (model) => ({
       setSelectNodeId: model.setSelectNodeId,
       selectNodeId: model.selectNodeId,

@@ -48,9 +48,9 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { refreshLastAutoSaveTime } = useModel('stageAutoSave', (model) => {
+  const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      refreshLastAutoSaveTime: model.triggerSaveTimeChange,
+      triggerSaveTimeChange: model.triggerSaveTimeChange,
     };
   });
 
@@ -300,6 +300,8 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                   addComponentToStage('button', {
                                     id: newId,
                                     display: 'inline',
+                                    parentId: 'root',
+                                    slotName: 'root',
                                   });
                                 }
 
@@ -309,7 +311,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                   comsInitalSettings['button'] ?? {},
                                 );
 
-                                refreshLastAutoSaveTime();
+                                triggerSaveTimeChange();
 
                                 return;
                               }
@@ -336,8 +338,10 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                   addComponentToStage('line', {
                                     id: newId,
                                     display: 'block',
+                                    parentId: 'root',
+                                    slotName: 'root',
                                   });
-                                  refreshLastAutoSaveTime();
+                                  triggerSaveTimeChange();
                                 }
 
                                 consola.info('初始化新组件配置');

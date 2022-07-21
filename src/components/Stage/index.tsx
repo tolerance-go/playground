@@ -5,7 +5,6 @@ import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { ElementCenter } from '@/typings/ElementCenter';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
-import { useEffect } from 'react';
 import { AtomLine } from '../AtomLine';
 
 /** 根据 type 静态注册组件对象 */
@@ -20,10 +19,6 @@ export default function Stage() {
       .map((id) => model.stageComponentsModel?.[id])
       .filter((item): item is StageComponentsModelItem => item !== undefined),
   }));
-
-  useEffect(() => {
-    consola.info('初始化舞台基本信息');
-  }, []);
 
   if (!rootNodeModels) {
     return null;

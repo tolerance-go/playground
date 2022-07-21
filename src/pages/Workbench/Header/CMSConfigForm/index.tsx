@@ -2,7 +2,7 @@ import { DatabaseOutlined } from '@ant-design/icons';
 import { Button, Col, Drawer, Row } from 'antd';
 import { useState } from 'react';
 import List from './List';
-import Sheet from './sheet';
+import Sheet from './Sheet';
 
 export default () => {
   const [visible, setVisible] = useState(false);

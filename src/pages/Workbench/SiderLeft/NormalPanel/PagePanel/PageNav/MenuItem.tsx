@@ -20,7 +20,7 @@ export const MenuItem = ({ item }: { item: API.Page }) => {
   const { run: runDelete, loading: deleteLoading } = useRequest(
     async () => {
       return PageControllerDestroy({
-        id: item.id,
+        id: String(item.id),
       });
     },
     {

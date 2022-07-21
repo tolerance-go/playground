@@ -1,3 +1,4 @@
+import { useMemoizedFn } from 'ahooks';
 import { useState } from 'react';
 
 export type SlotPosition = 'before' | 'after';
@@ -16,6 +17,12 @@ const useSlotsInsert = () => {
   const [focusSlotPosition, setFocusSlotPosition] =
     useState<SlotPosition>('after');
 
+  const cleanFocusSlotsInert = useMemoizedFn(() => {
+    setFocusComId(undefined);
+    setFocusSlotName(undefined);
+    setFocusSlotPosition('after');
+  });
+
   return {
     focusComId,
     focusSlotName,
@@ -23,6 +30,7 @@ const useSlotsInsert = () => {
     setFocusComId,
     setFocusSlotName,
     setFocusSlotPosition,
+    cleanFocusSlotsInert,
   };
 };
 

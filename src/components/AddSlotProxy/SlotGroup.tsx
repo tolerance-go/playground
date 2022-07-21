@@ -17,7 +17,7 @@ export default ({
   }));
 
   const { selectNodeId, setSelectNodeId } = useModel(
-    'selectNodeMeta',
+    'stageSelectNode',
     (model) => ({
       selectNodeId: model.selectNodeId,
       setSelectNodeId: model.setSelectNodeId,

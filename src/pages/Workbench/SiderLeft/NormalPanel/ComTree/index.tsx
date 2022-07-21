@@ -35,9 +35,15 @@ export default () => {
     setHoverNodeId: model.setHoverNodeId,
   }));
 
-  const { setSelectNodeId } = useModel('selectNodeMeta', (model) => ({
+  const { setSelectNodeId } = useModel('stageSelectNode', (model) => ({
     setSelectNodeId: model.setSelectNodeId,
   }));
+
+  const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
+    return {
+      triggerSaveTimeChange: model.triggerSaveTimeChange,
+    };
+  });
 
   const treeData = useMemo(() => {
     const getTree = (
@@ -103,43 +109,11 @@ export default () => {
     return getTree(rootIds, 'root', 'root');
   }, [stageComponentsModel, rootIds]);
 
-  const onDrop: TreeProps<SelfTreeDataNode>['onDrop'] = (info) => {
-    const dropKey = info.node.key;
-    const dragKey = info.dragNode.key;
-    const dropPos = info.node.pos.split('-');
-    const dropPosition =
-      info.dropPosition - Number(dropPos[dropPos.length - 1]);
-
-    window.__consola.info('action:', 'droped', info, {
-      dropKey,
-      dragKey,
-      dropPos,
-      dropPosition,
-    });
-
-    // const loop = (data, key, callback) => {
-    //   for (let i = 0; i < data.length; i++) {
-    //     if (data[i].key === key) {
-    //       return callback(data[i], i, data);
-    //     }
-
-    //     if (data[i].children) {
-    //       loop(data[i].children, key, callback);
-    //     }
-    //   }
-    // };
-
-    // const data = [...gData]; // Find dragObject
-
-    // let dragObj;
-    // loop(data, dragKey, (item, index, arr) => {
-    //   arr.splice(index, 1);
-    //   dragObj = item;
-    // });
-
+  const handleDrop: TreeProps<SelfTreeDataNode>['onDrop'] = (info) => {
     if (!info.dropToGap) {
-      window.__consola.info('action:', 'droped', '添加到头部', info);
+      window.__consola.info('action:', 'droped', '添加到插槽顶部', info);
 
+      /** 此时的 node 插槽 */
       moveComFromTree({
         comId: info.dragNode.key as string,
         parentId: info.dragNode.data.parentId,
@@ -148,56 +122,34 @@ export default () => {
         targetComId: info.node.data.comId,
         targetSlotName: info.node.data.slotName,
       });
-      // // Drop on the content
-      // loop(data, dropKey, (item) => {
-      //   item.children = item.children || []; // where to insert 示例添加到头部，可以是随意位置
-      //   item.children.unshift(dragObj);
-      // });
-    } else if (
-      (info.node.props.children || []).length > 0 && // Has children
-      info.node.props.expanded && // Is expanded
-      dropPosition === 1 // On the bottom gap
-    ) {
-      window.__consola.info(
-        'action:',
-        'droped',
-        '有子项，展开，底部空隙',
-        info,
-      );
-
-      // loop(data, dropKey, (item) => {
-      //   item.children = item.children || []; // where to insert 示例添加到头部，可以是随意位置
-
-      //   item.children.unshift(dragObj); // in previous version, we use item.children.push(dragObj) to insert the
-      //   // item to the tail of the children
-      // });
     } else {
-      window.__consola.info('action:', 'droped', '其他', info);
+      window.__consola.info('action:', 'droped', '添加到插槽间隔中', info);
 
-      // let ar = [];
-      // let i;
-      // loop(data, dropKey, (_item, index, arr) => {
-      //   ar = arr;
-      //   i = index;
-      // });
+      /** 此时的 node 是组件，而不是插槽 */
 
-      // if (dropPosition === -1) {
-      //   ar.splice(i, 0, dragObj);
-      // } else {
-      //   ar.splice(i + 1, 0, dragObj);
-      // }
+      moveComFromTree({
+        comId: info.dragNode.key as string,
+        parentId: info.dragNode.data.parentId,
+        slotName: info.dragNode.data.slotName,
+        targetIndex: info.dropPosition,
+        targetComId: info.node.data.parentId,
+        targetSlotName: info.node.data.slotName,
+      });
     }
 
-    // setGData(data);
+    triggerSaveTimeChange();
   };
 
+  /** 当组件选中 keys 变化，触发舞台选中节点状态变化 */
   useEffect(() => {
     if (selectedKeys?.length) {
       setSelectNodeId(String(selectedKeys[0]));
     } else {
       setSelectNodeId(undefined);
     }
-  });
+  }, [selectedKeys]);
+
+  window.__consola.info('debug:', 'tree render expanedKeys', expanedKeys);
 
   return (
     <Row
@@ -229,8 +181,10 @@ export default () => {
           allowDrop={(info) => {
             window.__consola.info('filter:', 'allowDrop', info);
             return (
+              /** 插槽子级 */
               (info.dropNode.data.type === 'slots' &&
                 info.dropPosition === 0) ||
+              /** 组件同级 */
               (info.dropNode.data.type === 'component' &&
                 info.dropPosition === 1)
             );
@@ -254,7 +208,7 @@ export default () => {
             setSelectedKeys(selectedKeys);
             setSelectedNodes(info.selectedNodes);
           }}
-          onDrop={onDrop}
+          onDrop={handleDrop}
         />
       </Col>
     </Row>

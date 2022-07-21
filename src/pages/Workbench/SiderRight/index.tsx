@@ -11,7 +11,7 @@ const { Sider } = Layout;
 export default function App() {
   const { mode } = useModel('siderRightMode');
 
-  const { setSelectNodeId } = useModel('selectNodeMeta', (model) => ({
+  const { setSelectNodeId } = useModel('stageSelectNode', (model) => ({
     setSelectNodeId: model.setSelectNodeId,
   }));
 
