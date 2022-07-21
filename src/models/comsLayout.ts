@@ -6,6 +6,9 @@ export type NormalStatus = 'page' | 'layout' | 'asset';
 export type SelfTreeDataNode = TreeDataNode & {
   data: {
     type: string;
+    parentId: string;
+    slotName: string;
+    comId: string;
   };
 };
 

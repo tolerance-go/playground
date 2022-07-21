@@ -15,7 +15,7 @@ specifiers:
   '@umijs/max-plugin-openapi': ^1.0.5
   '@umijs/openapi': ^1.6.0
   ahooks: ^3.5.2
-  antd: ^4.20.7
+  antd: ^4.21.5
   clsx: ^1.2.1
   consola: ^2.15.3
   dayjs: ^1.11.3

@@ -173,6 +173,63 @@ const useStageComponentsModel = () => {
     },
   );
 
+  /**
+   * 移动组件
+   * 插槽是不能移动的
+   */
+  const moveComFromTree = useMemoizedFn(
+    (options: {
+      comId: string;
+      parentId: string;
+      slotName: string;
+      targetIndex: number;
+      targetComId: string;
+      targetSlotName: string;
+    }) => {
+      const {
+        comId,
+        parentId,
+        slotName,
+        targetIndex,
+        targetComId,
+        targetSlotName,
+      } = options;
+      setStageComponentsModel(
+        produce((prev) => {
+          // 找到要移动的元素
+          const toMoveNode = prev?.[comId];
+
+          if (toMoveNode) {
+            /**
+             * 从原来位置删除
+             * 只是从父组件插槽相应删除
+             */
+            const parentNode = prev?.[parentId];
+            if (!parentNode) {
+              throw new Error('parentNode is not defined');
+            }
+            const index = parentNode.slots[slotName].findIndex(
+              (slotComId) => slotComId === comId,
+            );
+            parentNode.slots[slotName].splice(index, 1);
+            // 在新的组件指定插槽下的指定顺序放置
+            const targetParentNode = prev?.[targetComId];
+
+            if (!targetParentNode) {
+              throw new Error('targetParentNode is not defined');
+            }
+
+            targetParentNode.slots[targetSlotName].splice(
+              targetIndex,
+              0,
+              comId,
+            );
+          }
+        }),
+      );
+    },
+  );
+
   /** 获取数据，准备持久化 */
   const getData = useMemoizedFn(() => {
     return {
@@ -204,6 +261,7 @@ const useStageComponentsModel = () => {
     addComToStageSlot,
     removeComFromTree,
     removeSlotFromTree,
+    moveComFromTree,
   };
 };
 
