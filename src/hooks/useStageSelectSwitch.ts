@@ -1,21 +1,24 @@
 import { useModel } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
 
-/** model 中存在相互依赖，因此抽到这里 */
+/**
+ * model 中存在相互依赖，因此抽到这里
+ * https://github.com/umijs/umi/issues/8666
+ */
 const useStageSelectSwitch = () => {
   const { setStageSelectSlotGroupId, stageSelectSlotGroupId } = useModel(
     'stageSelectSlotGroup',
     (model) => ({
-      setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
-      stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
+      setStageSelectSlotGroupId: model.setStageSelectSlotGroupId,
+      stageSelectSlotGroupId: model.stageSelectSlotGroupId,
     }),
   );
 
   const { stageSelectNodeId, setStageSelectNodeId } = useModel(
     'stageSelectNode',
     (model) => ({
-      stageSelectNodeId: model?.stageSelectNodeId,
-      setStageSelectNodeId: model?.setStageSelectNodeId,
+      stageSelectNodeId: model.stageSelectNodeId,
+      setStageSelectNodeId: model.setStageSelectNodeId,
     }),
   );
 

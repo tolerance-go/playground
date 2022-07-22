@@ -1,5 +1,6 @@
 import { Layout } from 'antd';
 import Center from './Center';
+import Executor from './Executor';
 import HeaderInner from './Header';
 import SiderLeft from './SiderLeft';
 import SiderRight from './SiderRight';
@@ -9,6 +10,7 @@ const { Header } = Layout;
 export default function App() {
   return (
     <Layout>
+      <Executor />
       <Header
         style={{
           background: '#fff',
