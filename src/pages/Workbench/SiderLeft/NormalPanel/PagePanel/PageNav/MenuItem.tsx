@@ -8,10 +8,10 @@ export const MenuItem = ({ item }: { item: API.Page }) => {
   const { deletePath, setCreatePathing, setTempInputValueByTarget } = useModel(
     'pageList',
     (model) => ({
-      deletePath: model.deletePath,
-      setCreatePathing: model.setCreatePathing,
-      pushPath: model.pushPath,
-      setTempInputValueByTarget: model.setTempInputValueByTarget,
+      deletePath: model?.deletePath,
+      setCreatePathing: model?.setCreatePathing,
+      pushPath: model?.pushPath,
+      setTempInputValueByTarget: model?.setTempInputValueByTarget,
     }),
   );
 

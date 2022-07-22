@@ -17,14 +17,14 @@ export default ({
   const { removeComFromTree, removeSlotFromTree } = useModel(
     'stageComponentsModel',
     (model) => ({
-      removeComFromTree: model.removeComFromTree,
-      removeSlotFromTree: model.removeSlotFromTree,
+      removeComFromTree: model?.removeComFromTree,
+      removeSlotFromTree: model?.removeSlotFromTree,
     }),
   );
 
   const { refreshLastAutoSaveTime } = useModel('stageAutoSave', (model) => {
     return {
-      refreshLastAutoSaveTime: model.triggerSaveTimeChange,
+      refreshLastAutoSaveTime: model?.triggerSaveTimeChange,
     };
   });
 

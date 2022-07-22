@@ -31,7 +31,7 @@ export const AutoSaveTag = () => {
   const { saveStageComsData } = useSaveStage();
 
   const { setPageListByVersionId } = useModel('pageList', (model) => ({
-    setPageListByVersionId: model.setPageListByVersionId,
+    setPageListByVersionId: model?.setPageListByVersionId,
   }));
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,8 +39,8 @@ export const AutoSaveTag = () => {
   const { activeVersionId, setActiveVersionId } = useModel(
     'versionList',
     (model) => ({
-      activeVersionId: model.activeVersionId,
-      setActiveVersionId: model.setActiveVersionId,
+      activeVersionId: model?.activeVersionId,
+      setActiveVersionId: model?.setActiveVersionId,
     }),
   );
 

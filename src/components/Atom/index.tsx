@@ -14,7 +14,7 @@ export const Atom = (props: StageComponentsModelItem) => {
 
   const { settings } = useModel('componentsSettings', (model) => {
     return {
-      settings: model.settings[props.id],
+      settings: model?.settings[props.id],
     };
   });
 

@@ -9,12 +9,12 @@ export const TempInput = () => {
     tempInputValue,
     setTempInputValue,
   } = useModel('pageList', (model) => ({
-    tempInputValue: model.tempInputValue,
-    createPathing: model.createPathing,
-    setCreatePathing: model.setCreatePathing,
-    pushPath: model.pushPath,
-    setTempInputValue: model.setTempInputValue,
-    setActivePageId: model.setActivePageId,
+    tempInputValue: model?.tempInputValue,
+    createPathing: model?.createPathing,
+    setCreatePathing: model?.setCreatePathing,
+    pushPath: model?.pushPath,
+    setTempInputValue: model?.setTempInputValue,
+    setActivePageId: model?.setActivePageId,
   }));
 
   const [searchParams] = useSearchParams();

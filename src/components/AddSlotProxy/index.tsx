@@ -19,7 +19,7 @@ export const AddSlotBtn = ({
   slots?: Record<string, string[]>;
 }) => {
   const { setMode } = useModel('siderLeftMode', (model) => ({
-    setMode: model.setMode,
+    setMode: model?.setMode,
   }));
 
   const {
@@ -30,17 +30,17 @@ export const AddSlotBtn = ({
     focusComId,
     focusSlotName,
   } = useModel('slotsInsert', (model) => ({
-    setFocusComId: model.setFocusComId,
-    setFocusSlotName: model.setFocusSlotName,
-    setFocusSlotPosition: model.setFocusSlotPosition,
-    focusSlotPosition: model.focusSlotPosition,
-    focusComId: model.focusComId,
-    focusSlotName: model.focusSlotName,
+    setFocusComId: model?.setFocusComId,
+    setFocusSlotName: model?.setFocusSlotName,
+    setFocusSlotPosition: model?.setFocusSlotPosition,
+    focusSlotPosition: model?.focusSlotPosition,
+    focusComId: model?.focusComId,
+    focusSlotName: model?.focusSlotName,
   }));
 
   const { stageComponentsModel } = useModel('stageComponentsModel', (model) => {
     return {
-      stageComponentsModel: model.stageComponentsModel,
+      stageComponentsModel: model?.stageComponentsModel,
     };
   });
 
@@ -89,7 +89,7 @@ export const AddSlotBtn = ({
   };
 
   const slotsDom = slotModels?.map((model) => (
-    <Atom key={model.id} {...model} />
+    <Atom key={model?.id} {...model} />
   ));
 
   const slotId = joinSlotGroupId(comId, slotName);

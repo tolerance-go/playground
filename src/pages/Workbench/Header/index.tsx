@@ -23,7 +23,7 @@ import SettingsBtn from './SettingsBtn';
 const App = () => {
   // const navigate = useNavigate();
   const { setMode } = useModel('siderLeftMode', (model) => ({
-    setMode: model.setMode,
+    setMode: model?.setMode,
   }));
 
   return (

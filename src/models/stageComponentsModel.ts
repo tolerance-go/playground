@@ -2,6 +2,7 @@ import { SlotPosition } from '@/models/slotsInsert';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
+import { WritableDraft } from 'immer/dist/internal';
 import { useState } from 'react';
 
 export type StageComponentsModelItem = {
@@ -29,7 +30,7 @@ const useStageComponentsModel = () => {
     useState<StageComponentsModel>();
 
   const { removeComSettings } = useModel('componentsSettings', (model) => ({
-    removeComSettings: model.removeComSettings,
+    removeComSettings: model?.removeComSettings,
   }));
 
   /** 新增组建到舞台 */
@@ -195,50 +196,203 @@ const useStageComponentsModel = () => {
       targetIndex: number;
       targetComId: string;
       targetSlotName: string;
+      targetParentId: string;
     }) => {
       const {
         comId,
         parentId,
         slotName,
+        targetParentId,
         targetIndex,
         targetComId,
         targetSlotName,
       } = options;
-      setStageComponentsModel(
-        produce((prev) => {
-          // 找到要移动的元素
-          const toMoveNode = prev?.[comId];
 
-          if (toMoveNode) {
-            /**
-             * 从原来位置删除
-             * 只是从父组件插槽相应删除
-             */
-            const parentNode = prev?.[parentId];
-            if (!parentNode) {
-              throw new Error('parentNode is not defined');
-            }
+      const removePrevCom = (
+        comsModel: WritableDraft<StageComponentsModel> | undefined,
+      ) => {
+        // 找到要移动的元素
+        const toMoveNode = comsModel?.[comId];
+
+        if (toMoveNode) {
+          /**
+           * 从原来位置删除
+           * 只是从父组件插槽相应删除
+           */
+          const parentNode = comsModel?.[parentId];
+          if (parentNode) {
             const index = parentNode.slots[slotName].findIndex(
               (slotComId) => slotComId === comId,
             );
             parentNode.slots[slotName].splice(index, 1);
-            // 在新的组件指定插槽下的指定顺序放置
-            const targetParentNode = prev?.[targetComId];
+          }
+        }
+      };
+      debugger;
 
-            if (!targetParentNode) {
-              throw new Error('targetParentNode is not defined');
+      /** 移动的是跟组件，放置的目标是跟组件 */
+      if (parentId === 'root' && targetSlotName === 'root') {
+        setRootIds(
+          produce((prev) => {
+            const index = prev.findIndex((item) => item === comId);
+
+            if (index === targetIndex) {
+              return prev;
             }
 
-            targetParentNode.slots[targetSlotName].splice(
-              targetIndex,
+            console.log(targetIndex);
+            prev.splice(index, 1);
+            prev.splice(
+              index < targetIndex ? targetIndex - 1 : targetIndex,
               0,
               comId,
             );
-          }
+          }),
+        );
+        /** 移动的是插槽组件，放置目标也是插槽 */
+      } else if (parentId !== 'root' && targetSlotName !== 'root') {
+        debugger;
+        setStageComponentsModel(
+          produce((prev) => {
+            // 找到要移动的元素
+            const node = prev?.[comId];
+            debugger;
 
-          return prev;
-        }),
-      );
+            if (node) {
+              /**
+               * 从原来位置删除
+               * 只是从父组件插槽相应删除
+               */
+              const parentNode = prev?.[parentId];
+              if (parentNode) {
+                const index = parentNode.slots[slotName].findIndex(
+                  (slotComId) => slotComId === comId,
+                );
+                parentNode.slots[slotName].splice(index, 1);
+
+                // 在新的组件指定插槽下的指定顺序放置
+                const targetCom = prev?.[targetComId];
+
+                if (targetCom) {
+                  /** 同一个插槽内移动 */
+                  if (targetComId === parentId) {
+                    targetCom.slots[targetSlotName].splice(
+                      index < targetIndex ? targetIndex - 1 : targetIndex,
+                      0,
+                      comId,
+                    );
+                  } else {
+                    /** 2个不同插槽移动 */
+                    targetCom.slots[targetSlotName].splice(
+                      targetIndex,
+                      0,
+                      comId,
+                    );
+                  }
+                }
+              }
+            }
+          }),
+        );
+
+        /** 移动的是跟组件，放置的是插槽组件 */
+      } else if (parentId === 'root' && targetSlotName !== 'root') {
+        debugger;
+        setRootIds(
+          produce((prev) => {
+            const index = prev.findIndex((item) => item === comId);
+            prev.splice(index, 1);
+          }),
+        );
+
+        setStageComponentsModel(
+          produce((prev) => {
+            // 在新的组件指定插槽下的指定顺序放置
+            const targetParentNode = prev?.[targetComId];
+
+            if (targetParentNode) {
+              targetParentNode.slots[targetSlotName].splice(
+                targetIndex,
+                0,
+                comId,
+              );
+            }
+          }),
+        );
+
+        /** 移动是插槽组件，放置的是跟组件 */
+      } else if (slotName !== 'root' && targetParentId === 'root') {
+        debugger;
+
+        setStageComponentsModel(
+          produce((prev) => {
+            // 找到要移动的元素
+            const node = prev?.[comId];
+
+            if (node) {
+              /**
+               * 从原来位置删除
+               * 只是从父组件插槽相应删除
+               */
+              const parentNode = prev?.[parentId];
+              if (parentNode) {
+                const index = parentNode.slots[slotName].findIndex(
+                  (slotComId) => slotComId === comId,
+                );
+                parentNode.slots[slotName].splice(index, 1);
+              }
+            }
+          }),
+        );
+
+        setRootIds(
+          produce((prev) => {
+            prev.splice(targetIndex, 0, comId);
+          }),
+        );
+      }
+
+      // setStageComponentsModel(
+      //   produce((prev) => {
+      //     // 找到要移动的元素
+      //     const toMoveNode = prev?.[comId];
+
+      //     if (toMoveNode) {
+      //       /**
+      //        * 从原来位置删除
+      //        * 只是从父组件插槽相应删除
+      //        */
+      //       const parentNode = prev?.[parentId];
+      //       if (parentNode) {
+      //         const index = parentNode.slots[slotName].findIndex(
+      //           (slotComId) => slotComId === comId,
+      //         );
+      //         parentNode.slots[slotName].splice(index, 1);
+      //       } else {
+      //         window.__consola.debug(
+      //           'debug:',
+      //           'moveComFromTree',
+      //           '没有找到父元素',
+      //           parentId,
+      //         );
+      //       }
+
+      //       // 在新的组件指定插槽下的指定顺序放置
+      //       const targetParentNode = prev?.[targetComId];
+
+      //       // 可能是跟组件位置
+      //       if (targetParentNode) {
+      //         targetParentNode.slots[targetSlotName].splice(
+      //           targetIndex,
+      //           0,
+      //           comId,
+      //         );
+      //       }
+      //     }
+
+      //     return prev;
+      //   }),
+      // );
     },
   );
 

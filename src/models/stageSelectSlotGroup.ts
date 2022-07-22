@@ -1,6 +1,6 @@
 import { useModel } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import { splitSlotId } from './../helps/index';
+import { splitSlotGroupId } from './../helps/index';
 
 export type StageSlotGroupNode = {
   /** 所在的插槽名称 */
@@ -28,16 +28,20 @@ const useStageSelectSlotGroup = () => {
   const { getLatestStageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => ({
-      getLatestStageComponentsModel: model.getLatestStageComponentsModel,
+      getLatestStageComponentsModel: model?.getLatestStageComponentsModel,
     }),
   );
+
+  const { openTargetFromTreeMenu } = useModel('comsLayout', (model) => ({
+    openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
+  }));
 
   /** 当 id 变化，设置 group */
   useEffect(() => {
     if (stageSelectSlotGroupId) {
       const stageComponentsModel = getLatestStageComponentsModel();
       if (stageComponentsModel) {
-        const { comId, slotName } = splitSlotId(stageSelectSlotGroupId);
+        const { comId, slotName } = splitSlotGroupId(stageSelectSlotGroupId);
         setStageSelectSlotGroup({
           id: stageSelectSlotGroupId,
           slots: stageComponentsModel[comId].slots[slotName],
@@ -49,6 +53,13 @@ const useStageSelectSlotGroup = () => {
       }
     } else {
       setStageSelectSlotGroup(undefined);
+    }
+  }, [stageSelectSlotGroupId]);
+
+  /** 当舞台选中组件 id 发生变化，打开树形节点菜单 */
+  useEffect(() => {
+    if (stageSelectSlotGroupId) {
+      openTargetFromTreeMenu(stageSelectSlotGroupId);
     }
   }, [stageSelectSlotGroupId]);
 

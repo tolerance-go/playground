@@ -6,14 +6,14 @@ export const useInitSatgeData = () => {
   const { initData: initComsTreeData } = useModel(
     'stageComponentsModel',
     (model) => ({
-      initData: model.initData,
+      initData: model?.initData,
     }),
   );
 
   const { initData: initComsSettingsData } = useModel(
     'componentsSettings',
     (model) => ({
-      initData: model.initData,
+      initData: model?.initData,
     }),
   );
 

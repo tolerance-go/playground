@@ -4,7 +4,7 @@ export const joinSlotGroupId = (comId: string, slotName: string) => {
   return `${comId}${step}${slotName}`;
 };
 
-export const splitSlotId = (slotGroupId: string) => {
+export const splitSlotGroupId = (slotGroupId: string) => {
   const [comId, slotName] = slotGroupId.split(step);
   return { comId, slotName };
 };

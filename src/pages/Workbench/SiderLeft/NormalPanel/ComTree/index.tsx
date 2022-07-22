@@ -2,6 +2,7 @@ import { isSlotGroupId, joinSlotGroupId } from '@/helps';
 import { SelfTreeDataNode } from '@/models/comsLayout';
 import { useModel } from '@umijs/max';
 import { Col, Row, Tag, Tree, TreeProps } from 'antd';
+import utl from 'lodash';
 import { useEffect, useMemo } from 'react';
 import TreeActions from './TreeActions';
 import TreeItemMenu from './TreeItemMenu';
@@ -10,9 +11,9 @@ export default () => {
   const { stageComponentsModel, rootIds, moveComFromTree } = useModel(
     'stageComponentsModel',
     (model) => ({
-      stageComponentsModel: model.stageComponentsModel,
-      rootIds: model.rootIds,
-      moveComFromTree: model.moveComFromTree,
+      stageComponentsModel: model?.stageComponentsModel,
+      rootIds: model?.rootIds,
+      moveComFromTree: model?.moveComFromTree,
     }),
   );
 
@@ -22,33 +23,39 @@ export default () => {
     setSelectedNodes,
     setExpanedKeys,
     setSelectedKeys,
+    showAllSlots,
   } = useModel('comsLayout', (model) => ({
-    expanedKeys: model.expanedKeys,
-    setExpanedKeys: model.setExpanedKeys,
-    selectedKeys: model.selectedKeys,
-    setSelectedKeys: model.setSelectedKeys,
-    selectedNodes: model.selectedNodes,
-    setSelectedNodes: model.setSelectedNodes,
+    expanedKeys: model?.expanedKeys,
+    setExpanedKeys: model?.setExpanedKeys,
+    selectedKeys: model?.selectedKeys,
+    setSelectedKeys: model?.setSelectedKeys,
+    selectedNodes: model?.selectedNodes,
+    setSelectedNodes: model?.setSelectedNodes,
+    showAllSlots: model.showAllSlots,
+  }));
+
+  const { comsSlotsNames } = useModel('componentsSlots', (model) => ({
+    comsSlotsNames: model.comsSlotsNames,
   }));
 
   const { setHoverNodeId } = useModel('hoverNodeId', (model) => ({
-    setHoverNodeId: model.setHoverNodeId,
+    setHoverNodeId: model?.setHoverNodeId,
   }));
 
   const { setStageSelectNodeId } = useModel('stageSelectNode', (model) => ({
-    setStageSelectNodeId: model.setStageSelectNodeId,
+    setStageSelectNodeId: model?.setStageSelectNodeId,
   }));
 
   const { setStageSelectSlotGroupId } = useModel(
     'stageSelectSlotGroup',
     (model) => ({
-      setStageSelectSlotGroupId: model.setStageSelectSlotGroupId,
+      setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
     }),
   );
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      triggerSaveTimeChange: model.triggerSaveTimeChange,
+      triggerSaveTimeChange: model?.triggerSaveTimeChange,
     };
   });
 
@@ -79,44 +86,75 @@ export default () => {
             type: 'component',
             parentId,
             slotName,
-            comId: model.id,
+            comId: model?.id,
           },
-          children: Object.keys(model?.slots ?? {}).map((slotName) => {
-            const slotIds = model?.slots[slotName] ?? [];
-            const slotGroupId = joinSlotGroupId(model.id, slotName);
-            return {
-              title: (
-                <TreeItemMenu
-                  comId={id}
-                  parentId={parentId}
-                  slotName={slotName}
-                  type="slots"
-                >
-                  <Tag>{slotName}</Tag>
-                </TreeItemMenu>
-              ),
-              /** 插槽层的 key 是父节 id 和插槽拼接 */
-              key: slotGroupId,
-              children: getTree(slotIds, id, slotName),
-              data: {
-                type: 'slots',
-                /**
-                 * 插槽的 comId 是所在组件的 id
-                 * parentId 是指所在组件的父 id
-                 */
-                parentId,
-                slotName,
-                comId: model.id,
-              },
-            };
-          }),
+          children: Object.keys(model?.slots ?? {})
+            .map((item) => ({
+              type: 'exist',
+              name: item,
+            }))
+            .concat(
+              (showAllSlots
+                ? utl.difference(
+                    comsSlotsNames[model.type],
+                    Object.keys(model?.slots ?? {}),
+                  )
+                : []
+              ).map((name) => ({
+                type: 'shadow',
+                name,
+              })),
+            )
+            .map((item) => {
+              const slotName = item.name;
+              const slotIds = model?.slots[slotName] ?? [];
+              const slotGroupId = joinSlotGroupId(model?.id, slotName);
+              return {
+                title: (
+                  <TreeItemMenu
+                    comId={id}
+                    parentId={parentId}
+                    slotName={slotName}
+                    type="slots"
+                  >
+                    <Tag
+                      style={{
+                        border:
+                          item.type === 'shadow'
+                            ? '1px dashed #d9d9d9'
+                            : undefined,
+                        color: item.type === 'shadow' ? '#bbb' : undefined,
+                      }}
+                    >
+                      {slotName}
+                    </Tag>
+                  </TreeItemMenu>
+                ),
+                /** 插槽层的 key 是父节 id 和插槽拼接 */
+                key: slotGroupId,
+                children: getTree(slotIds, id, slotName),
+                data: {
+                  type: 'slots',
+                  /**
+                   * 插槽的 comId 是所在组件的 id
+                   * parentId 是指所在组件的父 id
+                   */
+                  parentId,
+                  slotName,
+                  comId: model?.id,
+                },
+              };
+            }),
         };
       });
     };
     return getTree(rootIds, 'root', 'root');
-  }, [stageComponentsModel, rootIds]);
+  }, [stageComponentsModel, showAllSlots, rootIds]);
 
   const handleDrop: TreeProps<SelfTreeDataNode>['onDrop'] = (info) => {
+
+    debugger;
+    
     if (!info.dropToGap) {
       window.__consola.info('action:', 'droped', '添加到插槽顶部', info);
 
@@ -128,6 +166,7 @@ export default () => {
         targetIndex: 0,
         targetComId: info.node.data.comId,
         targetSlotName: info.node.data.slotName,
+        targetParentId: info.node.data.parentId,
       });
     } else {
       window.__consola.info('action:', 'droped', '添加到插槽间隔中', info);
@@ -141,6 +180,7 @@ export default () => {
         targetIndex: info.dropPosition,
         targetComId: info.node.data.parentId,
         targetSlotName: info.node.data.slotName,
+        targetParentId: info.node.data.parentId,
       });
     }
 

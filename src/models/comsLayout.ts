@@ -1,9 +1,10 @@
-import { joinSlotGroupId } from '@/helps';
+import { isSlotGroupId, joinSlotGroupId } from '@/helps';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { TreeDataNode } from 'antd';
 import utl from 'lodash';
 import { useState } from 'react';
+import { splitSlotGroupId } from './../helps/index';
 
 export type NormalStatus = 'page' | 'layout' | 'asset';
 
@@ -20,27 +21,29 @@ const useComsLayout = () => {
   const [expanedKeys, setExpanedKeys] = useState<React.Key[]>();
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>();
   const [selectedNodes, setSelectedNodes] = useState<SelfTreeDataNode[]>();
+  /** 是否展示全部插槽 */
+  const [showAllSlots, setShowAllSlots] = useState<boolean>(false);
 
   const { getLatestStageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => {
       return {
-        getLatestStageComponentsModel: model.getLatestStageComponentsModel,
+        getLatestStageComponentsModel: model?.getLatestStageComponentsModel,
       };
     },
   );
 
   /** 层级打开指定的菜单 */
-  const openTargetFromTreeMenu = useMemoizedFn((comId: string) => {
+  const openTargetFromTreeMenu = useMemoizedFn((targetId: string) => {
     const stageComponentsModel = getLatestStageComponentsModel();
 
-    const findAllParentsId = (id: string, dist: string[] = []) => {
-      if (id === 'root' || stageComponentsModel?.[id].parentId === 'root')
+    const findAllParentsId = (comId: string, dist: string[] = []) => {
+      if (comId === 'root' || stageComponentsModel?.[comId].parentId === 'root')
         return dist;
-      const parentId = stageComponentsModel?.[id].parentId;
+      const parentId = stageComponentsModel?.[comId].parentId;
 
       if (parentId) {
-        const slotName = stageComponentsModel?.[id].slotName;
+        const slotName = stageComponentsModel?.[comId].slotName;
         if (slotName) {
           dist.push(joinSlotGroupId(parentId, slotName));
         }
@@ -52,21 +55,32 @@ const useComsLayout = () => {
       return dist;
     };
 
-    window.__consola.info(
-      'debug:',
-      'findAllParentsId(targetId)',
-      comId,
-      findAllParentsId(comId),
-    );
+    const isSlotGroupIdResult = isSlotGroupId(targetId);
+
+    const getComId = () => {
+      if (isSlotGroupIdResult) {
+        return splitSlotGroupId(targetId).comId;
+      }
+      return targetId;
+    };
+
+    const comId = getComId();
+
     setExpanedKeys((prev) =>
-      utl.union((prev ?? []).concat(findAllParentsId(comId))),
+      utl.union(
+        (prev ?? [])
+          .concat(findAllParentsId(comId))
+          .concat(isSlotGroupIdResult ? comId : []),
+      ),
     );
   });
 
   return {
+    showAllSlots,
     selectedKeys,
     expanedKeys,
     selectedNodes,
+    setShowAllSlots,
     setSelectedNodes,
     setSelectedKeys,
     setExpanedKeys,

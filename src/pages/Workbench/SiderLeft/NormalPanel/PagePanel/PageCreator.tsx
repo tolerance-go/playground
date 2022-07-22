@@ -5,9 +5,9 @@ export const PageCreator = () => {
   const { setCreatePathing, setTempInputValueByIndex } = useModel(
     'pageList',
     (model) => ({
-      setCreatePathing: model.setCreatePathing,
-      setTempInputValue: model.setTempInputValue,
-      setTempInputValueByIndex: model.setTempInputValueByIndex,
+      setCreatePathing: model?.setCreatePathing,
+      setTempInputValue: model?.setTempInputValue,
+      setTempInputValueByIndex: model?.setTempInputValueByIndex,
     }),
   );
 

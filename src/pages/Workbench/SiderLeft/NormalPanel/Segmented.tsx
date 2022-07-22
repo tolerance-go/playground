@@ -6,8 +6,8 @@ export default () => {
   const { normalStatus, setNormalStatus } = useModel(
     'siderLeftMode',
     (model) => ({
-      setNormalStatus: model.setNormalStatus,
-      normalStatus: model.normalStatus,
+      setNormalStatus: model?.setNormalStatus,
+      normalStatus: model?.normalStatus,
     }),
   );
 

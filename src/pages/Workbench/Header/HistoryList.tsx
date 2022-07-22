@@ -9,7 +9,7 @@ import SaveToVersionBtn from './SaveToVersionBtn';
 
 export const RemoveBtn = ({ item }: { item: API.Version }) => {
   const { deleteVersion } = useModel('versionList', (model) => ({
-    deleteVersion: model.deleteVersion,
+    deleteVersion: model?.deleteVersion,
   }));
 
   const { run, loading } = useRequest(
@@ -42,11 +42,11 @@ export default () => {
 
   const { data, loading, runLoadList, activeVersionId, setActiveVersionId } =
     useModel('versionList', (model) => ({
-      data: model.data,
-      loading: model.loading,
-      runLoadList: model.runLoadList,
-      activeVersionId: model.activeVersionId,
-      setActiveVersionId: model.setActiveVersionId,
+      data: model?.data,
+      loading: model?.loading,
+      runLoadList: model?.runLoadList,
+      activeVersionId: model?.activeVersionId,
+      setActiveVersionId: model?.setActiveVersionId,
     }));
 
   useEffect(() => {

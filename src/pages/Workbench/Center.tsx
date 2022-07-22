@@ -5,8 +5,8 @@ import { Layout } from 'antd';
 const { Content } = Layout;
 
 export default () => {
-  const { setMode } = useModel('siderLeftMode', (mode) => ({
-    setMode: mode.setMode,
+  const { setMode } = useModel('siderLeftMode', (model) => ({
+    setMode: model?.setMode,
   }));
 
   return (

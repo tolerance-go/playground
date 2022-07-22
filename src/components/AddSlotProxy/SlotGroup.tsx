@@ -12,20 +12,20 @@ export default ({
   slotGroupId: string;
 }>) => {
   const { hoverNodeId, setHoverNodeId } = useModel('hoverNodeId', (model) => ({
-    hoverNodeId: model.hoverNodeId,
-    setHoverNodeId: model.setHoverNodeId,
+    hoverNodeId: model?.hoverNodeId,
+    setHoverNodeId: model?.setHoverNodeId,
   }));
 
   const { stageSelectSlotGroupId, setStageSelectSlotGroupId } = useModel(
     'stageSelectSlotGroup',
     (model) => ({
-      stageSelectSlotGroupId: model.stageSelectSlotGroupId,
-      setStageSelectSlotGroupId: model.setStageSelectSlotGroupId,
+      stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
+      setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
     }),
   );
 
   const { setSelectedKeys } = useModel('comsLayout', (model) => ({
-    setSelectedKeys: model.setSelectedKeys,
+    setSelectedKeys: model?.setSelectedKeys,
   }));
 
   if (!hasSlotsDom || location.pathname === '/playground') {

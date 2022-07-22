@@ -7,8 +7,8 @@ export default () => {
   const { activeVersionId, setActiveVersionId } = useModel(
     'versionList',
     (model) => ({
-      activeVersionId: model.activeVersionId,
-      setActiveVersionId: model.setActiveVersionId,
+      activeVersionId: model?.activeVersionId,
+      setActiveVersionId: model?.setActiveVersionId,
     }),
   );
 

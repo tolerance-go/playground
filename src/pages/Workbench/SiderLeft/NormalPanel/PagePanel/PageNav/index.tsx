@@ -12,16 +12,16 @@ const PageNav = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { pageList, fetchListLoading } = useModel('pageList', (model) => ({
-    pageList: model.pageList,
-    fetchListLoading: model.fetchListLoading,
+    pageList: model?.pageList,
+    fetchListLoading: model?.fetchListLoading,
   }));
 
   const { activePageId, createPathing, setActivePageId } = useModel(
     'pageList',
     (model) => ({
-      createPathing: model.createPathing,
-      activePageId: model.activePageId,
-      setActivePageId: model.setActivePageId,
+      createPathing: model?.createPathing,
+      activePageId: model?.activePageId,
+      setActivePageId: model?.setActivePageId,
     }),
   );
 

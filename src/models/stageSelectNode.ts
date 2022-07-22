@@ -10,17 +10,17 @@ const useStageSelectNode = () => {
   const { getLatestStageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => ({
-      getLatestStageComponentsModel: model.getLatestStageComponentsModel,
+      getLatestStageComponentsModel: model?.getLatestStageComponentsModel,
     }),
   );
 
   const { openTargetFromTreeMenu } = useModel('comsLayout', (model) => ({
-    openTargetFromTreeMenu: model.openTargetFromTreeMenu,
+    openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
   }));
 
   const { setNormalStatus, setMode } = useModel('siderLeftMode', (model) => ({
-    setNormalStatus: model.setNormalStatus,
-    setMode: model.setMode,
+    setNormalStatus: model?.setNormalStatus,
+    setMode: model?.setMode,
   }));
 
   useEffect(() => {

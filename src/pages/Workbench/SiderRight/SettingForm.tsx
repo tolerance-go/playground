@@ -76,7 +76,7 @@ const SettingInput = ({
 
 export const SettingForm = () => {
   const { selectNodeMeta } = useModel('stageSelectNode', (model) => ({
-    selectNodeMeta: model.stageSelectNode,
+    selectNodeMeta: model?.stageSelectNode,
   }));
   const { setComponentSettings, settings } = useModel('componentsSettings');
   const { componentsConfigs } = useModel(
@@ -84,7 +84,7 @@ export const SettingForm = () => {
     (model) => {
       consola.info('准备返回渲染配置', selectNodeMeta, model);
       return {
-        componentsConfigs: model.componentsConfigs,
+        componentsConfigs: model?.componentsConfigs,
       };
     },
   );

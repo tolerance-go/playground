@@ -1,24 +1,31 @@
-import { EyeOutlined, SwitcherOutlined } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  SwitcherOutlined,
+} from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Button, Col, Row, Space } from 'antd';
 
 export default () => {
-  const { setExpanedKeys } = useModel('comsLayout', (model) => ({
-    setExpanedKeys: model.setExpanedKeys,
-  }));
+  const { setExpanedKeys, showAllSlots, setShowAllSlots } = useModel(
+    'comsLayout',
+    (model) => ({
+      setExpanedKeys: model?.setExpanedKeys,
+      showAllSlots: model.showAllSlots,
+      setShowAllSlots: model.setShowAllSlots,
+    }),
+  );
 
   return (
     <Row justify="end" align="middle">
       <Col>
         <Space size={5}>
           <Button
-            // <EyeInvisibleOutlined />
-            // EyeOutlined
-            icon={<EyeOutlined />}
+            icon={showAllSlots ? <EyeInvisibleOutlined /> : <EyeOutlined />}
             size="small"
             type="text"
             onClick={() => {
-              setExpanedKeys([]);
+              setShowAllSlots((prev) => !prev);
             }}
           ></Button>
           <Button

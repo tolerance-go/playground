@@ -6,7 +6,7 @@ import Segmented from './Segmented';
 
 export default () => {
   const { normalStatus } = useModel('siderLeftMode', (model) => ({
-    normalStatus: model.normalStatus,
+    normalStatus: model?.normalStatus,
   }));
   return (
     <Row

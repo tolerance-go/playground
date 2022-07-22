@@ -19,7 +19,7 @@ const useSiderLeftMode = () => {
 
   const { cleanFocusSlotsInert } = useModel('slotsInsert', (model) => {
     return {
-      cleanFocusSlotsInert: model.cleanFocusSlotsInert,
+      cleanFocusSlotsInert: model?.cleanFocusSlotsInert,
     };
   });
 

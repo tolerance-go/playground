@@ -16,21 +16,21 @@ export const AtomWrapper = (
   const { setStageSelectNodeId, stageSelectNodeId } = useModel(
     'stageSelectNode',
     (model) => ({
-      setStageSelectNodeId: model.setStageSelectNodeId,
-      stageSelectNodeId: model.stageSelectNodeId,
+      setStageSelectNodeId: model?.setStageSelectNodeId,
+      stageSelectNodeId: model?.stageSelectNodeId,
     }),
   );
   const { hoverNodeId, setHoverNodeId } = useModel('hoverNodeId', (model) => ({
-    hoverNodeId: model.hoverNodeId,
-    setHoverNodeId: model.setHoverNodeId,
+    hoverNodeId: model?.hoverNodeId,
+    setHoverNodeId: model?.setHoverNodeId,
   }));
 
   const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
-    setMode: model.setMode,
+    setMode: model?.setMode,
   }));
 
   const { setSelectedKeys } = useModel('comsLayout', (model) => ({
-    setSelectedKeys: model.setSelectedKeys,
+    setSelectedKeys: model?.setSelectedKeys,
   }));
 
   return (

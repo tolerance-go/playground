@@ -8,7 +8,7 @@ export const useSaveStage = () => {
     'stageComponentsModel',
     (model) => {
       return {
-        getData: model.getData,
+        getData: model?.getData,
       };
     },
   );
@@ -17,14 +17,14 @@ export const useSaveStage = () => {
     'componentsSettings',
     (model) => {
       return {
-        getData: model.getData,
+        getData: model?.getData,
       };
     },
   );
 
   const { activePageId } = useModel('pageList', (model) => {
     return {
-      activePageId: model.activePageId,
+      activePageId: model?.activePageId,
     };
   });
 

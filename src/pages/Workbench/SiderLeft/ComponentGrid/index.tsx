@@ -17,40 +17,40 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
   const { addComponentToStage, addComToStageSlot } = useModel(
     'stageComponentsModel',
     (model) => ({
-      addComponentToStage: model.addComponentToStage,
-      addComToStageSlot: model.addComToStageSlot,
+      addComponentToStage: model?.addComponentToStage,
+      addComToStageSlot: model?.addComToStageSlot,
     }),
   );
 
   const { focusComId, focusSlotName, focusSlotPosition } = useModel(
     'slotsInsert',
     (model) => ({
-      focusComId: model.focusComId,
-      focusSlotName: model.focusSlotName,
-      focusSlotPosition: model.focusSlotPosition,
+      focusComId: model?.focusComId,
+      focusSlotName: model?.focusSlotName,
+      focusSlotPosition: model?.focusSlotPosition,
     }),
   );
 
   const { setComponentSettings } = useModel('componentsSettings', (model) => ({
-    setComponentSettings: model.setComponentSettings,
+    setComponentSettings: model?.setComponentSettings,
   }));
 
   const { comsInitalSettings } = useModel(
     'componentsSettingConfigs',
     (model) => ({
-      comsInitalSettings: model.comsInitalSettings,
+      comsInitalSettings: model?.comsInitalSettings,
     }),
   );
 
   const { mode: siderLeftMode } = useModel('siderLeftMode', (model) => ({
-    mode: model.mode,
+    mode: model?.mode,
   }));
 
   const ref = useRef<HTMLDivElement>(null);
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      triggerSaveTimeChange: model.triggerSaveTimeChange,
+      triggerSaveTimeChange: model?.triggerSaveTimeChange,
     };
   });
 

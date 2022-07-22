@@ -7,15 +7,15 @@ export default () => {
   const [searchParams] = useSearchParams();
 
   const { pushFromStart } = useModel('versionList', (model) => ({
-    pushFromStart: model.pushFromStart,
+    pushFromStart: model?.pushFromStart,
   }));
 
   const { pageList } = useModel('pageList', (model) => ({
-    pageList: model.pageList,
+    pageList: model?.pageList,
   }));
 
   const { setActiveVersionId } = useModel('versionList', (model) => ({
-    setActiveVersionId: model.setActiveVersionId,
+    setActiveVersionId: model?.setActiveVersionId,
   }));
 
   return (
