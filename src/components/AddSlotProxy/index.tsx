@@ -1,5 +1,5 @@
 import { SLOTS_NAME } from '@/constants';
-import { joinSlotId } from '@/helps';
+import { joinSlotGroupId } from '@/helps';
 import { SlotPosition } from '@/models/slotsInsert';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { PlusOutlined } from '@ant-design/icons';
@@ -92,7 +92,7 @@ export const AddSlotBtn = ({
     <Atom key={model.id} {...model} />
   ));
 
-  const slotId = joinSlotId(comId, slotName);
+  const slotId = joinSlotGroupId(comId, slotName);
 
   if (slotName === SLOTS_NAME.ADDON_BEFORE) {
     return (

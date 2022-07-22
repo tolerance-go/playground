@@ -3,7 +3,7 @@ import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
 import { useContext } from 'react';
-import { AtomWrapper } from './AtomWrapper';
+import { AtomWrapper } from './Wrapper';
 
 /**
  * 通过 model 生成组件

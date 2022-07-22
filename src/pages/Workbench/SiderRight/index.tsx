@@ -12,7 +12,7 @@ export default function App() {
   const { mode } = useModel('siderRightMode');
 
   const { setSelectNodeId } = useModel('stageSelectNode', (model) => ({
-    setSelectNodeId: model.setSelectNodeId,
+    setSelectNodeId: model.setStageSelectNodeId,
   }));
 
   const { activeVersionId } = useModel('versionList', (model) => {

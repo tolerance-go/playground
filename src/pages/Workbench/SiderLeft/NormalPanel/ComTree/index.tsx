@@ -1,4 +1,4 @@
-import { joinSlotId } from '@/helps';
+import { isSlotGroupId, joinSlotGroupId } from '@/helps';
 import { SelfTreeDataNode } from '@/models/comsLayout';
 import { useModel } from '@umijs/max';
 import { Col, Row, Tag, Tree, TreeProps } from 'antd';
@@ -35,9 +35,16 @@ export default () => {
     setHoverNodeId: model.setHoverNodeId,
   }));
 
-  const { setSelectNodeId } = useModel('stageSelectNode', (model) => ({
-    setSelectNodeId: model.setSelectNodeId,
+  const { setStageSelectNodeId } = useModel('stageSelectNode', (model) => ({
+    setStageSelectNodeId: model.setStageSelectNodeId,
   }));
+
+  const { setStageSelectSlotGroupId } = useModel(
+    'stageSelectSlotGroup',
+    (model) => ({
+      setStageSelectSlotGroupId: model.setStageSelectSlotGroupId,
+    }),
+  );
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
@@ -76,7 +83,7 @@ export default () => {
           },
           children: Object.keys(model?.slots ?? {}).map((slotName) => {
             const slotIds = model?.slots[slotName] ?? [];
-            const slotGroupId = joinSlotId(model.id, slotName);
+            const slotGroupId = joinSlotGroupId(model.id, slotName);
             return {
               title: (
                 <TreeItemMenu
@@ -143,9 +150,12 @@ export default () => {
   /** 当组件选中 keys 变化，触发舞台选中节点状态变化 */
   useEffect(() => {
     if (selectedKeys?.length) {
-      setSelectNodeId(String(selectedKeys[0]));
-    } else {
-      setSelectNodeId(undefined);
+      const key = String(selectedKeys[0]);
+      if (isSlotGroupId(key)) {
+        setStageSelectSlotGroupId(key);
+      } else {
+        setStageSelectNodeId(key);
+      }
     }
   }, [selectedKeys]);
 

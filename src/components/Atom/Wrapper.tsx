@@ -3,7 +3,7 @@ import { useModel } from '@umijs/max';
 import clsx from 'clsx';
 import consola from 'consola';
 import React from 'react';
-import styles from './AtomWrapper.less';
+import styles from './Wrapper.less';
 
 /**
  * 舞台节点的包装组件
@@ -13,11 +13,11 @@ import styles from './AtomWrapper.less';
 export const AtomWrapper = (
   props: React.PropsWithChildren<StageComponentsModelItem>,
 ) => {
-  const { setSelectNodeId, selectNodeId } = useModel(
+  const { setStageSelectNodeId, stageSelectNodeId } = useModel(
     'stageSelectNode',
     (model) => ({
-      setSelectNodeId: model.setSelectNodeId,
-      selectNodeId: model.selectNodeId,
+      setStageSelectNodeId: model.setStageSelectNodeId,
+      stageSelectNodeId: model.stageSelectNodeId,
     }),
   );
   const { hoverNodeId, setHoverNodeId } = useModel('hoverNodeId', (model) => ({
@@ -36,7 +36,7 @@ export const AtomWrapper = (
   return (
     <div
       className={clsx(styles.wrap, {
-        [styles.selected]: selectNodeId === props.id,
+        [styles.selected]: stageSelectNodeId === props.id,
         [styles.hover]: hoverNodeId === props.id,
       })}
       style={{
@@ -67,7 +67,7 @@ export const AtomWrapper = (
       onClick={(event) => {
         consola.info('atom 被点击', props);
 
-        setSelectNodeId(props.id);
+        setStageSelectNodeId(props.id);
         setSelectedKeys([props.id]);
         consola.success('选中组件', props.id);
 

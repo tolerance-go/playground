@@ -16,11 +16,11 @@ export default ({
     setHoverNodeId: model.setHoverNodeId,
   }));
 
-  const { selectNodeId, setSelectNodeId } = useModel(
-    'stageSelectNode',
+  const { stageSelectSlotGroupId, setStageSelectSlotGroupId } = useModel(
+    'stageSelectSlotGroup',
     (model) => ({
-      selectNodeId: model.selectNodeId,
-      setSelectNodeId: model.setSelectNodeId,
+      stageSelectSlotGroupId: model.stageSelectSlotGroupId,
+      setStageSelectSlotGroupId: model.setStageSelectSlotGroupId,
     }),
   );
 
@@ -36,7 +36,7 @@ export default ({
     <div
       className={clsx(styles.wrap, {
         [styles.hover]: slotGroupId === hoverNodeId,
-        [styles.selected]: slotGroupId === selectNodeId,
+        [styles.selected]: slotGroupId === stageSelectSlotGroupId,
       })}
       style={{
         display: 'inline-block',
@@ -61,7 +61,7 @@ export default ({
         }
       }}
       onClick={(event) => {
-        setSelectNodeId(slotGroupId);
+        setStageSelectSlotGroupId(slotGroupId);
         setSelectedKeys([slotGroupId]);
 
         /** 防止多层级的 Atom */

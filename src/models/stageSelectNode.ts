@@ -3,14 +3,14 @@ import { useModel } from '@umijs/max';
 import { useEffect, useState } from 'react';
 
 const useStageSelectNode = () => {
-  const [selectNodeMeta, setSelectNodeMeta] =
+  const [stageSelectNode, setStageSelectNode] =
     useState<StageComponentsModelItem>();
-  const [selectNodeId, setSelectNodeId] = useState<string>();
+  const [stageSelectNodeId, setStageSelectNodeId] = useState<string>();
 
-  const { stageComponentsModel } = useModel(
+  const { getLatestStageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => ({
-      stageComponentsModel: model.stageComponentsModel,
+      getLatestStageComponentsModel: model.getLatestStageComponentsModel,
     }),
   );
 
@@ -24,34 +24,34 @@ const useStageSelectNode = () => {
   }));
 
   useEffect(() => {
-    if (selectNodeId) {
-      setSelectNodeMeta(stageComponentsModel?.[selectNodeId]);
+    if (stageSelectNodeId) {
+      setStageSelectNode(getLatestStageComponentsModel()?.[stageSelectNodeId]);
     } else {
-      setSelectNodeMeta(undefined);
+      setStageSelectNode(undefined);
     }
-  }, [selectNodeId]);
+  }, [stageSelectNodeId]);
 
   /** 当舞台选中组件 id 发生变化，打开树形节点菜单 */
   useEffect(() => {
-    if (selectNodeId) {
-      openTargetFromTreeMenu(selectNodeId);
+    if (stageSelectNodeId) {
+      openTargetFromTreeMenu(stageSelectNodeId);
     }
-  }, [selectNodeId]);
+  }, [stageSelectNodeId]);
 
   /** 当舞台选中组件，切换布局 */
   useEffect(() => {
-    if (selectNodeId) {
+    if (stageSelectNodeId) {
       setMode('normal');
       setNormalStatus('layout');
     }
-  }, [selectNodeId]);
+  }, [stageSelectNodeId]);
 
-  window.__consola.info('debug:', 'selectNodeMeta', selectNodeMeta);
+  window.__consola.info('debug:', 'selectNodeMeta', stageSelectNode);
 
   return {
-    selectNodeId,
-    selectNodeMeta,
-    setSelectNodeId,
+    stageSelectNodeId,
+    stageSelectNode,
+    setStageSelectNodeId,
   };
 };
 

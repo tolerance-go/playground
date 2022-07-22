@@ -1,4 +1,4 @@
-import { joinSlotId } from '@/helps';
+import { joinSlotGroupId } from '@/helps';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { TreeDataNode } from 'antd';
@@ -42,7 +42,7 @@ const useComsLayout = () => {
       if (parentId) {
         const slotName = stageComponentsModel?.[id].slotName;
         if (slotName) {
-          dist.push(joinSlotId(parentId, slotName));
+          dist.push(joinSlotGroupId(parentId, slotName));
         }
 
         dist.push(parentId);
