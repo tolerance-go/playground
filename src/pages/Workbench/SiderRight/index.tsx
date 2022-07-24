@@ -1,3 +1,4 @@
+import { BranchesOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Layout, Tabs } from 'antd';
 import consola from 'consola';
@@ -58,6 +59,9 @@ export default function App() {
         size="small"
         type="editable-card"
         addIcon={<CreateComStatus ref={createFormRef} />}
+        tabBarExtraContent={{
+          right: <BranchesOutlined />,
+        }}
       >
         {stageSelectNodeId && componentsStatus[stageSelectNodeId] ? (
           Object.keys(componentsStatus[stageSelectNodeId]).map((statusId) => {

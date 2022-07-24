@@ -1,4 +1,4 @@
-import { BranchesOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import { DrawerForm, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -39,11 +39,12 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     }>
       title="新建配置状态"
       formRef={formRef}
-      trigger={<BranchesOutlined />}
+      trigger={<PlusOutlined />}
       autoFocusFirstInput
       drawerProps={{
         destroyOnClose: true,
       }}
+      width={400}
       visible={visible}
       onVisibleChange={setVisible}
       submitTimeout={2000}
