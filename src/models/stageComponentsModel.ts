@@ -228,7 +228,6 @@ const useStageComponentsModel = () => {
           }
         }
       };
-      debugger;
 
       /** 移动的是跟组件，放置的目标是跟组件 */
       if (parentId === 'root' && targetSlotName === 'root') {
@@ -251,12 +250,10 @@ const useStageComponentsModel = () => {
         );
         /** 移动的是插槽组件，放置目标也是插槽 */
       } else if (parentId !== 'root' && targetSlotName !== 'root') {
-        debugger;
         setStageComponentsModel(
           produce((prev) => {
             // 找到要移动的元素
             const node = prev?.[comId];
-            debugger;
 
             if (node) {
               /**
@@ -297,7 +294,6 @@ const useStageComponentsModel = () => {
 
         /** 移动的是跟组件，放置的是插槽组件 */
       } else if (parentId === 'root' && targetSlotName !== 'root') {
-        debugger;
         setRootIds(
           produce((prev) => {
             const index = prev.findIndex((item) => item === comId);
@@ -322,7 +318,6 @@ const useStageComponentsModel = () => {
 
         /** 移动是插槽组件，放置的是跟组件 */
       } else if (slotName !== 'root' && targetParentId === 'root') {
-        debugger;
 
         setStageComponentsModel(
           produce((prev) => {

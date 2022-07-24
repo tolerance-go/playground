@@ -152,9 +152,6 @@ export default () => {
   }, [stageComponentsModel, showAllSlots, rootIds]);
 
   const handleDrop: TreeProps<SelfTreeDataNode>['onDrop'] = (info) => {
-
-    debugger;
-    
     if (!info.dropToGap) {
       window.__consola.info('action:', 'droped', '添加到插槽顶部', info);
 

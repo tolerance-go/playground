@@ -18,7 +18,6 @@ export default function Stage() {
   const { rootIds, stageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => {
-      debugger;
       return {
         stageComponentsModel: model.stageComponentsModel,
         rootIds: model.rootIds,

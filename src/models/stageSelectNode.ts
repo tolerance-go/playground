@@ -1,5 +1,6 @@
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
+import { useMemoizedFn } from 'ahooks';
 import { useEffect, useState } from 'react';
 
 const useStageSelectNode = () => {
@@ -22,6 +23,10 @@ const useStageSelectNode = () => {
     setNormalStatus: model?.setNormalStatus,
     setMode: model?.setMode,
   }));
+
+  const getStageSelectNodeId = useMemoizedFn(() => {
+    return stageSelectNodeId;
+  });
 
   useEffect(() => {
     if (stageSelectNodeId) {
@@ -52,6 +57,7 @@ const useStageSelectNode = () => {
     stageSelectNodeId,
     stageSelectNode,
     setStageSelectNodeId,
+    getStageSelectNodeId,
   };
 };
 
