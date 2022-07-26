@@ -22,6 +22,12 @@ export const useSaveStage = () => {
     },
   );
 
+  const { getData: getStatusSettings } = useModel('statusSettings', (model) => {
+    return {
+      getData: model?.getData,
+    };
+  });
+
   const { activePageId } = useModel('pageList', (model) => {
     return {
       activePageId: model?.activePageId,
@@ -37,6 +43,7 @@ export const useSaveStage = () => {
         JSON.stringify({
           comsTree: getComsTreeData(),
           comsModel: getComsModelData(),
+          comsStatus: getStatusSettings(),
         }),
       );
     }

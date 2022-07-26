@@ -23,6 +23,7 @@ const useComponentsSettings = () => {
 
   /** 初始化 */
   const initData = useMemoizedFn((from?: { settings: ComsSettings }) => {
+    debugger;
     setSettings(from?.settings ?? {});
   });
 

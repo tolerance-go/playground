@@ -1,3 +1,4 @@
+import { DEFAULT_COM_STATUS_NAME } from '@/constants';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import clsx from 'clsx';
@@ -14,7 +15,7 @@ export const AtomWrapper = (
   props: React.PropsWithChildren<StageComponentsModelItem>,
 ) => {
   const { setStageSelectNodeId, stageSelectNodeId } = useModel(
-    'stageSelectNode',
+    'stageSelectNodeId',
     (model) => ({
       setStageSelectNodeId: model?.setStageSelectNodeId,
       stageSelectNodeId: model?.stageSelectNodeId,
@@ -28,6 +29,13 @@ export const AtomWrapper = (
   const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
     setMode: model?.setMode,
   }));
+
+  const { setSelectedComponentStatusId } = useModel(
+    'selectedComponentStatus',
+    (model) => ({
+      setSelectedComponentStatusId: model.setSelectedComponentStatusId,
+    }),
+  );
 
   const { setSelectedKeys } = useModel('comsLayout', (model) => ({
     setSelectedKeys: model?.setSelectedKeys,
@@ -69,6 +77,9 @@ export const AtomWrapper = (
 
         setStageSelectNodeId(props.id);
         setSelectedKeys([props.id]);
+
+        setSelectedComponentStatusId(DEFAULT_COM_STATUS_NAME);
+
         consola.success('选中组件', props.id);
 
         setRightBarMode('settings');

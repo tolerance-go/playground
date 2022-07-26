@@ -1,0 +1,1 @@
+全局 view-model 中间层，可以使用多个 model 之间数据

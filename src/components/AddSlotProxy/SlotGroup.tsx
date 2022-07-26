@@ -17,7 +17,7 @@ export default ({
   }));
 
   const { stageSelectSlotGroupId, setStageSelectSlotGroupId } = useModel(
-    'stageSelectSlotGroup',
+    'stageSelectSlotGroupId',
     (model) => ({
       stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
       setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,

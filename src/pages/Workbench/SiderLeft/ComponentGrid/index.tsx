@@ -22,6 +22,13 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
     }),
   );
 
+  const { getLatestComsInitalSettings } = useModel(
+    'componentsSettingConfigs',
+    (model) => ({
+      getLatestComsInitalSettings: model?.getLatestComsInitalSettings,
+    }),
+  );
+
   const { focusComId, focusSlotName, focusSlotPosition } = useModel(
     'slotsInsert',
     (model) => ({
@@ -31,16 +38,27 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
     }),
   );
 
-  const { setComponentSettings } = useModel('componentsSettings', (model) => ({
-    setComponentSettings: model?.setComponentSettings,
-  }));
-
-  const { comsInitalSettings } = useModel(
-    'componentsSettingConfigs',
+  const { setSelectedComponentStatusId } = useModel(
+    'selectedComponentStatus',
     (model) => ({
-      comsInitalSettings: model?.comsInitalSettings,
+      setSelectedComponentStatusId: model?.setSelectedComponentStatusId,
     }),
   );
+
+  const { initComStatus } = useModel('statusSettings', (model) => ({
+    initComStatus: model?.initComStatus,
+  }));
+
+  const { setComStatusSettingsDefaults } = useModel(
+    'statusSettingsDefaults',
+    (model) => ({
+      setComStatusSettingsDefaults: model.setComStatusSettingsDefaults,
+    }),
+  );
+
+  const { setStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    setStageSelectNodeId: model?.setStageSelectNodeId,
+  }));
 
   const { mode: siderLeftMode } = useModel('siderLeftMode', (model) => ({
     mode: model?.mode,
@@ -277,9 +295,9 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                             hoverable={false}
                             style={gridStyle}
                             onClick={() => {
+                              const newComId = nanoid();
+                              const statusId = nanoid();
                               if (item.name === 'button') {
-                                const newId = nanoid();
-
                                 if (siderLeftMode === 'insert') {
                                   if (!focusComId || !focusSlotName) {
                                     throw new Error(
@@ -289,7 +307,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
 
                                   addComToStageSlot({
                                     parentId: focusComId,
-                                    newId,
+                                    newId: newComId,
                                     slotName: focusSlotName,
                                     type: 'button',
                                     display: 'inline',
@@ -298,26 +316,13 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                 } else {
                                   consola.info('添加新组件到舞台');
                                   addComponentToStage('button', {
-                                    id: newId,
+                                    id: newComId,
                                     display: 'inline',
                                     parentId: 'root',
                                     slotName: 'root',
                                   });
                                 }
-
-                                consola.info('初始化新组件配置');
-                                setComponentSettings(
-                                  newId,
-                                  comsInitalSettings['button'] ?? {},
-                                );
-
-                                triggerSaveTimeChange();
-
-                                return;
-                              }
-                              if (item.name === 'line') {
-                                const newId = nanoid();
-
+                              } else if (item.name === 'line') {
                                 if (siderLeftMode === 'insert') {
                                   if (!focusComId || !focusSlotName) {
                                     throw new Error(
@@ -327,7 +332,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
 
                                   addComToStageSlot({
                                     parentId: focusComId,
-                                    newId,
+                                    newId: newComId,
                                     slotName: focusSlotName,
                                     type: 'line',
                                     display: 'block',
@@ -336,21 +341,39 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                 } else {
                                   consola.info('添加新组件到舞台');
                                   addComponentToStage('line', {
-                                    id: newId,
+                                    id: newComId,
                                     display: 'block',
                                     parentId: 'root',
                                     slotName: 'root',
                                   });
-                                  triggerSaveTimeChange();
                                 }
-
-                                consola.info('初始化新组件配置');
-                                setComponentSettings(
-                                  newId,
-                                  comsInitalSettings['line'] ?? {},
-                                );
-                                return;
                               }
+
+                              // 初始化新组件的初始化状态
+                              initComStatus({
+                                comId: newComId,
+                                statusId,
+                                configs: {
+                                  settings:
+                                    getLatestComsInitalSettings()?.[
+                                      item.name
+                                    ] ?? {},
+                                  actions: {},
+                                  styles: {},
+                                },
+                              });
+
+                              consola.info('选中组件和默认状态');
+                              /** 设置选中组件 */
+                              setStageSelectNodeId(newComId);
+
+                              /** 设置选中组件的选中状态 */
+                              setSelectedComponentStatusId(statusId);
+
+                              /** 设置组件默认状态 */
+                              setComStatusSettingsDefaults(newComId, statusId);
+
+                              triggerSaveTimeChange();
                             }}
                           >
                             <Typography.Text

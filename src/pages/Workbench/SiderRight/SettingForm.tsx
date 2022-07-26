@@ -1,3 +1,5 @@
+import { useComponentSettings } from '@/hooks/useComponentSettings';
+import { useSelectedNodeMeta } from '@/hooks/useSelectedNode';
 import { SegmentedPropsPicked } from '@/typings/SegmentedProps';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { useModel } from '@umijs/max';
@@ -75,10 +77,13 @@ const SettingInput = ({
 };
 
 export const SettingForm = () => {
-  const { selectNodeMeta } = useModel('stageSelectNode', (model) => ({
-    selectNodeMeta: model?.stageSelectNode,
+  const { stageSelectNode: selectNodeMeta } = useSelectedNodeMeta();
+
+  const { setComSettingsInCurrent } = useModel('statusSettings', (model) => ({
+    setComSettingsInCurrent: model.setComSettingsInCurrent,
   }));
-  const { setComponentSettings, settings } = useModel('componentsSettings');
+
+  const { settings } = useComponentSettings(selectNodeMeta?.id);
   const { componentsConfigs } = useModel(
     'componentsSettingConfigs',
     (model) => {
@@ -96,8 +101,8 @@ export const SettingForm = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (selectNodeMeta && settings[selectNodeMeta.id]) {
-      form.setFieldsValue(settings[selectNodeMeta.id]);
+    if (settings) {
+      form.setFieldsValue(settings);
     }
   }, [selectNodeMeta?.id]);
 
@@ -121,7 +126,7 @@ export const SettingForm = () => {
       requiredMark={false}
       onValuesChange={(changedValues, values) => {
         consola.success('同步修改组件配置值', values);
-        setComponentSettings(selectNodeMeta.id, values);
+        setComSettingsInCurrent(values);
       }}
     >
       {configs?.map((item) => {

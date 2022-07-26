@@ -13,7 +13,7 @@ export default function App() {
   const { mode } = useModel('siderRightMode');
 
   const { setSelectNodeId, stageSelectNodeId } = useModel(
-    'stageSelectNode',
+    'stageSelectNodeId',
     (model) => ({
       setSelectNodeId: model?.setStageSelectNodeId,
       stageSelectNodeId: model?.stageSelectNodeId,
@@ -29,8 +29,6 @@ export default function App() {
   const { componentsStatus } = useModel('statusSettings', (model) => ({
     componentsStatus: model.componentsStatus,
   }));
-
-  debugger;
 
   const createFormRef = useRef<CreateComStatusAPI>(null);
 
@@ -68,9 +66,7 @@ export default function App() {
             const componentStatus =
               componentsStatus[stageSelectNodeId][statusId];
             return (
-              <TabPane tab={componentStatus.name} key={statusId}>
-                Content of Tab Pane 3
-              </TabPane>
+              <TabPane tab={componentStatus.name} key={statusId}></TabPane>
             );
           })
         ) : (

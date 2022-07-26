@@ -42,12 +42,12 @@ export default () => {
     setHoverNodeId: model?.setHoverNodeId,
   }));
 
-  const { setStageSelectNodeId } = useModel('stageSelectNode', (model) => ({
+  const { setStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
     setStageSelectNodeId: model?.setStageSelectNodeId,
   }));
 
   const { setStageSelectSlotGroupId } = useModel(
-    'stageSelectSlotGroup',
+    'stageSelectSlotGroupId',
     (model) => ({
       setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
     }),

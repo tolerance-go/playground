@@ -9,7 +9,7 @@ export const AtomButton = (
     text?: string;
   }>,
 ) => {
-  const { text, ...rest } = props.settings;
+  const { text, ...rest } = props.settings ?? {};
 
   return (
     <>

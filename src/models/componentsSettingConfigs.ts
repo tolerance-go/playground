@@ -1,5 +1,6 @@
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { LineConfig } from '@ant-design/plots';
+import { useMemoizedFn } from 'ahooks';
 import { useState } from 'react';
 
 /**
@@ -7,13 +8,15 @@ import { useState } from 'react';
  * 及其组件对应初始化配置信息
  */
 const useComponentsSettingConfigs = () => {
-  const [comsInitalSettings, setComsInitalSettings] = useState<{
-    button?: {
-      text?: string;
-      type?: string;
-    };
-    line?: Partial<LineConfig>;
-  }>({
+  const [comsInitalSettings, setComsInitalSettings] = useState<
+    {
+      button?: {
+        text?: string;
+        type?: string;
+      };
+      line?: Partial<LineConfig>;
+    } & Record<string, Record<string, any>>
+  >({
     button: {
       text: '按钮',
       type: 'primary',
@@ -58,9 +61,14 @@ const useComponentsSettingConfigs = () => {
     ],
   });
 
+  const getLatestComsInitalSettings = useMemoizedFn(() => {
+    return comsInitalSettings;
+  });
+
   return {
     comsInitalSettings,
     componentsConfigs,
+    getLatestComsInitalSettings,
     setComsInitalSettings,
     setComponentsConfigs,
   };

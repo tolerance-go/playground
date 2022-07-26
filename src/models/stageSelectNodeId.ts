@@ -1,19 +1,9 @@
-import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
+import { useMemoizedFn, useUpdateEffect } from 'ahooks';
 import { useEffect, useState } from 'react';
 
-const useStageSelectNode = () => {
-  const [stageSelectNode, setStageSelectNode] =
-    useState<StageComponentsModelItem>();
+const useStageSelectNodeId = () => {
   const [stageSelectNodeId, setStageSelectNodeId] = useState<string>();
-
-  const { getLatestStageComponentsModel } = useModel(
-    'stageComponentsModel',
-    (model) => ({
-      getLatestStageComponentsModel: model?.getLatestStageComponentsModel,
-    }),
-  );
 
   const { openTargetFromTreeMenu } = useModel('comsLayout', (model) => ({
     openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
@@ -24,17 +14,17 @@ const useStageSelectNode = () => {
     setMode: model?.setMode,
   }));
 
+  const { setStageSelectSlotGroupId, stageSelectSlotGroupId } = useModel(
+    'stageSelectSlotGroupId',
+    (model) => ({
+      setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
+      stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
+    }),
+  );
+
   const getStageSelectNodeId = useMemoizedFn(() => {
     return stageSelectNodeId;
   });
-
-  useEffect(() => {
-    if (stageSelectNodeId) {
-      setStageSelectNode(getLatestStageComponentsModel()?.[stageSelectNodeId]);
-    } else {
-      setStageSelectNode(undefined);
-    }
-  }, [stageSelectNodeId]);
 
   /** 当舞台选中组件 id 发生变化，打开树形节点菜单 */
   useEffect(() => {
@@ -51,14 +41,18 @@ const useStageSelectNode = () => {
     }
   }, [stageSelectNodeId]);
 
-  window.__consola.info('debug:', 'selectNodeMeta', stageSelectNode);
+  /** 当舞台选中组件时候，清空选中的插槽组 */
+  useUpdateEffect(() => {
+    if (stageSelectNodeId) {
+      setStageSelectSlotGroupId(undefined);
+    }
+  }, [stageSelectNodeId]);
 
   return {
     stageSelectNodeId,
-    stageSelectNode,
     setStageSelectNodeId,
     getStageSelectNodeId,
   };
 };
 
-export default useStageSelectNode;
+export default useStageSelectNodeId;

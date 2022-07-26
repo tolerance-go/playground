@@ -1,6 +1,6 @@
 import { ElementsCxt } from '@/components/ElementsCtx';
+import { useComponentSettings } from '@/hooks/useComponentSettings';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
-import { useModel } from '@umijs/max';
 import consola from 'consola';
 import { useContext } from 'react';
 import { AtomWrapper } from './Wrapper';
@@ -12,14 +12,10 @@ import { AtomWrapper } from './Wrapper';
 export const Atom = (props: StageComponentsModelItem) => {
   const elements = useContext(ElementsCxt);
 
-  const { settings } = useModel('componentsSettings', (model) => {
-    return {
-      settings: model?.settings[props.id],
-    };
-  });
-
   const Element = elements[props.type];
   const { slots, slotsOrder } = props;
+
+  const { settings } = useComponentSettings(props.id);
 
   consola.info('渲染 atom 组件', props.id);
 

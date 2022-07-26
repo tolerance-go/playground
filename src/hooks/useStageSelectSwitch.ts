@@ -7,7 +7,7 @@ import { useUpdateEffect } from 'ahooks';
  */
 const useStageSelectSwitch = () => {
   const { setStageSelectSlotGroupId, stageSelectSlotGroupId } = useModel(
-    'stageSelectSlotGroup',
+    'stageSelectSlotGroupId',
     (model) => ({
       setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
       stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
@@ -15,19 +15,12 @@ const useStageSelectSwitch = () => {
   );
 
   const { stageSelectNodeId, setStageSelectNodeId } = useModel(
-    'stageSelectNode',
+    'stageSelectNodeId',
     (model) => ({
       stageSelectNodeId: model?.stageSelectNodeId,
       setStageSelectNodeId: model?.setStageSelectNodeId,
     }),
   );
-
-  /** 当舞台选中组件时候，清空选中的插槽组 */
-  useUpdateEffect(() => {
-    if (stageSelectNodeId) {
-      setStageSelectSlotGroupId(undefined);
-    }
-  }, [stageSelectNodeId]);
 
   /** 当舞台选中插槽组时候，清空选中的组件 */
   useUpdateEffect(() => {
