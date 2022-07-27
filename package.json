@@ -13,6 +13,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@ant-design/graphs": "^1.2.3",
     "@ant-design/icons": "^4.7.0",
     "@ant-design/plots": "^1.1.1",
     "@ant-design/pro-components": "^1.1.3",

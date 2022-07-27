@@ -1,9 +1,9 @@
 import { useSelectedComDefaultStatId } from '@/hooks/useSelectedComDefaultStatId';
 import { useSetNearSelectedComponentStatusId } from '@/hooks/useSetNearSelectedComponentStatusId';
-import { BranchesOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Button, Tabs } from 'antd';
+import { Badge, Tabs, Typography } from 'antd';
 import { useRef } from 'react';
+import ComStatusSettingsTrigger from './ComStatusSettingsTrigger';
 import CreateComStatus, { CreateComStatusAPI } from './CreateComStatus';
 
 const { TabPane } = Tabs;
@@ -43,18 +43,7 @@ export const ComsStatusTabs = () => {
       activeKey={selectedComponentStatusId}
       addIcon={<CreateComStatus ref={createFormRef} />}
       tabBarExtraContent={{
-        right: (
-          <Button
-            size="small"
-            type="text"
-            shape="circle"
-            style={{
-              marginLeft: 5,
-            }}
-          >
-            <BranchesOutlined />
-          </Button>
-        ),
+        right: <ComStatusSettingsTrigger />,
       }}
       onChange={(activeKey) => {
         setSelectedComponentStatusId(activeKey);
@@ -80,7 +69,19 @@ export const ComsStatusTabs = () => {
           return (
             <TabPane
               closable={selectedComDefaultStatId !== statusId}
-              tab={componentStatus.name}
+              tab={
+                selectedComDefaultStatId === statusId ? (
+                  <Badge dot>
+                    {selectedComponentStatusId === statusId ? (
+                      <Typography.Link>{componentStatus.name}</Typography.Link>
+                    ) : (
+                      componentStatus.name
+                    )}
+                  </Badge>
+                ) : (
+                  componentStatus.name
+                )
+              }
               key={statusId}
             ></TabPane>
           );

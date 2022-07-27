@@ -1,13 +1,10 @@
-import { PlusOutlined } from '@ant-design/icons';
-import {
-  DrawerForm,
-  ProFormInstance,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { BranchesOutlined } from '@ant-design/icons';
+import { DrawerForm, ProFormInstance } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { message } from 'antd';
+import { Button, message, Tabs } from 'antd';
 import { nanoid } from 'nanoid';
 import React, { useImperativeHandle, useRef, useState } from 'react';
+import { ComStatusTreeMap } from './ComStatusTreeMap';
 
 export type CreateComStatusAPI = {
   open: () => void;
@@ -44,13 +41,21 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     <DrawerForm<{
       name: string;
     }>
-      title="新建配置状态"
+      title="组件状态配置"
       formRef={formRef}
-      trigger={<PlusOutlined />}
+      trigger={
+        <Button
+          size="small"
+          type="text"
+          shape="circle"
+          style={{
+            marginLeft: 5,
+          }}
+        >
+          <BranchesOutlined />
+        </Button>
+      }
       autoFocusFirstInput
-      drawerProps={{
-        destroyOnClose: true,
-      }}
       width={400}
       visible={visible}
       onVisibleChange={setVisible}
@@ -64,7 +69,14 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
         return true;
       }}
     >
-      <ProFormText name="name" label="名称" placeholder="请输入名称" />
+      <Tabs>
+        <Tabs.TabPane key={'1'} tab="状态继承结构">
+          <ComStatusTreeMap />
+        </Tabs.TabPane>
+        <Tabs.TabPane key={'2'} tab="基本配置">
+          <ComStatusTreeMap />
+        </Tabs.TabPane>
+      </Tabs>
     </DrawerForm>
   );
 });

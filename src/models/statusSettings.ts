@@ -2,39 +2,27 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { DEFAULT_COM_STATUS_NAME } from './../constants/index';
-// /** 所有组件的所有状态下配置之间的关系 */
-// type ComsSettingsStatusRelation = Record<
-//   string,
-//   Record<
-//     string,
-//     {
-//       toStatus: string;
-//       fromStatus: string;
-//       syncFields: Record<string, boolean>;
-//     }
-//   >
-// >;
+
 import { useState } from 'react';
 
 /** 单个组件的配置 */
-type ComponentConfigs = {
+export type ComponentConfigs = {
   settings: object;
   actions: object;
   styles: object;
 };
 
+export type ComponentStat = {
+  id: string;
+  name: string;
+  configs: ComponentConfigs;
+};
+
 /** 组件的不同状态 */
-type ComponentStatus = Record<
-  string,
-  {
-    id: string;
-    name: string;
-    configs: ComponentConfigs;
-  }
->;
+export type ComponentStatus = Record<string, ComponentStat>;
 
 /** 所有组件的所有状态下的配置 */
-type ComponentsStatus = Record<string, ComponentStatus>;
+export type ComponentsStatus = Record<string, ComponentStatus>;
 
 const useStatusSettings = () => {
   const [componentsStatus, setComponentsStatus] = useState<ComponentsStatus>(
