@@ -1,9 +1,10 @@
 import { VersionControllerIndex } from '@/services/server/VersionController';
-import { useRequest } from '@umijs/max';
+import { useModel, useRequest } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
+import consola from 'consola';
 import { produce } from 'immer';
 import qs from 'qs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /** 路径管理 */
 const useVersionList = () => {
@@ -15,6 +16,10 @@ const useVersionList = () => {
   const [list, setList] = useState<API.Version[]>();
 
   const [activeVersionId, setActiveVersionId] = useState<number>();
+
+  const { setSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    setSelectNodeId: model?.setStageSelectNodeId,
+  }));
 
   const { loading, run } = useRequest(
     async () => {
@@ -46,6 +51,17 @@ const useVersionList = () => {
       }),
     );
   });
+
+  /**
+   * versionId 切换的时候，清空选中的舞台组件
+   * 之前放在 SettingForm 中，导致点击后 mode 变化
+   * SettingForm 重新渲染，useEffect 反复执行，所以
+   * 放到上面一层组件
+   */
+  useEffect(() => {
+    consola.info('版本切换清空选中组件', 'activeVersionId', activeVersionId);
+    setSelectNodeId(undefined);
+  }, [activeVersionId]);
 
   return {
     setActiveVersionId,

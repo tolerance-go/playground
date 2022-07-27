@@ -7,8 +7,8 @@ const useStageAutoSave = () => {
   /** 触发自动保存的时间 */
   const [triggerSaveTime, setTriggerSaveTime] = useState<number>();
 
-  /** 刷新最近保存时间 */
-  const triggerSaveTimeChange = useMemoizedFn(() => {
+  /** 刷新最近保存时间，触发接口同步，成功后修改保存时间 */
+  const triggerSave = useMemoizedFn(() => {
     setTriggerSaveTime(Date.now());
   });
 
@@ -21,7 +21,7 @@ const useStageAutoSave = () => {
     autoSaveLastTime,
     triggerSaveTime,
     updateAutoSaveTime,
-    triggerSaveTimeChange,
+    triggerSave,
   };
 };
 

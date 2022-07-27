@@ -28,6 +28,15 @@ export const useSaveStage = () => {
     };
   });
 
+  const { getData: getStatusSettingsDefaults } = useModel(
+    'statusSettingsDefaults',
+    (model) => {
+      return {
+        getData: model?.getData,
+      };
+    },
+  );
+
   const { activePageId } = useModel('pageList', (model) => {
     return {
       activePageId: model?.activePageId,
@@ -44,6 +53,7 @@ export const useSaveStage = () => {
           comsTree: getComsTreeData(),
           comsModel: getComsModelData(),
           comsStatus: getStatusSettings(),
+          comsStatusDefaults: getStatusSettingsDefaults(),
         }),
       );
     }

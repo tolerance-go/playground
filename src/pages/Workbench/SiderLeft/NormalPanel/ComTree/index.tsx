@@ -55,7 +55,7 @@ export default () => {
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      triggerSaveTimeChange: model?.triggerSaveTimeChange,
+      triggerSaveTimeChange: model?.triggerSave,
     };
   });
 

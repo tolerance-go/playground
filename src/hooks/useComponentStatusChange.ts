@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 export const useComponentStatusChange = () => {
   const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatus',
+    'selectedComponentStatusId',
     (model) => ({
       selectedComponentStatusId: model?.selectedComponentStatusId,
     }),

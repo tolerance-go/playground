@@ -1,8 +1,8 @@
 import { useModel } from '@/.umi/plugin-model';
-import { useSaveStage } from '@/hooks/useSaveStage';
+import { useAutoSave } from '@/hooks/useAutoSave';
 import { CloudOutlined } from '@ant-design/icons';
 import { useSearchParams } from '@umijs/max';
-import { useRequest, useUpdateEffect } from 'ahooks';
+import { useUpdateEffect } from 'ahooks';
 import { Popover, Space, Tooltip, Typography } from 'antd';
 import { TextProps } from 'antd/lib/typography/Text';
 import dayjs from 'dayjs';
@@ -25,10 +25,9 @@ const Text = (props: PropsWithChildren<TextProps>) => {
 };
 
 export const AutoSaveTag = () => {
-  const { autoSaveLastTime, triggerSaveTime, updateAutoSaveTime } =
-    useModel('stageAutoSave');
+  const { autoSaveLastTime } = useModel('stageAutoSave');
 
-  const { saveStageComsData } = useSaveStage();
+  const { loading } = useAutoSave();
 
   const { setPageListByVersionId } = useModel('pageList', (model) => ({
     setPageListByVersionId: model?.setPageListByVersionId,
@@ -43,27 +42,6 @@ export const AutoSaveTag = () => {
       setActiveVersionId: model?.setActiveVersionId,
     }),
   );
-
-  const { loading, run } = useRequest(
-    async () => {
-      const { success } = await saveStageComsData();
-
-      if (success) {
-        updateAutoSaveTime();
-      }
-
-      return { success };
-    },
-    {
-      manual: true,
-    },
-  );
-
-  useEffect(() => {
-    if (triggerSaveTime) {
-      run();
-    }
-  }, [triggerSaveTime]);
 
   useEffect(() => {
     /** 根据 url 初始化当前激活的 pageId */

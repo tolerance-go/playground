@@ -1,28 +1,26 @@
 import { useModel } from '@umijs/max';
 
 export const useComponentSettings = (comId?: string) => {
-  const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatus',
-    (model) => ({
-      selectedComponentStatusId: model?.selectedComponentStatusId,
-    }),
-  );
-
-  const { settings } = useModel('statusSettings', (model) => {
-    if (comId && selectedComponentStatusId) {
-      const { settings } =
-        model?.componentsStatus[comId]?.[selectedComponentStatusId]?.configs ??
-        {};
-      return {
-        settings,
-      };
-    }
+  const { componentsStatus } = useModel('statusSettings', (model) => {
     return {
-      settings: undefined,
+      componentsStatus: model.componentsStatus,
     };
   });
 
+  const { selectedComponentStatusId } = useModel(
+    'selectedComponentStatusId',
+    (model) => ({
+      selectedComponentStatusId: model.selectedComponentStatusId,
+    }),
+  );
+
+  if (comId && selectedComponentStatusId) {
+    const { settings } =
+      componentsStatus[comId]?.[selectedComponentStatusId]?.configs ?? {};
+    return { settings };
+  }
+
   return {
-    settings,
+    settings: undefined,
   };
 };

@@ -24,6 +24,13 @@ export const useInitSatgeData = () => {
     }),
   );
 
+  const { initData: initStatusSettingsDefaults } = useModel(
+    'statusSettingsDefaults',
+    (model) => ({
+      initData: model?.initData,
+    }),
+  );
+
   const initStageData = useMemoizedFn(async (activePageId: string) => {
     const { success, data } = await PageControllerShow({
       id: activePageId,
@@ -35,6 +42,7 @@ export const useInitSatgeData = () => {
       initComsTreeData(stageData.comsTree);
       initComsSettingsData(stageData.comsModel);
       initStatusSettings(stageData.comsStatus);
+      initStatusSettingsDefaults(stageData.comsStatusDefaults);
     }
   });
 

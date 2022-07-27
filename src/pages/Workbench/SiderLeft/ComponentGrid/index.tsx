@@ -39,7 +39,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
   );
 
   const { setSelectedComponentStatusId } = useModel(
-    'selectedComponentStatus',
+    'selectedComponentStatusId',
     (model) => ({
       setSelectedComponentStatusId: model?.setSelectedComponentStatusId,
     }),
@@ -68,7 +68,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      triggerSaveTimeChange: model?.triggerSaveTimeChange,
+      triggerSaveTimeChange: model?.triggerSave,
     };
   });
 

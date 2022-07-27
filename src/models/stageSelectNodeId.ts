@@ -1,5 +1,6 @@
 import { useModel } from '@umijs/max';
 import { useMemoizedFn, useUpdateEffect } from 'ahooks';
+import consola from 'consola';
 import { useEffect, useState } from 'react';
 
 const useStageSelectNodeId = () => {
@@ -22,6 +23,22 @@ const useStageSelectNodeId = () => {
     }),
   );
 
+  const { setSelectedKeys } = useModel('comsLayout', (model) => ({
+    setSelectedKeys: model?.setSelectedKeys,
+  }));
+
+  const { selectedComponentStatusIdFromComDefaultStatus } = useModel(
+    'statusSettingsDefaults',
+    (model) => ({
+      selectedComponentStatusIdFromComDefaultStatus:
+        model.selectRightPanelComStatusIdFromDefault,
+    }),
+  );
+
+  const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
+    setMode: model?.setMode,
+  }));
+
   const getStageSelectNodeId = useMemoizedFn(() => {
     return stageSelectNodeId;
   });
@@ -33,6 +50,27 @@ const useStageSelectNodeId = () => {
     }
   }, [stageSelectNodeId]);
 
+  /** 当舞台选中组件时候，清空选中的插槽组 */
+  useUpdateEffect(() => {
+    if (stageSelectNodeId) {
+      setStageSelectSlotGroupId(undefined);
+    }
+  }, [stageSelectNodeId]);
+
+  /** 选中组件后，设置布局选中 key */
+  useUpdateEffect(() => {
+    if (stageSelectNodeId) {
+      setSelectedKeys([stageSelectNodeId]);
+    }
+  }, [stageSelectNodeId]);
+
+  /** 选中组件后，设置 right panel 选中状态 tab */
+  useUpdateEffect(() => {
+    if (stageSelectNodeId) {
+      selectedComponentStatusIdFromComDefaultStatus(stageSelectNodeId);
+    }
+  }, [stageSelectNodeId]);
+
   /** 当舞台选中组件，切换布局 */
   useEffect(() => {
     if (stageSelectNodeId) {
@@ -41,10 +79,11 @@ const useStageSelectNodeId = () => {
     }
   }, [stageSelectNodeId]);
 
-  /** 当舞台选中组件时候，清空选中的插槽组 */
+  /** 选中组件后，设置 right panel 的模式为 settings */
   useUpdateEffect(() => {
     if (stageSelectNodeId) {
-      setStageSelectSlotGroupId(undefined);
+      consola.success('激活右侧配置面板');
+      setRightBarMode('settings');
     }
   }, [stageSelectNodeId]);
 

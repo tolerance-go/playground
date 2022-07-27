@@ -1,8 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
-import type { ProFormInstance } from '@ant-design/pro-components';
-import { DrawerForm, ProFormText } from '@ant-design/pro-components';
+import {
+  DrawerForm,
+  ProFormInstance,
+  ProFormText,
+} from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
+import { nanoid } from 'nanoid';
 import React, { useImperativeHandle, useRef, useState } from 'react';
 
 const waitTime = (time: number = 100) => {
@@ -33,6 +37,17 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     }),
   );
 
+  const { triggerSave } = useModel('stageAutoSave', (model) => ({
+    triggerSave: model.triggerSave,
+  }));
+
+  const { setSelectedComponentStatusId } = useModel(
+    'selectedComponentStatusId',
+    (model) => ({
+      setSelectedComponentStatusId: model.setSelectedComponentStatusId,
+    }),
+  );
+
   return (
     <DrawerForm<{
       name: string;
@@ -49,8 +64,11 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
       onVisibleChange={setVisible}
       submitTimeout={2000}
       onFinish={async (values) => {
-        createComponentStatusFromNow(values.name);
+        const newStatId = nanoid();
+        createComponentStatusFromNow(newStatId, values.name);
+        setSelectedComponentStatusId(newStatId);
         message.success('创建成功');
+        triggerSave();
         return true;
       }}
     >

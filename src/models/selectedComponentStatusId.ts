@@ -1,7 +1,7 @@
 import { useMemoizedFn } from 'ahooks';
 import { useState } from 'react';
 
-const selectedComponentStatus = () => {
+const selectedComponentStatusId = () => {
   /** 当前组件应用的状态 */
   const [selectedComponentStatusId, setSelectedComponentStatusId] =
     useState<string>();
@@ -17,4 +17,4 @@ const selectedComponentStatus = () => {
   };
 };
 
-export default selectedComponentStatus;
+export default selectedComponentStatusId;

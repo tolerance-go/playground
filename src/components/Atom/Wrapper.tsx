@@ -1,4 +1,3 @@
-import { DEFAULT_COM_STATUS_NAME } from '@/constants';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import clsx from 'clsx';
@@ -24,21 +23,6 @@ export const AtomWrapper = (
   const { hoverNodeId, setHoverNodeId } = useModel('hoverNodeId', (model) => ({
     hoverNodeId: model?.hoverNodeId,
     setHoverNodeId: model?.setHoverNodeId,
-  }));
-
-  const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
-    setMode: model?.setMode,
-  }));
-
-  const { setSelectedComponentStatusId } = useModel(
-    'selectedComponentStatus',
-    (model) => ({
-      setSelectedComponentStatusId: model.setSelectedComponentStatusId,
-    }),
-  );
-
-  const { setSelectedKeys } = useModel('comsLayout', (model) => ({
-    setSelectedKeys: model?.setSelectedKeys,
   }));
 
   return (
@@ -75,15 +59,8 @@ export const AtomWrapper = (
       onClick={(event) => {
         consola.info('atom 被点击', props);
 
-        setStageSelectNodeId(props.id);
-        setSelectedKeys([props.id]);
-
-        setSelectedComponentStatusId(DEFAULT_COM_STATUS_NAME);
-
         consola.success('选中组件', props.id);
-
-        setRightBarMode('settings');
-        consola.success('激活右侧配置面板');
+        setStageSelectNodeId(props.id);
 
         /** 防止多层级的 Atom */
         event.stopPropagation();

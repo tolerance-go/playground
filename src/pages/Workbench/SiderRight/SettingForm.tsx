@@ -1,5 +1,6 @@
 import { useComponentSettings } from '@/hooks/useComponentSettings';
-import { useSelectedNodeMeta } from '@/hooks/useSelectedNode';
+import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
+import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { SegmentedPropsPicked } from '@/typings/SegmentedProps';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { useModel } from '@umijs/max';
@@ -77,26 +78,13 @@ const SettingInput = ({
 };
 
 export const SettingForm = () => {
-  const { stageSelectNode: selectNodeMeta } = useSelectedNodeMeta();
-
-  const { setComSettingsInCurrent } = useModel('statusSettings', (model) => ({
-    setComSettingsInCurrent: model.setComSettingsInCurrent,
+  const { stageSelectNode } = useSelectedNode();
+  const { configs } = useSelectedComSettingsConfigs();
+  const { setSelectedComSettings } = useModel('statusSettings', (model) => ({
+    setSelectedComSettings: model.setSelectedComSettings,
   }));
 
-  const { settings } = useComponentSettings(selectNodeMeta?.id);
-  const { componentsConfigs } = useModel(
-    'componentsSettingConfigs',
-    (model) => {
-      consola.info('准备返回渲染配置', selectNodeMeta, model);
-      return {
-        componentsConfigs: model?.componentsConfigs,
-      };
-    },
-  );
-
-  const configs = selectNodeMeta?.type
-    ? componentsConfigs[selectNodeMeta.type]
-    : undefined;
+  const { settings } = useComponentSettings(stageSelectNode?.id);
 
   const [form] = Form.useForm();
 
@@ -104,14 +92,12 @@ export const SettingForm = () => {
     if (settings) {
       form.setFieldsValue(settings);
     }
-  }, [selectNodeMeta?.id]);
+  }, [settings]);
 
-  if (!selectNodeMeta) {
+  if (!stageSelectNode) {
     consola.info('本次渲染，未选中元素，返回空');
     return null;
   }
-
-  consola.info('渲染配置表单', configs);
 
   return (
     <Form
@@ -126,7 +112,7 @@ export const SettingForm = () => {
       requiredMark={false}
       onValuesChange={(changedValues, values) => {
         consola.success('同步修改组件配置值', values);
-        setComSettingsInCurrent(values);
+        setSelectedComSettings(values);
       }}
     >
       {configs?.map((item) => {

@@ -2,7 +2,7 @@ import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import { useMemo } from 'react';
 
-export const useSelectedNodeMeta = () => {
+export const useSelectedNode = () => {
   const { stageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => ({

@@ -24,7 +24,7 @@ export default ({
 
   const { refreshLastAutoSaveTime } = useModel('stageAutoSave', (model) => {
     return {
-      refreshLastAutoSaveTime: model?.triggerSaveTimeChange,
+      refreshLastAutoSaveTime: model?.triggerSave,
     };
   });
 
