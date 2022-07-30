@@ -34,6 +34,9 @@ export default function App() {
             <TabPane tab="配置" key="1">
               <SettingForm />
             </TabPane>
+            <TabPane tab="动作" key="23">
+              Content of Tab Pane 3
+            </TabPane>
             <TabPane tab="事件" key="2">
               Content of Tab Pane 3
             </TabPane>

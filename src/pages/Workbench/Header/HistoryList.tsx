@@ -129,7 +129,7 @@ export default () => {
               setActiveKey(key);
             },
           },
-          actions: [<SaveToVersionBtn key={'save'} />],
+          // actions: [<SaveToVersionBtn key={'save'} />],
         }}
       />
     </div>

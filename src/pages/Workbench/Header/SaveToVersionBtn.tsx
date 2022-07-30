@@ -22,8 +22,8 @@ export default () => {
     <ModalForm<{
       name: string;
     }>
-      title="保存新版本"
-      trigger={<Button size="small">保存版本</Button>}
+      title="发布并保存新版本"
+      trigger={<Button type="primary">发布</Button>}
       autoFocusFirstInput
       modalProps={{
         onCancel: () => console.log('run'),

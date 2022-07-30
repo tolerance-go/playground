@@ -45,7 +45,7 @@ export default () => {
       );
     }
 
-    return <span>最新版本</span>;
+    return <span>最新未发布</span>;
   };
 
   return (

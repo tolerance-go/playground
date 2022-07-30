@@ -79,7 +79,7 @@ export const AutoSaveTag = () => {
               <CloudOutlined spin={loading} />
             </Space>
           ) : (
-            <span>已加载到最新版本</span>
+            <span>已加载到最新状态</span>
           )}
         </Text>
       </Tooltip>

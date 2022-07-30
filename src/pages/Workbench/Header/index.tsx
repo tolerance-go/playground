@@ -7,6 +7,7 @@ import { AutoSaveTag } from './AutoSaveTag';
 import CenterArea from './CenterArea';
 import CMSConfigForm from './CMSConfigForm';
 import { PlayAction } from './PlayAction';
+import SaveToVersionBtn from './SaveToVersionBtn';
 import SettingsBtn from './SettingsBtn';
 
 // const optionsWithDisabled = [
@@ -70,7 +71,7 @@ const App = () => {
           <Space>
             <AutoSaveTag />
             <PlayAction />
-            <Button type="primary">发布</Button>
+            <SaveToVersionBtn />
             <Divider type="vertical" />
             <SettingsBtn />
             <Avatar>User</Avatar>
