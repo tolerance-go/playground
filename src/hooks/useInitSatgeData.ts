@@ -31,6 +31,15 @@ export const useInitSatgeData = () => {
     }),
   );
 
+  const { initData: initStatusRelations } = useModel(
+    'statusRelations',
+    (model) => {
+      return {
+        initData: model?.initData,
+      };
+    },
+  );
+
   const initStageData = useMemoizedFn(async (activePageId: string) => {
     const { success, data } = await PageControllerShow({
       id: activePageId,
@@ -43,6 +52,7 @@ export const useInitSatgeData = () => {
       initComsSettingsData(stageData.comsModel);
       initStatusSettings(stageData.comsStatus);
       initStatusSettingsDefaults(stageData.comsStatusDefaults);
+      initStatusRelations(stageData.comsStatusRelations);
     }
   });
 

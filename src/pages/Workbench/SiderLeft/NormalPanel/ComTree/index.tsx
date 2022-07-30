@@ -55,7 +55,7 @@ export default () => {
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      triggerSaveTimeChange: model?.triggerSave,
+      triggerSaveTimeChange: model?.triggerPrepareSaveTimeChange,
     };
   });
 
@@ -169,7 +169,6 @@ export default () => {
       window.__consola.info('action:', 'droped', '添加到插槽间隔中', info);
 
       /** 此时的 node 是组件，而不是插槽 */
-
       moveComFromTree({
         comId: info.dragNode.key as string,
         parentId: info.dragNode.data.parentId,

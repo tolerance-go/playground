@@ -12,6 +12,7 @@ export type ComponentConfigs = {
   styles: object;
 };
 
+/** 组件状态 */
 export type ComponentStat = {
   id: string;
   name: string;

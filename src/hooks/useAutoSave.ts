@@ -5,7 +5,7 @@ import { useUpdateEffect } from 'ahooks';
 export const useAutoSave = () => {
   const { saveStageComsData } = useSaveStage();
 
-  const { triggerSaveTime, updateAutoSaveTime } = useModel('stageAutoSave');
+  const { prepareSaveTime, updateAutoSaveTime } = useModel('stageAutoSave');
 
   const { loading, run } = useRequest(
     async () => {
@@ -24,12 +24,12 @@ export const useAutoSave = () => {
 
   /** 当触发保存的时间修改，调用接口执行保存 */
   useUpdateEffect(() => {
-    if (triggerSaveTime) {
+    if (prepareSaveTime) {
       setTimeout(() => {
         run();
       });
     }
-  }, [triggerSaveTime]);
+  }, [prepareSaveTime]);
 
   return {
     loading,

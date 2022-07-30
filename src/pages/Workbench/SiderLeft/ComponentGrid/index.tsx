@@ -68,7 +68,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
 
   const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
     return {
-      triggerSaveTimeChange: model?.triggerSave,
+      triggerSaveTimeChange: model?.triggerPrepareSaveTimeChange,
     };
   });
 

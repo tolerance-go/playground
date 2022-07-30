@@ -30,7 +30,7 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { triggerSave } = useModel('stageAutoSave', (model) => ({
-    triggerSave: model.triggerSave,
+    triggerSave: model.triggerPrepareSaveTimeChange,
   }));
 
   const { setSelectedComponentStatusId } = useModel(

@@ -37,6 +37,15 @@ export const useSaveStage = () => {
     },
   );
 
+  const { getData: getStatusRelations } = useModel(
+    'statusRelations',
+    (model) => {
+      return {
+        getData: model?.getData,
+      };
+    },
+  );
+
   const { activePageId } = useModel('pageList', (model) => {
     return {
       activePageId: model?.activePageId,
@@ -50,6 +59,7 @@ export const useSaveStage = () => {
           id: activePageId,
         },
         JSON.stringify({
+          comsStatusRelations: getStatusRelations(),
           comsTree: getComsTreeData(),
           comsModel: getComsModelData(),
           comsStatus: getStatusSettings(),
