@@ -124,6 +124,20 @@ const useStatusSettings = () => {
     }
   });
 
+  /** 设置当前选中组件的激活 tab 的名称 */
+  const setSelectedComActiveStatName = useMemoizedFn((name: string) => {
+    const selectedComponentStatusId = getSelectedComponentStatusId();
+    const stageSelectNodeId = getStageSelectNodeId();
+
+    if (stageSelectNodeId && selectedComponentStatusId) {
+      setComponentsStatus(
+        produce((draft) => {
+          draft[stageSelectNodeId][selectedComponentStatusId].name = name;
+        }),
+      );
+    }
+  });
+
   const getLatestComponentsStatus = useMemoizedFn(() => {
     return componentsStatus;
   });
@@ -144,6 +158,7 @@ const useStatusSettings = () => {
 
   return {
     componentsStatus,
+    setSelectedComActiveStatName,
     setSelectedComSettings,
     deleteComStatus,
     deleteComStat,

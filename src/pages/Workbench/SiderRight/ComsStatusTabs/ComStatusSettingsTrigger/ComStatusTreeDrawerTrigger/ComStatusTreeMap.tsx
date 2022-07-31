@@ -4,7 +4,7 @@ import { useModel } from '@umijs/max';
 import { Tree } from 'antd';
 import { DataNode, TreeProps } from 'antd/lib/tree';
 import utl from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 type ComStatusTreeNode = DataNode & {
   parentStatId?: string;
@@ -128,6 +128,13 @@ export const ComStatusTreeMap = () => {
 
     triggerSaveTimeChange();
   };
+
+  /** 切换节点后，默认打开所有节点 */
+  useEffect(() => {
+    if (status) {
+      setExpandedKeys(Object.keys(status));
+    }
+  }, [status]);
 
   return (
     <Tree<ComStatusTreeNode>
