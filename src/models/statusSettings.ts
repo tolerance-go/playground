@@ -124,6 +124,19 @@ const useStatusSettings = () => {
     }
   });
 
+  /** 设置指定组件指定状态下的配置 */
+  const setComStatSettings = useMemoizedFn(
+    (comId: string, statId: string, settings: object) => {
+      setComponentsStatus(
+        produce((draft) => {
+          if (draft[comId][statId]?.configs) {
+            draft[comId][statId].configs.settings = settings;
+          }
+        }),
+      );
+    },
+  );
+
   /** 设置当前选中组件的激活 tab 的名称 */
   const setSelectedComActiveStatName = useMemoizedFn((name: string) => {
     const selectedComponentStatusId = getSelectedComponentStatusId();
@@ -160,6 +173,7 @@ const useStatusSettings = () => {
     componentsStatus,
     setSelectedComActiveStatName,
     setSelectedComSettings,
+    setComStatSettings,
     deleteComStatus,
     deleteComStat,
     getData,

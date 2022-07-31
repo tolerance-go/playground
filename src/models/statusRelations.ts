@@ -3,15 +3,24 @@ import { produce } from 'immer';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
+/** from 是被继承的，to 是继承者 */
 type ComStatRelation = {
+  id: string;
   toStatId: string;
   fromStatId: string;
-  syncFields: Record<string, boolean>;
+  /** 锁住的字段，不进行继承同步 */
+  lockFields: Record<string, boolean>;
 };
 
+/**
+ * key: relationId
+ */
 type ComStatusRelations = Record<string, ComStatRelation>;
 
-/** 所有组件的所有状态下配置之间的关系 */
+/**
+ * 所有组件的所有状态下配置之间的关系
+ * key: comId
+ */
 export type ComsStatusRelations = Record<string, ComStatusRelations>;
 
 const statusRelations = () => {
@@ -20,15 +29,21 @@ const statusRelations = () => {
 
   /** 创建组件状态关系 */
   const createComStatRelation = useMemoizedFn(
-    (comId: string, data: ComStatRelation) => {
+    (comId: string, data: Omit<ComStatRelation, 'id'>) => {
       setComsStatusRelations(
         produce((draft) => {
           const relationId = nanoid();
           if (draft[comId]) {
-            draft[comId][relationId] = data;
+            draft[comId][relationId] = {
+              ...data,
+              id: relationId,
+            };
           } else {
             draft[comId] = {
-              [relationId]: data,
+              [relationId]: {
+                ...data,
+                id: relationId,
+              },
             };
           }
         }),
@@ -63,8 +78,27 @@ const statusRelations = () => {
     },
   );
 
+  /** 找到所有继承该组件状态的状态 */
+  const getComExtendRelationsFromStat = useMemoizedFn(
+    (comId: string, fromStatId: string) => {
+      return Object.keys(comsStatusRelations[comId])
+        .filter((relationId) => {
+          const relation = comsStatusRelations[comId][relationId];
+          return relation.fromStatId === fromStatId;
+        })
+        .map((relationId) => comsStatusRelations[comId][relationId]);
+    },
+  );
+
+  /** 获取组件状态的继承锁定字段（不同步修改） */
+  const getStatLockFields = useMemoizedFn((comId: string, relationId: string) => {
+    return comsStatusRelations[comId][relationId].lockFields;
+  });
+
   return {
     comsStatusRelations,
+    getStatLockFields,
+    getComExtendRelationsFromStat,
     initData,
     getData,
     deleteComStatRelation,

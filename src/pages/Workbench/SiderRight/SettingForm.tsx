@@ -1,4 +1,5 @@
 import { useComponentSettings } from '@/hooks/useComponentSettings';
+import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { SegmentedPropsPicked } from '@/typings/SegmentedProps';
@@ -86,6 +87,8 @@ export const SettingForm = () => {
 
   const { settings } = useComponentSettings(stageSelectNode?.id);
 
+  const { setCurrentComSettingsExtendsSettings } = useComStatusExtendSettings();
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export const SettingForm = () => {
       requiredMark={false}
       onValuesChange={(changedValues, values) => {
         consola.success('同步修改组件配置值', values);
-        setSelectedComSettings(values);
+        setCurrentComSettingsExtendsSettings(values);
       }}
     >
       {configs?.map((item) => {
