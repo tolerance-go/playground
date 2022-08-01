@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
 /** from 是被继承的，to 是继承者 */
-type ComStatRelation = {
+export type ComStatRelation = {
   id: string;
   toStatId: string;
   fromStatId: string;
@@ -15,7 +15,7 @@ type ComStatRelation = {
 /**
  * key: relationId
  */
-type ComStatusRelations = Record<string, ComStatRelation>;
+export type ComStatusRelations = Record<string, ComStatRelation>;
 
 /**
  * 所有组件的所有状态下配置之间的关系
@@ -91,13 +91,39 @@ const statusRelations = () => {
   );
 
   /** 获取组件状态的继承锁定字段（不同步修改） */
-  const getStatLockFields = useMemoizedFn((comId: string, relationId: string) => {
-    return comsStatusRelations[comId][relationId].lockFields;
-  });
+  const getStatLockFields = useMemoizedFn(
+    (comId: string, relationId: string) => {
+      return comsStatusRelations[comId]?.[relationId].lockFields;
+    },
+  );
+
+  /** 将组件的继承字段锁起来 */
+  const lockComExtendField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].lockFields[fieldName] = true;
+        }),
+      );
+    },
+  );
+
+  /** 将组件的继承字段解锁 */
+  const unlockComExtendField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].lockFields[fieldName] = false;
+        }),
+      );
+    },
+  );
 
   return {
     comsStatusRelations,
     getStatLockFields,
+    lockComExtendField,
+    unlockComExtendField,
     getComExtendRelationsFromStat,
     initData,
     getData,

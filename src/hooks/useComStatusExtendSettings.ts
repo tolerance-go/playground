@@ -4,9 +4,13 @@ import utl from 'lodash';
 
 /** 组件继承状态修改 */
 export const useComStatusExtendSettings = () => {
-  const { setComStatSettings } = useModel('statusSettings', (model) => ({
-    setComStatSettings: model.setComStatSettings,
-  }));
+  const { setComStatSettings, updateComStatSettings } = useModel(
+    'statusSettings',
+    (model) => ({
+      setComStatSettings: model.setComStatSettings,
+      updateComStatSettings: model.updateComStatSettings,
+    }),
+  );
 
   const { getComExtendStatusFromStat, getStatLockFields } = useModel(
     'statusRelations',
@@ -35,13 +39,14 @@ export const useComStatusExtendSettings = () => {
       const extendRelations = getComExtendStatusFromStat(comId, statId);
       extendRelations.forEach((relation) => {
         const lockFields = getStatLockFields(comId, relation.id);
+        debugger;
         const filtedSettings = utl.omit(
           settings,
           lockFields
             ? Object.keys(lockFields).filter((field) => lockFields[field])
             : [],
         );
-        setComStatSettings(
+        updateComStatSettings(
           comId,
           relation.toStatId,
           // 锁住的字段，不进行继承同步，在这里过滤掉

@@ -1,81 +1,21 @@
 import { useComponentSettings } from '@/hooks/useComponentSettings';
 import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
+import { useCurrentComStatExtendRelation } from '@/hooks/useCurrentComStatExtendRelation';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
-import { SegmentedPropsPicked } from '@/typings/SegmentedProps';
-import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { useModel } from '@umijs/max';
-import { Form, Input, Segmented, Select, Switch } from 'antd';
+import { Form, Input, Select, Switch } from 'antd';
 import consola from 'consola';
-import React, { useEffect } from 'react';
-import styles from './SettingForm.less';
-
-export const SegmentedSwitch = ({
-  value,
-  onChange,
-  ...rest
-}: {
-  value?: boolean;
-  onChange?: (next: boolean) => void;
-} & Omit<SegmentedPropsPicked, 'value' | 'onChange' | 'options'>) => {
-  return (
-    <Segmented
-      block
-      {...rest}
-      options={[
-        {
-          label: '是',
-          value: 'true',
-        },
-        {
-          label: '否',
-          value: 'false',
-        },
-      ]}
-      value={String(value)}
-      onChange={(next) => {
-        onChange?.(next === 'true');
-      }}
-    />
-  );
-};
+import utl from 'lodash';
+import React, { useEffect, useMemo } from 'react';
+import styles from './index.less';
+import { SettingInput } from './SettingInput';
+import { SettingInputLabel } from './SettingInputLabel';
 
 const SettingInputs: Record<string, React.ElementType<any>> = {
   string: Input,
   boolean: Switch,
   select: Select,
-};
-
-const SettingInput = ({
-  config,
-  value,
-  onChange,
-}: {
-  config: SettingFormConfig[number];
-  value?: any;
-  onChange?: (next: any) => void;
-}) => {
-  if (config.type === 'string') {
-    return <Input bordered={false} value={value} onChange={onChange} />;
-  }
-
-  if (config.type === 'select') {
-    return (
-      <Select
-        mode={config.multiple ? 'multiple' : undefined}
-        value={value}
-        onChange={onChange}
-        options={config.options}
-        bordered={false}
-      />
-    );
-  }
-
-  if (config.type === 'boolean') {
-    return <SegmentedSwitch value={value} onChange={onChange} />;
-  }
-
-  return null;
 };
 
 export const SettingForm = () => {
@@ -89,7 +29,20 @@ export const SettingForm = () => {
 
   const { setCurrentComSettingsExtendsSettings } = useComStatusExtendSettings();
 
+  const { extendRelation } = useCurrentComStatExtendRelation();
+
   const [form] = Form.useForm();
+
+  const { triggerPrepareSaveTimeChange } = useModel(
+    'stageAutoSave',
+    (model) => ({
+      triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
+    }),
+  );
+
+  const debounceTriggerPrepareSaveTimeChange = useMemo(() => {
+    return utl.debounce(triggerPrepareSaveTimeChange, 350);
+  }, [triggerPrepareSaveTimeChange]);
 
   useEffect(() => {
     if (settings) {
@@ -116,6 +69,7 @@ export const SettingForm = () => {
       onValuesChange={(changedValues, values) => {
         consola.success('同步修改组件配置值', values);
         setCurrentComSettingsExtendsSettings(values);
+        debounceTriggerPrepareSaveTimeChange();
       }}
     >
       {configs?.map((item) => {
@@ -126,11 +80,22 @@ export const SettingForm = () => {
           <Form.Item
             required={item.required}
             key={item.name}
-            label={item.label}
+            label={
+              <SettingInputLabel
+                comId={stageSelectNode.id}
+                extendRelation={extendRelation}
+                fieldName={item.name}
+                label={item.label}
+              ></SettingInputLabel>
+            }
             name={item.name}
             colon={false}
           >
-            <SettingInput config={item} />
+            <SettingInput
+              extendRelation={extendRelation}
+              fieldName={item.name}
+              config={item}
+            />
           </Form.Item>
         );
       })}
