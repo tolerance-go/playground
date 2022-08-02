@@ -3,7 +3,7 @@ import { useMemoizedFn } from 'ahooks';
 
 export const useSetNearSelectedComponentStatusId = () => {
   const { getLatestComponentsStatus } = useModel('statusSettings', (model) => ({
-    getLatestComponentsStatus: model.getLatestComponentsStatus,
+    getLatestComponentsStatus: model.getComponentsStatus,
   }));
 
   const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({

@@ -25,7 +25,7 @@ const useComponentsSettingConfigs = () => {
       smooth: false,
     },
   });
-  const [componentsConfigs, setComponentsConfigs] = useState<
+  const [componentsSettingsConfigs, setComponentsSettingsConfigs] = useState<
     Record<string, SettingFormConfig>
   >({
     button: [
@@ -67,10 +67,10 @@ const useComponentsSettingConfigs = () => {
 
   return {
     comsInitalSettings,
-    componentsConfigs,
+    componentsConfigs: componentsSettingsConfigs,
     getLatestComsInitalSettings,
     setComsInitalSettings,
-    setComponentsConfigs,
+    setComponentsConfigs: setComponentsSettingsConfigs,
   };
 };
 

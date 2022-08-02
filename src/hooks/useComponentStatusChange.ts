@@ -14,7 +14,7 @@ export const useComponentStatusChange = () => {
   }));
 
   const { getLatestComponentsStatus } = useModel('statusSettings', (model) => ({
-    getLatestComponentsStatus: model?.getLatestComponentsStatus,
+    getLatestComponentsStatus: model?.getComponentsStatus,
   }));
 
   const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({

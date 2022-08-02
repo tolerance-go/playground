@@ -8,8 +8,6 @@ import { useState } from 'react';
 /** 单个组件的配置 */
 export type ComponentConfigs = {
   settings: object;
-  actions: object;
-  styles: object;
 };
 
 /** 组件状态 */
@@ -167,7 +165,7 @@ const useStatusSettings = () => {
     }
   });
 
-  const getLatestComponentsStatus = useMemoizedFn(() => {
+  const getComponentsStatus = useMemoizedFn(() => {
     return componentsStatus;
   });
 
@@ -195,7 +193,7 @@ const useStatusSettings = () => {
     deleteComStat,
     getData,
     initData,
-    getLatestComponentsStatus,
+    getComponentsStatus,
     initComStatus,
     setComponentsStatus,
     createComponentStatusFromNow,

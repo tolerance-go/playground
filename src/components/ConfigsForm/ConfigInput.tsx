@@ -1,34 +1,30 @@
 import { SegmentedSwitch } from '@/components/SegmentedSwitch';
-import { ComStatRelation } from '@/models/statusRelations';
+import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { Input, Select } from 'antd';
 
-export const SettingInput = ({
-  config,
-  value,
-  onChange,
-  extendRelation,
-  fieldName,
-}: {
+export type ConfigInputProps = {
+  disabled?: boolean;
   config: SettingFormConfig[number];
   value?: any;
   onChange?: (next: any) => void;
-  fieldName: string;
-  extendRelation: ComStatRelation | undefined;
-}) => {
-  const disabled = extendRelation
-    ? /**
-       * 锁住表示不自动同步，那么用户就是可以自定义输入的
-       * 这里和界面的图标是相反的
-       */
-      !extendRelation.lockFields[fieldName]
-    : false;
+  bordered?: boolean;
+};
+
+export const ConfigInput = ({
+  config,
+  value,
+  onChange,
+  disabled,
+  bordered,
+}: ConfigInputProps) => {
+  const { getSelectedComStatus } = useSelectedComponentStatus();
 
   if (config.type === 'string') {
     return (
       <Input
         disabled={disabled}
-        bordered={false}
+        bordered={bordered}
         value={value}
         onChange={onChange}
       />
@@ -42,8 +38,14 @@ export const SettingInput = ({
         mode={config.multiple ? 'multiple' : undefined}
         value={value}
         onChange={onChange}
-        options={config.options}
-        bordered={false}
+        options={
+          typeof config.options === 'function'
+            ? config.options({
+                getSelectedComStatus,
+              })
+            : config.options
+        }
+        bordered={bordered}
       />
     );
   }

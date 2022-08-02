@@ -1,29 +1,26 @@
+import { ConfigsForm } from '@/components/ConfigsForm';
 import { useComponentSettings } from '@/hooks/useComponentSettings';
 import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
 import { useCurrentComStatExtendRelation } from '@/hooks/useCurrentComStatExtendRelation';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { useModel } from '@umijs/max';
-import { Form, Input, Select, Switch } from 'antd';
+import { Form } from 'antd';
 import consola from 'consola';
 import utl from 'lodash';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import styles from './index.less';
-import { SettingInput } from './SettingInput';
 import { SettingInputLabel } from './SettingInputLabel';
 
-const SettingInputs: Record<string, React.ElementType<any>> = {
-  string: Input,
-  boolean: Switch,
-  select: Select,
-};
+// const SettingInputs: Record<string, React.ElementType<any>> = {
+//   string: Input,
+//   boolean: Switch,
+//   select: Select,
+// };
 
 export const SettingForm = () => {
   const { stageSelectNode } = useSelectedNode();
   const { configs } = useSelectedComSettingsConfigs();
-  const { setSelectedComSettings } = useModel('statusSettings', (model) => ({
-    setSelectedComSettings: model.setSelectedComSettings,
-  }));
 
   const { settings } = useComponentSettings(stageSelectNode?.id);
 
@@ -56,12 +53,14 @@ export const SettingForm = () => {
   }
 
   return (
-    <Form
-      // size={'small'}
+    <ConfigsForm
+      configs={configs}
       className={styles.wrapper}
-      {...{
-        labelCol: { span: 7 },
-        wrapperCol: { span: 17 },
+      labelCol={{
+        span: 7,
+      }}
+      wrapperCol={{
+        span: 17,
       }}
       layout={'horizontal'}
       form={form}
@@ -71,34 +70,29 @@ export const SettingForm = () => {
         setCurrentComSettingsExtendsSettings(values);
         debounceTriggerPrepareSaveTimeChange();
       }}
-    >
-      {configs?.map((item) => {
-        if (SettingInputs[item.type] === undefined) {
-          return null;
-        }
+      renderLabel={(item) => {
         return (
-          <Form.Item
-            required={item.required}
-            key={item.name}
-            label={
-              <SettingInputLabel
-                comId={stageSelectNode.id}
-                extendRelation={extendRelation}
-                fieldName={item.name}
-                label={item.label}
-              ></SettingInputLabel>
-            }
-            name={item.name}
-            colon={false}
-          >
-            <SettingInput
-              extendRelation={extendRelation}
-              fieldName={item.name}
-              config={item}
-            />
-          </Form.Item>
+          <SettingInputLabel
+            comId={stageSelectNode.id}
+            extendRelation={extendRelation}
+            fieldName={item.name}
+            label={item.label}
+          ></SettingInputLabel>
         );
-      })}
-    </Form>
+      }}
+      configInputProps={(item) => {
+        const disabled = extendRelation
+          ? /**
+             * 锁住表示不自动同步，那么用户就是可以自定义输入的
+             * 这里和界面的图标是相反的
+             */
+            !extendRelation.lockFields[item.name]
+          : false;
+        return {
+          disabled,
+          bordered: false,
+        };
+      }}
+    ></ConfigsForm>
   );
 };

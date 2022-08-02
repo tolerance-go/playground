@@ -1,22 +1,45 @@
 import { useModel } from '@umijs/max';
+import { useMemoizedFn } from 'ahooks';
 
 /** 获取当前选中组件的所有配置状态 */
 export const useSelectedComponentStatus = () => {
-  const { componentsStatus } = useModel('statusSettings', (model) => {
-    return {
-      componentsStatus: model.componentsStatus,
-    };
+  const { componentsStatus, getComponentsStatus } = useModel(
+    'statusSettings',
+    (model) => {
+      return {
+        componentsStatus: model.componentsStatus,
+        getComponentsStatus: model.getComponentsStatus,
+      };
+    },
+  );
+
+  const { stageSelectNodeId, getStageSelectNodeId } = useModel(
+    'stageSelectNodeId',
+    (model) => ({
+      stageSelectNodeId: model.stageSelectNodeId,
+      getStageSelectNodeId: model.getStageSelectNodeId,
+    }),
+  );
+
+  const getSelectedComStatus = useMemoizedFn(() => {
+    const componentsStatus = getComponentsStatus();
+    const stageSelectNodeId = getStageSelectNodeId();
+
+    if (stageSelectNodeId) {
+      return componentsStatus[stageSelectNodeId];
+    }
+    return undefined;
   });
 
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
-    stageSelectNodeId: model.stageSelectNodeId,
-  }));
-
   if (stageSelectNodeId) {
-    return { status: componentsStatus[stageSelectNodeId] };
+    return {
+      getSelectedComStatus,
+      status: componentsStatus[stageSelectNodeId],
+    };
   }
 
   return {
+    getSelectedComStatus,
     status: undefined,
   };
 };
