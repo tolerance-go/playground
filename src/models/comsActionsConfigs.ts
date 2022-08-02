@@ -59,7 +59,7 @@ const useComsActionsConfigs = () => {
             label: '目标状态',
             required: true,
             visible: [
-              ({ targetComId }) => !!targetComId,
+              ({ settings }) => !!settings?.targetComId,
               {
                 name: ['targetComId'],
               },

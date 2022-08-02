@@ -20,7 +20,7 @@ export const useCurrentComStatExtendRelation = () => {
 
   const extendRelation = useMemo(() => {
     if (stageSelectNodeId) {
-      const relations = Object.keys(comsStatusRelations[stageSelectNodeId]).map(
+      const relations = Object.keys(comsStatusRelations[stageSelectNodeId] ?? {}).map(
         (relationId) => comsStatusRelations[stageSelectNodeId][relationId],
       );
 

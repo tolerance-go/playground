@@ -14,6 +14,9 @@ export const ConfigsForm = ({
   configs,
   renderLabel,
   configInputProps,
+  onlyFormItem,
+  formItemNamePrefix,
+  renderFormItemWrapper,
   ...formProps
 }: {
   configs?: SettingFormConfig;
@@ -21,38 +24,61 @@ export const ConfigsForm = ({
   configInputProps?: (
     config: SettingFormConfig[number],
   ) => Omit<ConfigInputProps, 'config'>;
+  /** 只渲染 form item */
+  onlyFormItem?: boolean;
+  formItemNamePrefix?: string;
+  renderFormItemWrapper?: (itemDom: React.ReactNode) => React.ReactNode;
 } & FormProps) => {
-  return (
-    <Form {...formProps}>
-      {configs?.map((item) => {
-        if (SettingInputs[item.type] === undefined) {
-          return null;
-        }
+  const items = configs?.map((item) => {
+    const renderInner = () => {
+      if (SettingInputs[item.type] === undefined) {
+        return null;
+      }
 
-        const formControl = (
-          <Form.Item
-            required={item.required}
-            key={item.name}
-            label={renderLabel?.(item) ?? item.label}
-            name={item.name}
-            colon={false}
+      const formControl = (
+        <Form.Item
+          rules={[
+            ...(item.required
+              ? [
+                  {
+                    required: true,
+                  },
+                ]
+              : []),
+          ]}
+          key={item.name}
+          label={renderLabel?.(item) ?? item.label}
+          name={
+            formItemNamePrefix ? [formItemNamePrefix, item.name] : item.name
+          }
+          colon={false}
+        >
+          <ConfigInput {...configInputProps?.(item)} config={item} />
+        </Form.Item>
+      );
+
+      if (item.visible) {
+        return (
+          <ProFormDependency
+            name={
+              formItemNamePrefix
+                ? [formItemNamePrefix, ...item.visible[1].name]
+                : item.visible[1].name
+            }
           >
-            <ConfigInput {...configInputProps?.(item)} config={item} />
-          </Form.Item>
+            {(depends) => {
+              return item.visible?.[0](depends) ? formControl : null;
+            }}
+          </ProFormDependency>
         );
+      }
 
-        if (item.visible) {
-          return (
-            <ProFormDependency name={item.visible[1].name}>
-              {(depends) => {
-                return item.visible?.[0](depends) ? formControl : null;
-              }}
-            </ProFormDependency>
-          );
-        }
+      return formControl;
+    };
 
-        return formControl;
-      })}
-    </Form>
-  );
+    const inner = renderInner();
+
+    return renderFormItemWrapper?.(inner) ?? inner;
+  });
+  return onlyFormItem ? <>{items}</> : <Form {...formProps}>{items}</Form>;
 };

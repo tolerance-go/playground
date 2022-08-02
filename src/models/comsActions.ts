@@ -13,6 +13,7 @@ export type ComponentAction = {
   type: string;
   settings: object;
   name: string;
+  typeZh: string;
 };
 
 /** key: actionId */
@@ -34,7 +35,7 @@ const useComsActions = () => {
 
   /** 创建新的动作 */
   const createComStatAction = useMemoizedFn(
-    (comId: string, statId: string, action: ComponentAction) => {
+    (comId: string, statId: string, action: Omit<ComponentAction, 'id'>) => {
       setComsActions(
         produce((draft) => {
           const newId = nanoid();
@@ -47,15 +48,65 @@ const useComsActions = () => {
             draft[comId][statId] = {};
           }
 
-          draft[comId][statId][newId] = action;
+          draft[comId][statId][newId] = {
+            id: newId,
+            ...action,
+          };
         }),
       );
     },
   );
 
+  /** 更新动作 */
+  const updateComStatAction = useMemoizedFn(
+    (
+      comId: string,
+      statId: string,
+      action: Partial<ComponentAction> & Pick<ComponentAction, 'id'>,
+    ) => {
+      setComsActions(
+        produce((draft) => {
+          draft[comId][statId][action.id] = {
+            ...draft[comId][statId][action.id],
+            ...action,
+          };
+        }),
+      );
+    },
+  );
+
+  /** 删除动作 */
+  const deleteComStatAction = useMemoizedFn(
+    (comId: string, statId: string, actionId: string) => {
+      setComsActions(
+        produce((draft) => {
+          delete draft[comId][statId][actionId];
+        }),
+      );
+    },
+  );
+
+  /** 获取数据，准备持久化 */
+  const getData = useMemoizedFn(() => {
+    return {
+      comsActions,
+    };
+  });
+
+  /** 初始化 */
+  const initData = useMemoizedFn(
+    (from?: { comsActions: ComponentsActions }) => {
+      setComsActions(from?.comsActions ?? {});
+    },
+  );
+
   return {
     comsActions,
+    deleteComStatAction,
+    updateComStatAction,
     createComStatAction,
+    getData,
+    initData,
   };
 };
 

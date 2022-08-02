@@ -23,7 +23,7 @@ export type ComStatusRelations = Record<string, ComStatRelation>;
  */
 export type ComsStatusRelations = Record<string, ComStatusRelations>;
 
-const statusRelations = () => {
+const useStatusRelations = () => {
   const [comsStatusRelations, setComsStatusRelations] =
     useState<ComsStatusRelations>({});
 
@@ -81,7 +81,7 @@ const statusRelations = () => {
   /** 找到所有继承该组件状态的状态 */
   const getComExtendRelationsFromStat = useMemoizedFn(
     (comId: string, fromStatId: string) => {
-      return Object.keys(comsStatusRelations[comId])
+      return Object.keys(comsStatusRelations[comId] ?? {})
         .filter((relationId) => {
           const relation = comsStatusRelations[comId][relationId];
           return relation.fromStatId === fromStatId;
@@ -133,4 +133,4 @@ const statusRelations = () => {
   };
 };
 
-export default statusRelations;
+export default useStatusRelations;
