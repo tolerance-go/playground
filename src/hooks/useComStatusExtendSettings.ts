@@ -31,15 +31,12 @@ export const useComStatusExtendSettings = () => {
     getStageSelectNodeId: model.getStageSelectNodeId,
   }));
 
-  /** 设置组件配置和所有继承该配置的组件配置 */
-  const setComSettingsExtendsSettings = useMemoizedFn(
+  /** 设置组件所有继承该配置的组件配置 */
+  const setComExtendsSettings = useMemoizedFn(
     (comId: string, statId: string, settings: object) => {
-      setComStatSettings(comId, statId, settings);
-
       const extendRelations = getComExtendStatusFromStat(comId, statId);
       extendRelations.forEach((relation) => {
         const lockFields = getStatLockFields(comId, relation.id);
-        debugger;
         const filtedSettings = utl.omit(
           settings,
           lockFields
@@ -52,6 +49,7 @@ export const useComStatusExtendSettings = () => {
           // 锁住的字段，不进行继承同步，在这里过滤掉
           filtedSettings,
         );
+        setComExtendsSettings(comId, relation.toStatId, filtedSettings);
       });
     },
   );
@@ -62,7 +60,13 @@ export const useComStatusExtendSettings = () => {
       const stageSelectNodeId = getStageSelectNodeId();
 
       if (stageSelectNodeId && selectedComponentStatusId) {
-        setComSettingsExtendsSettings(
+        setComStatSettings(
+          stageSelectNodeId,
+          selectedComponentStatusId,
+          settings,
+        );
+
+        setComExtendsSettings(
           stageSelectNodeId,
           selectedComponentStatusId,
           settings,
@@ -73,6 +77,6 @@ export const useComStatusExtendSettings = () => {
 
   return {
     setCurrentComSettingsExtendsSettings,
-    setComSettingsExtendsSettings,
+    setComExtendsSettings,
   };
 };
