@@ -1,11 +1,12 @@
 import { useModel } from '@umijs/max';
 import { Col, Layout, Row, Tabs } from 'antd';
-import consola from 'consola';
 import { useState } from 'react';
+import { ComInfo } from './ComInfo';
 import { ComsStatusTabs } from './ComsStatusTabs';
+import ComStatEvents from './ComStatEvents';
 import { SettingForm } from './SettingForm';
+import StatActionsCreator from './StatActionsCreator';
 import StatActionsList from './StatActionsList';
-import StatActionsTab from './StatActionsTab';
 
 const { TabPane } = Tabs;
 
@@ -14,15 +15,7 @@ const { Sider } = Layout;
 export default function App() {
   const { mode } = useModel('siderRightMode');
 
-  // const { activeVersionId } = useModel('versionList', (model) => {
-  //   return {
-  //     activeVersionId: model?.activeVersionId,
-  //   };
-  // });
-
-  consola.info('渲染右侧面板');
-
-  const [activeKey, setActiveKey] = useState('actions');
+  const [activeKey, setActiveKey] = useState('events');
 
   return (
     <Sider
@@ -43,6 +36,9 @@ export default function App() {
             wrap={false}
           >
             <Col flex={'none'}>
+              <ComInfo />
+            </Col>
+            <Col flex={'none'}>
               <ComsStatusTabs />
             </Col>
 
@@ -50,12 +46,8 @@ export default function App() {
               <Tabs size="small" onChange={setActiveKey} activeKey={activeKey}>
                 <TabPane tab="配置" key="settings"></TabPane>
                 <TabPane tab="动作" key="actions"></TabPane>
-                <TabPane tab="事件" key="2">
-                  Content of Tab Pane 3
-                </TabPane>
-                <TabPane tab="外观" key="3">
-                  Content of Tab Pane 3
-                </TabPane>
+                <TabPane tab="事件" key="events"></TabPane>
+                <TabPane tab="外观" key="styles"></TabPane>
               </Tabs>
             </Col>
 
@@ -80,7 +72,7 @@ export default function App() {
                           marginBottom: 10,
                         }}
                       >
-                        <StatActionsTab />
+                        <StatActionsCreator />
                       </Col>
                       <Col
                         flex={'auto'}
@@ -93,6 +85,9 @@ export default function App() {
                       </Col>
                     </Row>
                   );
+                }
+                if (activeKey === 'events') {
+                  return <ComStatEvents />;
                 }
                 return <></>;
               })()}

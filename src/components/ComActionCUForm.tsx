@@ -1,7 +1,7 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import {
-  DrawerForm,
+  ModalForm,
   ProFormDependency,
   ProFormInstance,
   ProFormSelect,
@@ -25,7 +25,7 @@ export default ({
 
   const { stageSelectNode } = useSelectedNode();
 
-  const selectedcomsActionsConfigs = stageSelectNode?.type
+  const selectedComsActionsConfigs = stageSelectNode?.type
     ? comsActionsConfigs[stageSelectNode.type]
     : undefined;
 
@@ -85,7 +85,7 @@ export default ({
   ]);
 
   return (
-    <DrawerForm
+    <ModalForm
       // form={form}
       formRef={formRef}
       initialValues={{
@@ -96,7 +96,7 @@ export default ({
         name: actionData?.name,
         settings: actionData?.settings,
       }}
-      drawerProps={{
+      modalProps={{
         destroyOnClose: mode === 'edit' ? true : false,
       }}
       title={mode === 'create' ? '新建动作' : '编辑动作'}
@@ -107,7 +107,7 @@ export default ({
           <a key="edit">编辑</a>
         )
       }
-      width={400}
+      width={800}
       submitTimeout={2000}
       autoFocusFirstInput
       onFinish={async ({ type, name, settings }) => {
@@ -156,7 +156,7 @@ export default ({
         name="type"
         label="动作类型"
         placeholder="请选择"
-        options={selectedcomsActionsConfigs?.map((item) => ({
+        options={selectedComsActionsConfigs?.map((item) => ({
           label: item.name,
           value: item.type,
         }))}
@@ -166,7 +166,7 @@ export default ({
       />
       <ProFormDependency name={['type']}>
         {({ type }) => {
-          const config = selectedcomsActionsConfigs?.find(
+          const config = selectedComsActionsConfigs?.find(
             (item) => item.type === type?.value,
           );
           return (
@@ -178,6 +178,6 @@ export default ({
           );
         }}
       </ProFormDependency>
-    </DrawerForm>
+    </ModalForm>
   );
 };

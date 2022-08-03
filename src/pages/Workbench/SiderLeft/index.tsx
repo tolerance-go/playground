@@ -1,5 +1,5 @@
 import { useModel } from '@umijs/max';
-import { Alert, Layout } from 'antd';
+import { Alert, Col, Layout, Row } from 'antd';
 import consola from 'consola';
 import { useRef } from 'react';
 import ComponentGrid from './ComponentGrid';
@@ -26,15 +26,30 @@ export default function App() {
   };
 
   return (
-    <Sider
-      ref={siderRef}
-      theme="light"
-      width={300}
-    >
-      {mode === 'insert' && (
-        <Alert showIcon banner message="当前正在填充插槽" type="info" />
-      )}
-      {renderContent()}
+    <Sider ref={siderRef} theme="light" width={300}>
+      <Row
+        style={{
+          flexDirection: 'column',
+          height: '100%',
+          alignItems: 'stretch',
+        }}
+        wrap={false}
+      >
+        {mode === 'insert' && (
+          <Col flex={'none'}>
+            <Alert showIcon banner message="当前正在填充插槽" type="info" />
+          </Col>
+        )}
+        <Col
+          flex={'auto'}
+          style={{
+            overflowY: 'auto',
+            position: 'relative',
+          }}
+        >
+          {renderContent()}
+        </Col>
+      </Row>
     </Sider>
   );
 }

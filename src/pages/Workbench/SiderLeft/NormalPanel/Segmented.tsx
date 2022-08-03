@@ -26,8 +26,8 @@ export default () => {
           value: 'layout',
         },
         {
-          label: '资源',
-          value: 'asset',
+          label: '物料',
+          value: 'material',
         },
       ]}
     />

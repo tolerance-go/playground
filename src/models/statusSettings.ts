@@ -169,6 +169,11 @@ const useStatusSettings = () => {
     return componentsStatus;
   });
 
+  /** 获取指定组件的所有状态 */
+  const getComStatus = useMemoizedFn((comId: string) => {
+    return componentsStatus[comId];
+  });
+
   /** 获取数据，准备持久化 */
   const getData = useMemoizedFn(() => {
     return {
@@ -185,6 +190,7 @@ const useStatusSettings = () => {
 
   return {
     componentsStatus,
+    getComStatus,
     updateComStatSettings,
     setSelectedComActiveStatName,
     setSelectedComSettings,
