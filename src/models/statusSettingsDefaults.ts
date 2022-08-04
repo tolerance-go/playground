@@ -6,7 +6,7 @@ import { useState } from 'react';
 export type StatusSettingsDefaults = Record<string, string>;
 
 /** 每个组件的默认应用状态 */
-const statusSettingsDefaults = () => {
+const useStatusSettingsDefaults = () => {
   const [statusSettingsDefaults, setStatusSettingsDefaults] =
     useState<StatusSettingsDefaults>({});
 
@@ -74,4 +74,4 @@ const statusSettingsDefaults = () => {
   };
 };
 
-export default statusSettingsDefaults;
+export default useStatusSettingsDefaults;

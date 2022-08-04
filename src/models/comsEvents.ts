@@ -1,3 +1,5 @@
+import { ComId, EventId, StatId } from '@/typings/keys';
+import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
@@ -24,30 +26,34 @@ export type ComponentEvent = {
 };
 
 /** key: EventId */
-export type ComponentEvents = Record<string, ComponentEvent>;
+export type ComponentEvents = Record<EventId, ComponentEvent>;
 
 /**
  * 组件的不同状态
  * key: statId
  */
-export type ComponentStatusEvents = Record<string, ComponentEvents>;
+export type ComponentStatusEvents = Record<StatId, ComponentEvents>;
 
 /** 所有组件的所有状态下的配置
  * key: comId
  */
-export type ComponentsEvents = Record<string, ComponentStatusEvents>;
+export type ComponentsEvents = Record<ComId, ComponentStatusEvents>;
 
 /** 组件的事件管理 */
 const useComsEvents = () => {
   const [comsEvents, setComsEvents] = useState<ComponentsEvents>({});
 
-  /** 创建新的动作 */
+  const { eventManager } = useModel('eventManager', (model) => ({
+    eventManager: model.eventManager,
+  }));
+
+  /** 创建新的事件 */
   const createComStatEvent = useMemoizedFn(
     (comId: string, statId: string, event: Omit<ComponentEvent, 'id'>) => {
+      const newId = nanoid();
+
       setComsEvents(
         produce((draft) => {
-          const newId = nanoid();
-
           if (draft[comId] === undefined) {
             draft[comId] = {};
           }
@@ -62,6 +68,16 @@ const useComsEvents = () => {
           };
         }),
       );
+
+      /** 注册事件 */
+      eventManager.register(comId, statId, {
+        id: newId,
+        type: event.type,
+        settings: event.settings,
+        execComId: event.execComId,
+        execComStatId: event.execComStatId,
+        execComStatActionId: event.execComStatActionId,
+      });
     },
   );
 
@@ -80,6 +96,16 @@ const useComsEvents = () => {
           };
         }),
       );
+
+      /** 更新注册 */
+      eventManager.update(comId, statId, {
+        id: event.id,
+        type: event.type,
+        settings: event.settings,
+        execComId: event.execComId,
+        execComStatId: event.execComStatId,
+        execComStatActionId: event.execComStatActionId,
+      });
     },
   );
 
@@ -91,6 +117,9 @@ const useComsEvents = () => {
           delete draft[comId][statId][eventId];
         }),
       );
+
+      /** 卸载注册 */
+      eventManager.uninstalled(comId, statId, eventId);
     },
   );
 
@@ -104,6 +133,26 @@ const useComsEvents = () => {
   /** 初始化 */
   const initData = useMemoizedFn((from?: { comsEvents: ComponentsEvents }) => {
     setComsEvents(from?.comsEvents ?? {});
+
+    /** 初始化注册事件管理 */
+    if (from?.comsEvents) {
+      Object.keys(from.comsEvents).forEach((comId) => {
+        Object.keys(from.comsEvents[comId]).forEach((statId) => {
+          const events = from.comsEvents[comId][statId];
+          Object.keys(events).forEach((eventId) => {
+            const event = events[eventId];
+            eventManager.register(comId, statId, {
+              id: event.id,
+              type: event.type,
+              settings: event.settings,
+              execComId: event.execComId,
+              execComStatId: event.execComStatId,
+              execComStatActionId: event.execComStatActionId,
+            });
+          });
+        });
+      });
+    }
   });
 
   return {

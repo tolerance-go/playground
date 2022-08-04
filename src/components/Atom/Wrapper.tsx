@@ -11,7 +11,12 @@ import styles from './Wrapper.less';
  * 他会响应用户设计阶段的选择事件进行操作，选中并且进行设置
  */
 export const AtomWrapper = (
-  props: React.PropsWithChildren<StageComponentsModelItem>,
+  props: React.PropsWithChildren<
+    StageComponentsModelItem & {
+      /** 事件交互中，处于状态改变时 */
+      usedStat: boolean;
+    }
+  >,
 ) => {
   const { setStageSelectNodeId, stageSelectNodeId } = useModel(
     'stageSelectNodeId',
@@ -30,6 +35,7 @@ export const AtomWrapper = (
       className={clsx(styles.wrap, {
         [styles.selected]: stageSelectNodeId === props.id,
         [styles.hover]: hoverNodeId === props.id,
+        [styles.warn]: props.usedStat,
       })}
       style={{
         padding: 8,

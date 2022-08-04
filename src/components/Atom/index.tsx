@@ -1,6 +1,7 @@
 import { ElementsCxt } from '@/components/ElementsCtx';
 import { useComponentDefaultSettings } from '@/hooks/useComponentDefaultSettings';
 import { useComponentSettings } from '@/hooks/useComponentSettings';
+import { useComponentUsedSettings } from '@/hooks/useComponentUsedSettings';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
@@ -21,20 +22,30 @@ export const Atom = (props: StageComponentsModelItem) => {
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 
-  const { settings: defaultSettings } = useComponentDefaultSettings(props.id);
+  const { settings: defaultSettings, defaultStatId } =
+    useComponentDefaultSettings(props.id);
+  const { settings: usedSettings, usedStatId } = useComponentUsedSettings(
+    props.id,
+  );
   const { settings } = useComponentSettings(props.id);
 
   consola.info('渲染 atom 组件', props.id);
 
+  /**
+   * 选中状态 settings 优先级最高
+   * 其他 used 大于 defaults
+   */
   const el = (
     <Element
       key={props.id}
       {...{
         id: props.id,
+        /** 每个组件都一定存在一个默认状态 */
+        statId: (usedStatId ?? defaultStatId) as string,
         settings:
           stageSelectNodeId === props.id
-            ? settings ?? defaultSettings
-            : defaultSettings,
+            ? settings ?? usedSettings ?? defaultSettings
+            : usedSettings ?? defaultSettings,
         slots,
         slotsOrder,
       }}
@@ -45,5 +56,9 @@ export const Atom = (props: StageComponentsModelItem) => {
     return el;
   }
 
-  return <AtomWrapper {...props}>{el}</AtomWrapper>;
+  return (
+    <AtomWrapper {...props} usedStat={usedStatId !== undefined}>
+      {el}
+    </AtomWrapper>
+  );
 };

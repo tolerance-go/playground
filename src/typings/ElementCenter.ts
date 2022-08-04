@@ -8,6 +8,7 @@ export type AtomComponentProps<Settings extends object = object> = {
   slotsOrder?: Record<string, number[]>;
   settings?: Settings;
   id: string;
+  statId: string;
 };
 
 /**

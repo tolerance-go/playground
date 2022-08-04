@@ -254,6 +254,9 @@ export default ({
           );
         }}
       </ProFormDependency>
+
+      <ProFormText disabled name="1111" label="触发条件(待实现)" placeholder="请输入" />
+      <ProFormText disabled name="2222" label="执行条件(待实现)" placeholder="请输入" />
     </ModalForm>
   );
 };

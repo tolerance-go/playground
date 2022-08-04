@@ -19,7 +19,7 @@ export const useComponentDefaultSettings = (comId?: string) => {
 
     const { settings } =
       componentsStatus[comId]?.[defaultStatId]?.configs ?? {};
-    return { settings };
+    return { settings, defaultStatId };
   }
 
   return {

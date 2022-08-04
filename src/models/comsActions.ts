@@ -105,8 +105,16 @@ const useComsActions = () => {
     return comsActions[comId]?.[statId];
   });
 
+  /** 获取指定组件的状态下的动作 */
+  const getComStatAction = useMemoizedFn(
+    (comId: string, statId: string, actionId: string) => {
+      return comsActions[comId]?.[statId]?.[actionId];
+    },
+  );
+
   return {
     comsActions,
+    getComStatAction,
     getComStatActions,
     deleteComStatAction,
     updateComStatAction,
