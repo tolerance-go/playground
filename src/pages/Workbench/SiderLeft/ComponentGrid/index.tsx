@@ -85,7 +85,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
       >
         {[
           {
-            title: 'Web',
+            title: '基础',
             type: 'tabs',
             children: [
               {

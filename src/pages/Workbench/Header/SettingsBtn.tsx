@@ -1,4 +1,4 @@
-import { SettingFilled } from '@ant-design/icons';
+import { SettingOutlined } from '@ant-design/icons';
 import { ModalForm } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 
@@ -15,7 +15,7 @@ export default () => {
     <ModalForm
       title="设置"
       trigger={
-        <Button type="text" icon={<SettingFilled />}>
+        <Button type="text" icon={<SettingOutlined />}>
           设置
         </Button>
       }
