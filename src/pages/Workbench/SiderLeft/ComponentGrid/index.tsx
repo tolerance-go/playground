@@ -358,8 +358,6 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                                     getLatestComsInitalSettings()?.[
                                       item.name
                                     ] ?? {},
-                                  actionsId: {},
-                                  stylesId: {},
                                 },
                               });
 

@@ -1,6 +1,7 @@
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { ProFormDependency } from '@ant-design/pro-components';
 import { Form, FormProps } from 'antd';
+import clsx from 'clsx';
 import React from 'react';
 import { ConfigInput, ConfigInputProps } from './ConfigInput';
 import styles from './index.less';
@@ -28,6 +29,10 @@ export const ConfigsForm = ({
     const renderInner = () => {
       const formControl = (
         <Form.Item
+          className={clsx({
+            [styles.labelAlignLeft]: item.labelAlignLeft ?? true,
+            [styles.formItemSplit]: item.formItemSplit,
+          })}
           rules={[
             ...(item.required
               ? [

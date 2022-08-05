@@ -6,15 +6,24 @@ import { useState } from 'react';
 const defaultConfigs: SettingFormConfig = [
   {
     type: 'boxSize',
-    name: 'marginSize',
-    label: '外边距',
+    name: 'size',
+    label: '尺寸大小',
     verticalLayout: true,
+    formItemSplit: true,
   },
   {
-    type: 'boxSize',
-    name: 'paddingSize',
+    type: 'boxPosition',
+    name: 'marginPosition',
+    label: '外边距',
+    verticalLayout: true,
+    formItemSplit: true,
+  },
+  {
+    type: 'boxPosition',
+    name: 'paddingPosition',
     label: '内边距',
     verticalLayout: true,
+    formItemSplit: true,
   },
   {
     type: 'select',
@@ -32,8 +41,8 @@ const defaultConfigs: SettingFormConfig = [
     ],
   },
   {
-    type: 'boxSize',
-    name: 'positionSize',
+    type: 'boxPosition',
+    name: 'position',
     label: '定位边距',
     verticalLayout: true,
   },

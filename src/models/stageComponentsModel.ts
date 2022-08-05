@@ -1,5 +1,5 @@
 import { SlotPosition } from '@/models/slotsInsert';
-import { useModel } from '@umijs/max';
+// import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
 import { WritableDraft } from 'immer/dist/internal';
@@ -29,9 +29,9 @@ const useStageComponentsModel = () => {
   const [stageComponentsModel, setStageComponentsModel] =
     useState<StageComponentsModel>();
 
-  const { removeComSettings } = useModel('componentsSettings', (model) => ({
-    removeComSettings: model?.removeComSettings,
-  }));
+  // const { removeComSettings } = useModel('comsActiveSettings', (model) => ({
+  //   removeComSettings: model?.removeComSettings,
+  // }));
 
   /** 新增组建到舞台 */
   const addComponentToStage = useMemoizedFn(
@@ -147,12 +147,12 @@ const useStageComponentsModel = () => {
           collectAllSlotComIds(comId);
           allSlots.forEach((slotComId) => {
             delete prev?.[slotComId];
-            removeComSettings(slotComId);
+            // removeComSettings(slotComId);
           });
 
           /** 删除自身 */
           delete prev?.[comId];
-          removeComSettings(comId);
+          // removeComSettings(comId);
         }),
       );
     },

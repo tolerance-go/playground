@@ -5,12 +5,11 @@ import { useState } from 'react';
 
 export type StatusSettingsUsed = Record<string, string>;
 
-/** 每个组件的默认应用状态 */
+/** 每个组件的动作改变后的状态 */
 const useStatusSettingsUsed = () => {
   const [statusSettingsUsed, setStatusSettingsUsed] =
     useState<StatusSettingsUsed>({});
 
-  /** 设置组件的默认状态 */
   const setComStatusSettingsUsed = useMemoizedFn(
     (comId: string, statId: string) => {
       setStatusSettingsUsed(

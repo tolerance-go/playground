@@ -7,6 +7,12 @@ export const useComponentUsedSettings = (comId?: string) => {
     };
   });
 
+  const { comsStyles } = useModel('comsStyles', (model) => {
+    return {
+      comsStyles: model.comsStyles,
+    };
+  });
+
   const { statusSettingsUsed } = useModel('statusSettingsUsed', (model) => ({
     statusSettingsUsed: model.statusSettingsUsed,
   }));
@@ -15,10 +21,13 @@ export const useComponentUsedSettings = (comId?: string) => {
     const usedStatId = statusSettingsUsed[comId];
 
     const { settings } = componentsStatus[comId]?.[usedStatId]?.configs ?? {};
-    return { settings, usedStatId };
+    const styles = comsStyles[comId]?.[usedStatId];
+    return { settings, styles, usedStatId };
   }
 
   return {
+    usedStatId: undefined,
+    styles: undefined,
     settings: undefined,
   };
 };

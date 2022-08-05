@@ -12,6 +12,9 @@ export type SettingFormConfig = ((
       type: 'boxSize';
     }
   | {
+      type: 'boxPosition';
+    }
+  | {
       type: 'select';
       multiple?: boolean;
       options:
@@ -32,4 +35,8 @@ export type SettingFormConfig = ((
   required?: boolean;
   /** formItem 垂直布局 */
   verticalLayout?: boolean;
+  /** label 是否左对齐 */
+  labelAlignLeft?: boolean;
+  /** 是否显示分割线 */
+  formItemSplit?: boolean;
 })[];

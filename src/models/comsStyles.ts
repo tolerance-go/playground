@@ -13,35 +13,34 @@ export type UnitNumber = {
   unit?: 'percentage' | 'absolute';
 };
 
-export type BoxSize = {
+export type BoxPosition = {
   top?: UnitNumber;
   left?: UnitNumber;
   right?: UnitNumber;
   bottom?: UnitNumber;
 };
 
-export type ComponentStyle = {
-  id: string;
-  marginSize: BoxSize;
-  paddingSize: BoxSize;
-  positionType: CSSProperties['position'];
-  positionSize: BoxSize;
-  width: UnitNumber;
-  height: UnitNumber;
+export type BoxSize = {
+  width?: UnitNumber;
+  height?: UnitNumber;
   /** 锁定宽高比例 */
-  lockingWidthRatio: boolean;
+  lockingWidthRatio?: boolean;
 };
 
-type StyleId = string;
-
-/** key: EventId */
-export type ComponentStyles = Record<StyleId, ComponentStyle>;
+export type ComponentStyle = {
+  id: string;
+  marginPosition: BoxPosition;
+  paddingPosition: BoxPosition;
+  positionType: CSSProperties['position'];
+  position: BoxPosition;
+  size: BoxSize;
+};
 
 /**
  * 组件的不同状态
  * key: statId
  */
-export type ComponentStatusStyles = Record<StatId, ComponentStyles>;
+export type ComponentStatusStyles = Record<StatId, ComponentStyle>;
 
 /** 所有组件的所有状态下的配置
  * key: comId
@@ -59,10 +58,7 @@ const useComsStyles = () => {
           if (draft[comId] === undefined) {
             draft[comId] = {};
           }
-          if (draft[comId][statId] === undefined) {
-            draft[comId][statId] = {};
-          }
-          draft[comId][statId][style.id] = style;
+          draft[comId][statId] = style;
         }),
       );
     },
@@ -81,6 +77,7 @@ const useComsStyles = () => {
   });
 
   return {
+    comsStyles,
     getData,
     initData,
     setComponentStyle,

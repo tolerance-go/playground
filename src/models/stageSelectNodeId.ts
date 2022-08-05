@@ -15,11 +15,10 @@ const useStageSelectNodeId = () => {
     setMode: model?.setMode,
   }));
 
-  const { setStageSelectSlotGroupId, stageSelectSlotGroupId } = useModel(
+  const { setStageSelectSlotGroupId } = useModel(
     'stageSelectSlotGroupId',
     (model) => ({
       setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
-      stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
     }),
   );
 

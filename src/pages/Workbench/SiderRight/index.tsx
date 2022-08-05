@@ -52,7 +52,12 @@ export default function App() {
               </Tabs>
             </Col>
 
-            <Col flex={'auto'}>
+            <Col
+              flex={'auto'}
+              style={{
+                overflowY: 'auto',
+              }}
+            >
               {(() => {
                 if (activeKey === 'settings') {
                   return <SettingForm />;

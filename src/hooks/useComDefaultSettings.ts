@@ -1,6 +1,6 @@
 import { useModel } from '@umijs/max';
 
-export const useComponentDefaultSettings = (comId?: string) => {
+export const useComDefaultSettings = (comId?: string) => {
   const { componentsStatus } = useModel('statusSettings', (model) => {
     return {
       componentsStatus: model.componentsStatus,

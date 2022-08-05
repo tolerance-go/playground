@@ -1,6 +1,7 @@
 import { SLOTS_NAME } from '@/constants';
 import { EventHandlerParams } from '@/domains/EventManager';
 import { ComponentAction } from '@/models/comsActions';
+import { ComponentStyle } from '@/models/comsStyles';
 import { SwitchStatusAction } from '@/typings/actions';
 import { AtomComponentProps } from '@/typings/ElementCenter';
 import { useModel } from '@umijs/max';
@@ -21,11 +22,16 @@ export interface AtomButtonSwtichStatusAction extends ComponentAction {
   };
 }
 
+export type AtomButtonStyle = ComponentStyle;
+
 export const AtomButton = (
-  props: AtomComponentProps<{
-    type?: ButtonProps['type'];
-    text?: string;
-  }>,
+  props: AtomComponentProps<
+    {
+      type?: ButtonProps['type'];
+      text?: string;
+    },
+    AtomButtonStyle
+  >,
 ) => {
   const { text, ...rest } = props.settings ?? {};
 
@@ -81,8 +87,12 @@ export const AtomButton = (
         comId={props.id}
         slotName={SLOTS_NAME.ADDON_BEFORE}
       />
+
       <Button
         {...rest}
+        style={{
+          width: props.styles?.size?.width?.value,
+        }}
         onClick={() => {
           eventManager.dispatch(
             'click',

@@ -13,14 +13,14 @@ export const useSaveStage = () => {
     },
   );
 
-  const { getData: getComsModelData } = useModel(
-    'componentsSettings',
-    (model) => {
-      return {
-        getData: model?.getData,
-      };
-    },
-  );
+  // const { getData: getComsModelData } = useModel(
+  //   'comsActiveSettings',
+  //   (model) => {
+  //     return {
+  //       getData: model?.getData,
+  //     };
+  //   },
+  // );
 
   const { getData: getStatusSettings } = useModel('statusSettings', (model) => {
     return {
@@ -73,7 +73,7 @@ export const useSaveStage = () => {
         JSON.stringify({
           comsStatusRelations: getStatusRelations(),
           comsTree: getComsTreeData(),
-          comsModel: getComsModelData(),
+          // comsModel: getComsModelData(),
           comsStatus: getStatusSettings(),
           comsStatusDefaults: getStatusSettingsDefaults(),
           comsActions: getComsActions(),

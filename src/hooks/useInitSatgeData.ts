@@ -10,12 +10,12 @@ export const useInitSatgeData = () => {
     }),
   );
 
-  const { initData: initComsSettingsData } = useModel(
-    'componentsSettings',
-    (model) => ({
-      initData: model?.initData,
-    }),
-  );
+  // const { initData: initComsSettingsData } = useModel(
+  //   'comsActiveSettings',
+  //   (model) => ({
+  //     initData: model?.initData,
+  //   }),
+  // );
 
   const { initData: initStatusSettings } = useModel(
     'statusSettings',
@@ -61,7 +61,7 @@ export const useInitSatgeData = () => {
 
     if (success) {
       initComsTreeData(stageData.comsTree);
-      initComsSettingsData(stageData.comsModel);
+      // initComsSettingsData(stageData.comsModel);
       initStatusSettings(stageData.comsStatus);
       initStatusSettingsDefaults(stageData.comsStatusDefaults);
       initStatusRelations(stageData.comsStatusRelations);

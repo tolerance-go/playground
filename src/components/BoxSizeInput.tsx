@@ -1,50 +1,27 @@
-import { BoxSize, UnitNumber } from '@/models/comsStyles';
+import { UnitNumber } from '@/models/comsStyles';
+import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { useMemoizedFn } from 'ahooks';
-import { InputNumber, Row, Select, SelectProps } from 'antd';
+import { Col, InputNumber, Row, Space } from 'antd';
+import { UnitSelect } from './UnitSelect';
 
-const UnitSelector = (props: {
-  value: SelectProps['value'];
-  onChange: SelectProps['onChange'];
-}) => {
-  return (
-    <Select
-      defaultValue={'absolute'}
-      value={props.value}
-      onChange={props.onChange}
-    >
-      <Select.Option value="percentage">
-        <span
-          style={{
-            fontSize: 10,
-          }}
-        >
-          百分比
-        </span>
-      </Select.Option>
-      <Select.Option value="absolute">
-        <span
-          style={{
-            fontSize: 10,
-          }}
-        >
-          绝对值
-        </span>
-      </Select.Option>
-    </Select>
-  );
+export type BoxSizeInputValue = {
+  width?: UnitNumber;
+  height?: UnitNumber;
+  lockingWidthRatio?: boolean;
 };
 
 export default (props: {
+  bordered?: boolean;
   disabled?: boolean;
-  value?: BoxSize;
-  onChange?: (value: BoxSize) => void;
+  value?: BoxSizeInputValue;
+  onChange?: (value: BoxSizeInputValue) => void;
 }) => {
   const handleChange = useMemoizedFn(
-    (next: number, pos: 'top' | 'left' | 'right' | 'bottom') => {
+    (next: number, type: 'width' | 'height') => {
       props.onChange?.({
         ...props.value,
-        [pos]: {
-          ...props.value?.[pos],
+        [type]: {
+          ...props.value?.[type],
           value: next,
         },
       });
@@ -52,11 +29,11 @@ export default (props: {
   );
 
   const handleUnitChange = useMemoizedFn(
-    (next: UnitNumber['unit'], pos: 'top' | 'left' | 'right' | 'bottom') => {
+    (next: UnitNumber['unit'], type: 'width' | 'height') => {
       props.onChange?.({
         ...props.value,
-        [pos]: {
-          ...props.value?.[pos],
+        [type]: {
+          ...props.value?.[type],
           unit: next,
         },
       });
@@ -65,77 +42,106 @@ export default (props: {
 
   return (
     <div>
+      <Row gutter={20}>
+        <Col flex={'none'}>宽度</Col>
+        <Col flex={'auto'}>
+          <InputNumber
+            size="small"
+            onChange={(next) => handleChange(next, 'width')}
+            style={{
+              width: '100%',
+            }}
+            disabled={props.disabled}
+            placeholder="请输入"
+            value={props.value?.width?.value}
+            addonAfter={
+              <UnitSelect
+                value={props.value?.width?.unit}
+                onChange={(next) => handleUnitChange(next, 'width')}
+              />
+            }
+          />
+        </Col>
+      </Row>
       <Row
         justify="center"
         style={{
-          marginBottom: 15,
+          padding: 10,
         }}
       >
-        <InputNumber
-          size="small"
-          onChange={(next) => handleChange(next, 'top')}
-          style={{ width: '45%' }}
-          disabled={props.disabled}
-          placeholder="上"
-          value={props.value?.top?.value}
-          addonAfter={
-            <UnitSelector
-              value={props.value?.top?.unit}
-              onChange={(next) => handleUnitChange(next, 'top')}
+        {props.value?.lockingWidthRatio ? (
+          <Space
+            style={{
+              cursor: 'pointer',
+            }}
+            size={'small'}
+            onClick={() => {
+              props.onChange?.({
+                ...props.value,
+                lockingWidthRatio: false,
+              });
+            }}
+          >
+            <span
+              style={{
+                fontSize: 10,
+              }}
+            >
+              比例固定
+            </span>
+            <LockOutlined
+              style={{
+                fontSize: 12,
+              }}
             />
-          }
-        />
+          </Space>
+        ) : (
+          <Space
+            style={{
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              props.onChange?.({
+                ...props.value,
+                lockingWidthRatio: true,
+              });
+            }}
+          >
+            <span
+              style={{
+                fontSize: 10,
+              }}
+            >
+              比例不固定
+            </span>
+            <UnlockOutlined
+              style={{
+                fontSize: 12,
+              }}
+            />
+          </Space>
+        )}
       </Row>
-      <Row
-        justify="space-between"
-        style={{
-          marginBottom: 15,
-        }}
-      >
-        <InputNumber
-          size="small"
-          onChange={(next) => handleChange(next, 'left')}
-          style={{ width: '45%' }}
-          disabled={props.disabled}
-          placeholder="左"
-          value={props.value?.left?.value}
-          addonAfter={
-            <UnitSelector
-              value={props.value?.left?.unit}
-              onChange={(next) => handleUnitChange(next, 'left')}
-            />
-          }
-        />
-        <InputNumber
-          onChange={(next) => handleChange(next, 'right')}
-          size="small"
-          style={{ width: '45%' }}
-          disabled={props.disabled}
-          placeholder="右"
-          value={props.value?.right?.value}
-          addonAfter={
-            <UnitSelector
-              value={props.value?.right?.unit}
-              onChange={(next) => handleUnitChange(next, 'right')}
-            />
-          }
-        />
-      </Row>
-      <Row justify="center">
-        <InputNumber
-          size="small"
-          onChange={(next) => handleChange(next, 'bottom')}
-          style={{ width: '45%' }}
-          disabled={props.disabled}
-          placeholder="下"
-          value={props.value?.bottom?.value}
-          addonAfter={
-            <UnitSelector
-              value={props.value?.bottom?.unit}
-              onChange={(next) => handleUnitChange(next, 'bottom')}
-            />
-          }
-        />
+      <Row gutter={20}>
+        <Col flex={'none'}>高度</Col>
+        <Col flex={'auto'}>
+          <InputNumber
+            size="small"
+            onChange={(next) => handleChange(next, 'height')}
+            style={{
+              width: '100%',
+            }}
+            disabled={props.disabled}
+            placeholder="请输入"
+            value={props.value?.height?.value}
+            addonAfter={
+              <UnitSelect
+                value={props.value?.height?.unit}
+                onChange={(next) => handleUnitChange(next, 'height')}
+              />
+            }
+          />
+        </Col>
       </Row>
     </div>
   );

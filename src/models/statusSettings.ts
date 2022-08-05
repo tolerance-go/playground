@@ -3,6 +3,7 @@ import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { DEFAULT_COM_STATUS_NAME } from './../constants/index';
 
+import { ComId, StatId } from '@/typings/keys';
 import { useState } from 'react';
 
 /** 单个组件的配置 */
@@ -18,10 +19,10 @@ export type ComponentStat = {
 };
 
 /** 组件的不同状态 */
-export type ComponentStatus = Record<string, ComponentStat>;
+export type ComponentStatus = Record<StatId, ComponentStat>;
 
 /** 所有组件的所有状态下的配置 */
-export type ComponentsStatus = Record<string, ComponentStatus>;
+export type ComponentsStatus = Record<ComId, ComponentStatus>;
 
 const useStatusSettings = () => {
   const [componentsStatus, setComponentsStatus] = useState<ComponentsStatus>(

@@ -2,6 +2,7 @@ import { SegmentedSwitch } from '@/components/SegmentedSwitch';
 import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { Input, Select } from 'antd';
+import BoxPositionInput from '../BoxPositionInput';
 import BoxSizeInput from '../BoxSizeInput';
 
 export type ConfigInputProps = {
@@ -24,6 +25,10 @@ export const ConfigInput = ({
   if (config.type === 'string') {
     return (
       <Input
+        style={{
+          background: '#f3f3f3',
+          borderRadius: '4px',
+        }}
         disabled={disabled}
         bordered={bordered}
         value={value}
@@ -35,6 +40,10 @@ export const ConfigInput = ({
   if (config.type === 'select') {
     return (
       <Select
+        style={{
+          background: '#f3f3f3',
+          borderRadius: '4px',
+        }}
         disabled={disabled}
         mode={config.multiple ? 'multiple' : undefined}
         value={value}
@@ -57,9 +66,25 @@ export const ConfigInput = ({
     );
   }
 
+  if (config.type === 'boxPosition') {
+    return (
+      <BoxPositionInput
+        bordered={bordered}
+        disabled={disabled}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+
   if (config.type === 'boxSize') {
     return (
-      <BoxSizeInput disabled={disabled} value={value} onChange={onChange} />
+      <BoxSizeInput
+        bordered={bordered}
+        disabled={disabled}
+        value={value}
+        onChange={onChange}
+      ></BoxSizeInput>
     );
   }
 

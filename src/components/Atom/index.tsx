@@ -1,7 +1,10 @@
 import { ElementsCxt } from '@/components/ElementsCtx';
-import { useComponentDefaultSettings } from '@/hooks/useComponentDefaultSettings';
+import { useComDefaultSettings } from '@/hooks/useComDefaultSettings';
+import { useComDefaultStatId } from '@/hooks/useComDefaultStatId';
+import { useComDefaultStyles } from '@/hooks/useComDefaultStyles';
 import { useComponentSettings } from '@/hooks/useComponentSettings';
 import { useComponentUsedSettings } from '@/hooks/useComponentUsedSettings';
+import { useComSelectedStatStyles } from '@/hooks/useComSelectedStatStyles';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
@@ -22,12 +25,16 @@ export const Atom = (props: StageComponentsModelItem) => {
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 
-  const { settings: defaultSettings, defaultStatId } =
-    useComponentDefaultSettings(props.id);
-  const { settings: usedSettings, usedStatId } = useComponentUsedSettings(
-    props.id,
-  );
+  const { defaultStatId } = useComDefaultStatId(props.id);
+  const { settings: defaultSettings } = useComDefaultSettings(props.id);
+  const { styles: defaultStyles } = useComDefaultStyles(props.id);
+  const {
+    settings: usedSettings,
+    styles: usedStyles,
+    usedStatId,
+  } = useComponentUsedSettings(props.id);
   const { settings } = useComponentSettings(props.id);
+  const { styles } = useComSelectedStatStyles(props.id);
 
   consola.info('渲染 atom 组件', props.id);
 
@@ -46,6 +53,10 @@ export const Atom = (props: StageComponentsModelItem) => {
           stageSelectNodeId === props.id
             ? settings ?? usedSettings ?? defaultSettings
             : usedSettings ?? defaultSettings,
+        styles:
+          stageSelectNodeId === props.id
+            ? styles ?? usedStyles ?? defaultStyles
+            : usedStyles ?? defaultStyles,
         slots,
         slotsOrder,
       }}
