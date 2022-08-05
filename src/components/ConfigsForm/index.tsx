@@ -1,14 +1,9 @@
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { ProFormDependency } from '@ant-design/pro-components';
-import { Form, FormProps, Input, Select, Switch } from 'antd';
+import { Form, FormProps } from 'antd';
 import React from 'react';
 import { ConfigInput, ConfigInputProps } from './ConfigInput';
-
-const SettingInputs: Record<string, React.ElementType<any>> = {
-  string: Input,
-  boolean: Switch,
-  select: Select,
-};
+import styles from './index.less';
 
 export const ConfigsForm = ({
   configs,
@@ -31,10 +26,6 @@ export const ConfigsForm = ({
 } & FormProps) => {
   const items = configs?.map((item) => {
     const renderInner = () => {
-      if (SettingInputs[item.type] === undefined) {
-        return null;
-      }
-
       const formControl = (
         <Form.Item
           rules={[
@@ -46,6 +37,16 @@ export const ConfigsForm = ({
                 ]
               : []),
           ]}
+          {...(item.verticalLayout
+            ? {
+                labelCol: {
+                  span: 24,
+                },
+                wrapperCol: {
+                  span: 24,
+                },
+              }
+            : undefined)}
           key={item.name}
           label={renderLabel?.(item) ?? item.label}
           name={
@@ -80,5 +81,11 @@ export const ConfigsForm = ({
 
     return renderFormItemWrapper?.(inner) ?? inner;
   });
-  return onlyFormItem ? <>{items}</> : <Form {...formProps}>{items}</Form>;
+  return onlyFormItem ? (
+    <>{items}</>
+  ) : (
+    <Form {...formProps} className={styles.wrapper}>
+      {items}
+    </Form>
+  );
 };

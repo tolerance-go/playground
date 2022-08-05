@@ -2,6 +2,7 @@ import { SegmentedSwitch } from '@/components/SegmentedSwitch';
 import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { Input, Select } from 'antd';
+import BoxSizeInput from '../BoxSizeInput';
 
 export type ConfigInputProps = {
   disabled?: boolean;
@@ -53,6 +54,12 @@ export const ConfigInput = ({
   if (config.type === 'boolean') {
     return (
       <SegmentedSwitch disabled={disabled} value={value} onChange={onChange} />
+    );
+  }
+
+  if (config.type === 'boxSize') {
+    return (
+      <BoxSizeInput disabled={disabled} value={value} onChange={onChange} />
     );
   }
 

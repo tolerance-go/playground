@@ -9,6 +9,9 @@ export type SettingFormConfig = ((
       type: 'boolean';
     }
   | {
+      type: 'boxSize';
+    }
+  | {
       type: 'select';
       multiple?: boolean;
       options:
@@ -27,4 +30,6 @@ export type SettingFormConfig = ((
   name: string;
   label: string;
   required?: boolean;
+  /** formItem 垂直布局 */
+  verticalLayout?: boolean;
 })[];

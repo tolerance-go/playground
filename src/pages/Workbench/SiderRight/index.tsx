@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ComInfo } from './ComInfo';
 import { ComsStatusTabs } from './ComsStatusTabs';
 import ComStatEvents from './ComStatEvents';
+import ComStatStyle from './ComStatStyle';
 import { SettingForm } from './SettingForm';
 import StatActionsCreator from './StatActionsCreator';
 import StatActionsList from './StatActionsList';
@@ -15,7 +16,7 @@ const { Sider } = Layout;
 export default function App() {
   const { mode } = useModel('siderRightMode');
 
-  const [activeKey, setActiveKey] = useState('events');
+  const [activeKey, setActiveKey] = useState('styles');
 
   return (
     <Sider
@@ -88,6 +89,10 @@ export default function App() {
                 }
                 if (activeKey === 'events') {
                   return <ComStatEvents />;
+                }
+
+                if (activeKey === 'styles') {
+                  return <ComStatStyle />;
                 }
                 return <></>;
               })()}

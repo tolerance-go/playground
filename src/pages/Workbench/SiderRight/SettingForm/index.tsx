@@ -9,7 +9,6 @@ import { Form } from 'antd';
 import consola from 'consola';
 import utl from 'lodash';
 import { useEffect, useMemo } from 'react';
-import styles from './index.less';
 import { SettingInputLabel } from './SettingInputLabel';
 
 // const SettingInputs: Record<string, React.ElementType<any>> = {
@@ -55,7 +54,6 @@ export const SettingForm = () => {
   return (
     <ConfigsForm
       configs={configs}
-      className={styles.wrapper}
       labelCol={{
         span: 7,
       }}
