@@ -1,7 +1,7 @@
 import { VersionControllerShow } from '@/services/server/VersionController';
-import { ExportOutlined } from '@ant-design/icons';
+import { CloseOutlined, ExportOutlined } from '@ant-design/icons';
 import { useModel, useRequest } from '@umijs/max';
-import { Divider, Space, Spin, Tooltip, Typography } from 'antd';
+import { Divider, Space, Spin, Tag, Tooltip, Typography } from 'antd';
 
 export default () => {
   const { activeVersionId, setActiveVersionId } = useModel(
@@ -29,23 +29,25 @@ export default () => {
   const renderVersion = () => {
     if (data) {
       return (
-        <Space size={'small'}>
-          {data?.name}
-          <Tooltip title="退出当前版本状态">
-            <ExportOutlined
-              onClick={() => {
-                setActiveVersionId(undefined);
-              }}
-              style={{
-                cursor: 'pointer',
-              }}
-            />
-          </Tooltip>
-        </Space>
+        <Tag>
+          <Space size={'small'}>
+            {data?.name}
+            <Tooltip title="退出当前版本状态">
+              <ExportOutlined
+                onClick={() => {
+                  setActiveVersionId(undefined);
+                }}
+                style={{
+                  cursor: 'pointer',
+                }}
+              />
+            </Tooltip>
+          </Space>
+        </Tag>
       );
     }
 
-    return <span>最新未发布</span>;
+    return <Tag>最新未发布</Tag>;
   };
 
   return (
@@ -57,15 +59,50 @@ export default () => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      {
-        <Space size={'small'}>
-          <Typography.Text type="secondary">test</Typography.Text>
-          <Divider type="vertical" />
-          <Spin spinning={loading} size="small">
-            {renderVersion()}
-          </Spin>
-        </Space>
-      }
+      <Space size={'small'}>
+        <Typography.Text type="secondary">
+          1000{' '}
+          <CloseOutlined
+            style={{
+              fontSize: 10,
+            }}
+          />{' '}
+          600
+        </Typography.Text>
+        {/* <Space>
+          <InputNumber
+            style={{
+              width: 110,
+            }}
+            addonBefore="宽"
+            size="small"
+          ></InputNumber>
+          <CloseOutlined
+            style={{
+              fontSize: 10,
+            }}
+          />
+          <InputNumber
+            style={{
+              width: 110,
+            }}
+            addonBefore="高"
+            size="small"
+          ></InputNumber>
+        </Space> */}
+        <Divider type="vertical" />
+        <Typography.Text
+          style={{
+            marginRight: 10,
+          }}
+          type="secondary"
+        >
+          test
+        </Typography.Text>
+        <Spin spinning={loading} size="small">
+          {renderVersion()}
+        </Spin>
+      </Space>
     </div>
   );
 };
