@@ -22,6 +22,9 @@ export type Event = {
 };
 
 export class EventManager {
+  /** 禁用 */
+  private disabled: boolean;
+
   /** 全局注册组件发生事件及后续执行目标组件 */
   private eventCenter: Record<ComId, Record<StatId, Record<EventId, Event>>> =
     {};
@@ -31,6 +34,10 @@ export class EventManager {
     ComId,
     Record<StatId, Record<EventType, Record<EventHandlerId, EventHandler>>>
   > = {};
+
+  constructor(disabled: boolean) {
+    this.disabled = disabled;
+  }
 
   /** 注册事件 */
   public register(comId: string, statId: string, event: Event) {
@@ -122,6 +129,8 @@ export class EventManager {
       statId: string;
     },
   ) {
+    if (this.disabled) return;
+
     const { comId, statId } = from;
 
     if (this.eventCenter[comId] && this.eventCenter[comId][statId]) {

@@ -4,7 +4,7 @@
   "author": "tolerance-go <892728595@qq.com>",
   "scripts": {
     "build": "max build",
-    "dev": "max dev",
+    "dev": "PORT=8000 max dev",
     "postinstall": "max setup",
     "openapi": "max openapi",
     "prepare": "husky install",

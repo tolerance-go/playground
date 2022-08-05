@@ -6,6 +6,7 @@ import APIConfigForm from './APIConfigForm';
 import { AutoSaveTag } from './AutoSaveTag';
 import CenterArea from './CenterArea';
 import CMSConfigForm from './CMSConfigForm';
+// import EventInteraction from './EventInteraction';
 import { PlayAction } from './PlayAction';
 import SaveToVersionBtn from './SaveToVersionBtn';
 import SettingsBtn from './SettingsBtn';
@@ -70,6 +71,9 @@ const App = () => {
         <Col>
           <Space>
             <AutoSaveTag />
+            {/* <Divider type="vertical" /> */}
+            {/* 事件交互 */}
+            {/* <EventInteraction /> */}
             <PlayAction />
             <SaveToVersionBtn />
             <Divider type="vertical" />

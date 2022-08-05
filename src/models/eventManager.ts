@@ -3,8 +3,9 @@ import { useState } from 'react';
 
 /** 事件处理中心 */
 const useEventManager = () => {
-  const [eventManager] = useState(new EventManager());
-  window.__eventManager = eventManager;
+  const [eventManager] = useState(
+    new EventManager(location.pathname !== '/playground'),
+  );
   return {
     eventManager,
   };
