@@ -1,11 +1,14 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
+import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
+import { useComStatusExtendStyles } from '@/hooks/useComStatusExtendStyles';
 import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
+import { useFormReset } from '@/hooks/useFormReset';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
 import { useSelectedComActiveStatStyle } from '@/hooks/useSelectedComActiveStatStyle';
 import { useSelectedComStyleConfigs } from '@/hooks/useSelectedComStyleConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { useModel } from '@umijs/max';
 import { Form } from 'antd';
-import { useEffect } from 'react';
 
 export default () => {
   const { configs } = useSelectedComStyleConfigs();
@@ -13,37 +16,39 @@ export default () => {
 
   const { stageSelectNode } = useSelectedNode();
 
-  const { setComponentStyle } = useModel('comsStyles', (model) => ({
-    setComponentStyle: model.setComponentStyle,
-  }));
+  const { setCurrentComStylesExtendsStyles } = useComStatusExtendStyles();
 
-  const { getSelectedComponentStatusId, selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+  const { triggerPrepareSaveTimeChange } = useModel(
+    'stageAutoSave',
     (model) => ({
-      getSelectedComponentStatusId: model.getSelectedComponentStatusId,
-      selectedComponentStatusId: model.selectedComponentStatusId,
+      triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),
   );
-
-  const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
-    getStageSelectNodeId: model.getStageSelectNodeId,
-  }));
 
   const { debounceTriggerPrepareSaveTimeChange } =
     useDebounceTriggerPrepareSaveTimeChange();
 
   const { style } = useSelectedComActiveStatStyle(stageSelectNode?.id);
+  const { extendRelation } = useSelectedComActiveStatExtendRelation();
+
+  const { lockComExtendStyleField, unlockComExtendStyleField } = useModel(
+    'statusRelations',
+    (model) => ({
+      lockComExtendStyleField: model.lockComExtendStyleField,
+      unlockComExtendStyleField: model.unlockComExtendStyleField,
+    }),
+  );
 
   /** 先执行 reset 再执行 setFieldsValue */
-  useEffect(() => {
-    form.resetFields();
-  }, [selectedComponentStatusId]);
+  // useEffect(() => {
+  //   form.resetFields();
+  // }, [selectedComponentStatusId]);
 
-  useEffect(() => {
-    if (style) {
-      form.setFieldsValue(style);
-    }
-  }, [style]);
+  useFormReset(form, style);
+
+  if (!stageSelectNode) {
+    return null;
+  }
 
   return (
     <ConfigsForm
@@ -55,44 +60,53 @@ export default () => {
       wrapperCol={{
         span: 17,
       }}
+      theme="dark-area"
       layout={'horizontal'}
       form={form}
       requiredMark={false}
       onValuesChange={(changedValues, values) => {
-        const selectedComponentStatusId = getSelectedComponentStatusId();
-        const stageSelectNodeId = getStageSelectNodeId();
-
-        if (stageSelectNodeId && selectedComponentStatusId) {
-          setComponentStyle(
-            stageSelectNodeId,
-            selectedComponentStatusId,
-            values,
-          );
-        }
-        // consola.success('同步修改组件配置值', values);
-        // setCurrentComSettingsExtendsSettings(values);
+        setCurrentComStylesExtendsStyles(values);
         debounceTriggerPrepareSaveTimeChange();
       }}
-      // renderLabel={(item) => {
-      //   return (
-      //     <SettingInputLabel
-      //       comId={stageSelectNode.id}
-      //       extendRelation={extendRelation}
-      //       fieldName={item.name}
-      //       label={item.label}
-      //     ></SettingInputLabel>
-      //   );
-      // }}
-      configInputProps={() => {
-        // const disabled = extendRelation
-        //   ? /**
-        //      * 锁住表示不自动同步，那么用户就是可以自定义输入的
-        //      * 这里和界面的图标是相反的
-        //      */
-        //     !extendRelation.lockFields[item.name]
-        //   : false;
+      renderLabel={(item) => {
+        if (!extendRelation) {
+          return <span>{item.label}</span>;
+        }
+
+        return (
+          <FormItemExtendLabel
+            lockFields={extendRelation.styleLockFields}
+            fieldName={item.name}
+            label={item.label}
+            onUnLockClick={() => {
+              unlockComExtendStyleField(
+                stageSelectNode.id,
+                extendRelation.id,
+                item.name,
+              );
+              triggerPrepareSaveTimeChange();
+            }}
+            onLockClick={() => {
+              lockComExtendStyleField(
+                stageSelectNode.id,
+                extendRelation.id,
+                item.name,
+              );
+              triggerPrepareSaveTimeChange();
+            }}
+          ></FormItemExtendLabel>
+        );
+      }}
+      configInputProps={(item) => {
+        const disabled = extendRelation
+          ? /**
+             * 锁住表示不自动同步，那么用户就是可以自定义输入的
+             * 这里和界面的图标是相反的
+             */
+            !extendRelation.styleLockFields[item.name]
+          : false;
         return {
-          // disabled,
+          disabled,
           bordered: false,
         };
       }}

@@ -1,9 +1,9 @@
 import { useModel } from '@umijs/max';
 
-export const useComDefaultSettings = (comId?: string) => {
-  const { componentsStatus } = useModel('statusSettings', (model) => {
+export const useComDefaultStatSetting = (comId?: string) => {
+  const { comsSettings } = useModel('comsSettings', (model) => {
     return {
-      componentsStatus: model.componentsStatus,
+      comsSettings: model.comsSettings,
     };
   });
 
@@ -17,8 +17,7 @@ export const useComDefaultSettings = (comId?: string) => {
   if (comId) {
     const defaultStatId = statusSettingsDefaults[comId];
 
-    const { settings } =
-      componentsStatus[comId]?.[defaultStatId]?.configs ?? {};
+    const settings = comsSettings[comId]?.[defaultStatId];
     return { settings, defaultStatId };
   }
 

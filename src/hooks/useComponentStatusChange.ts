@@ -13,7 +13,7 @@ export const useComponentStatusChange = () => {
   //   setComponentSettings: model?.setComponentSettings,
   // }));
 
-  // const { getLatestComponentsStatus } = useModel('statusSettings', (model) => ({
+  // const { getLatestComponentsStatus } = useModel('comsStatus', (model) => ({
   //   getLatestComponentsStatus: model?.getComponentsStatus,
   // }));
 

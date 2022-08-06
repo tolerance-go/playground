@@ -15,11 +15,11 @@ export default () => {
           setVisible(true);
         }}
       >
-        CMS
+        数据
       </Button>
       <Drawer
         visible={visible}
-        title="CMS 管理"
+        title="数据管理"
         onClose={() => setVisible(false)}
         {...{
           placement: 'top',

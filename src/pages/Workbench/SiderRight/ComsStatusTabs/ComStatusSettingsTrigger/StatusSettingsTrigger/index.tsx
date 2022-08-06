@@ -27,7 +27,7 @@ export default () => {
   );
 
   const { setSelectedComActiveStatName } = useModel(
-    'statusSettings',
+    'comsStatus',
     (model) => ({
       setSelectedComActiveStatName: model.setSelectedComActiveStatName,
     }),

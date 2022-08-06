@@ -16,7 +16,7 @@ export const ComsStatusTabs = () => {
   }));
 
   const { componentsStatus, deleteComStat } = useModel(
-    'statusSettings',
+    'comsStatus',
     (model) => ({
       componentsStatus: model.componentsStatus,
       deleteComStat: model.deleteComStat,

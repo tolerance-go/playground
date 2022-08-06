@@ -1,6 +1,6 @@
 import { useModel } from '@umijs/max';
 
-export const useComDefaultStyles = (comId?: string) => {
+export const useComDefaultStatStyle = (comId?: string) => {
   const { comsStyles } = useModel('comsStyles', (model) => {
     return {
       comsStyles: model.comsStyles,

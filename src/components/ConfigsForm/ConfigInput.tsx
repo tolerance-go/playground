@@ -11,6 +11,7 @@ export type ConfigInputProps = {
   value?: any;
   onChange?: (next: any) => void;
   bordered?: boolean;
+  theme?: 'dark-area';
 };
 
 export const ConfigInput = ({
@@ -19,16 +20,21 @@ export const ConfigInput = ({
   onChange,
   disabled,
   bordered,
+  theme,
 }: ConfigInputProps) => {
   const { getSelectedComStatus } = useSelectedComponentStatus();
 
   if (config.type === 'string') {
     return (
       <Input
-        style={{
-          background: '#f3f3f3',
-          borderRadius: '4px',
-        }}
+        style={
+          theme === 'dark-area'
+            ? {
+                background: '#f3f3f3',
+                borderRadius: '4px',
+              }
+            : undefined
+        }
         disabled={disabled}
         bordered={bordered}
         value={value}
@@ -40,10 +46,14 @@ export const ConfigInput = ({
   if (config.type === 'select') {
     return (
       <Select
-        style={{
-          background: '#f3f3f3',
-          borderRadius: '4px',
-        }}
+        style={
+          theme === 'dark-area'
+            ? {
+                background: '#f3f3f3',
+                borderRadius: '4px',
+              }
+            : undefined
+        }
         disabled={disabled}
         mode={config.multiple ? 'multiple' : undefined}
         value={value}

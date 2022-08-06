@@ -23,7 +23,7 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
   );
 
   const { getLatestComsInitalSettings } = useModel(
-    'componentsSettingConfigs',
+    'comsSettingsConfigs',
     (model) => ({
       getLatestComsInitalSettings: model?.getLatestComsInitalSettings,
     }),
@@ -45,8 +45,16 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
     }),
   );
 
-  const { initComStatus } = useModel('statusSettings', (model) => ({
+  const { initComStatus } = useModel('comsStatus', (model) => ({
     initComStatus: model?.initComStatus,
+  }));
+
+  const { setComStatSetting } = useModel('comsSettings', (model) => ({
+    setComStatSetting: model.setComStatSetting,
+  }));
+
+  const { setComStatStyle } = useModel('comsStyles', (model) => ({
+    setComStatStyle: model.setComStatStyle,
   }));
 
   const { setComStatusSettingsDefaults } = useModel(
@@ -353,13 +361,16 @@ const App = ({ siderRef }: { siderRef: React.RefObject<HTMLDivElement> }) => {
                               initComStatus({
                                 comId: newComId,
                                 statusId,
-                                configs: {
-                                  settings:
-                                    getLatestComsInitalSettings()?.[
-                                      item.name
-                                    ] ?? {},
-                                },
                               });
+
+                              setComStatSetting(
+                                newComId,
+                                statusId,
+                                getLatestComsInitalSettings()?.[item.name] ??
+                                  {},
+                              );
+
+                              setComStatStyle(newComId, statusId, {});
 
                               consola.info('选中组件和默认状态');
                               /** 设置选中组件 */

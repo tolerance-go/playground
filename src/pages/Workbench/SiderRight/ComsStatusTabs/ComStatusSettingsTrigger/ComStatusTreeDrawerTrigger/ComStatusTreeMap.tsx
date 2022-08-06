@@ -111,6 +111,7 @@ export const ComStatusTreeMap = () => {
           fromStatId: dropNode.key as string,
           toStatId: dragNode.key as string,
           settingLockFields: {},
+          styleLockFields: {},
         });
       } else {
         /** 拖拽组件到同级组件后，此时 dropNode 是同级别的 */
@@ -121,6 +122,7 @@ export const ComStatusTreeMap = () => {
             fromStatId: dropNode.parentStatId as string,
             toStatId: dragNode.key as string,
             settingLockFields: {},
+            styleLockFields: {},
           });
         }
       }

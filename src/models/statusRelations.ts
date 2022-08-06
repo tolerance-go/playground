@@ -3,14 +3,16 @@ import { produce } from 'immer';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
+export type LockFields = Record<string, boolean>;
+
 /** from 是被继承的，to 是继承者 */
 export type ComStatRelation = {
   id: string;
   toStatId: string;
   fromStatId: string;
   /** 锁住的字段，不进行继承同步 */
-  settingLockFields: Record<string, boolean>;
-  styleLockFields: Record<string, boolean>;
+  settingLockFields: LockFields;
+  styleLockFields: LockFields;
 };
 
 /**
@@ -92,14 +94,20 @@ const useStatusRelations = () => {
   );
 
   /** 获取组件状态的继承锁定字段（不同步修改） */
-  const getStatLockFields = useMemoizedFn(
+  const getStatLockSettingFields = useMemoizedFn(
     (comId: string, relationId: string) => {
       return comsStatusRelations[comId]?.[relationId].settingLockFields;
     },
   );
 
+  const getStatLockStyleFields = useMemoizedFn(
+    (comId: string, relationId: string) => {
+      return comsStatusRelations[comId]?.[relationId].styleLockFields;
+    },
+  );
+
   /** 将组件的继承字段锁起来 */
-  const lockComExtendField = useMemoizedFn(
+  const lockComExtendSettingField = useMemoizedFn(
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
@@ -110,7 +118,7 @@ const useStatusRelations = () => {
   );
 
   /** 将组件的继承字段解锁 */
-  const unlockComExtendField = useMemoizedFn(
+  const unlockComExtendSettingField = useMemoizedFn(
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
@@ -120,11 +128,36 @@ const useStatusRelations = () => {
     },
   );
 
+  /** 将组件的继承字段锁起来 */
+  const lockComExtendStyleField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].styleLockFields[fieldName] = true;
+        }),
+      );
+    },
+  );
+
+  /** 将组件的继承字段解锁 */
+  const unlockComExtendStyleField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].styleLockFields[fieldName] = false;
+        }),
+      );
+    },
+  );
+
   return {
     comsStatusRelations,
-    getStatLockFields,
-    lockComExtendField,
-    unlockComExtendField,
+    getStatLockStyleFields,
+    lockComExtendStyleField,
+    unlockComExtendStyleField,
+    getStatLockSettingFields,
+    lockComExtendSettingField,
+    unlockComExtendSettingField,
     getComExtendRelationsFromStat,
     initData,
     getData,

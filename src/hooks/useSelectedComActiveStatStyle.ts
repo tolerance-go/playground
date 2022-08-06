@@ -15,7 +15,7 @@ export const useSelectedComActiveStatStyle = (comId?: string) => {
   );
 
   if (comId && selectedComponentStatusId) {
-    const style = comsStyles[comId]?.[selectedComponentStatusId] ?? {};
+    const style = comsStyles[comId]?.[selectedComponentStatusId];
     return { style };
   }
 

@@ -1,15 +1,15 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
-import { useComponentSettings } from '@/hooks/useComponentSettings';
+import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
+import { useComActiveStatSetting } from '@/hooks/useComActiveStatSetting';
 import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
-import { useCurrentComStatExtendRelation } from '@/hooks/useCurrentComStatExtendRelation';
 import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
+import { useFormReset } from '@/hooks/useFormReset';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { useModel } from '@umijs/max';
 import { Form } from 'antd';
 import consola from 'consola';
-import { useEffect } from 'react';
-import { SettingInputLabel } from './SettingInputLabel';
 
 // const SettingInputs: Record<string, React.ElementType<any>> = {
 //   string: Input,
@@ -21,34 +21,39 @@ export const SettingForm = () => {
   const { stageSelectNode } = useSelectedNode();
   const { configs } = useSelectedComSettingsConfigs();
 
-  const { settings } = useComponentSettings(stageSelectNode?.id);
+  const { settings } = useComActiveStatSetting(stageSelectNode?.id);
 
   const { setCurrentComSettingsExtendsSettings } = useComStatusExtendSettings();
 
-  const { extendRelation } = useCurrentComStatExtendRelation();
-
-  const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
-    (model) => ({
-      selectedComponentStatusId: model.selectedComponentStatusId,
-    }),
-  );
+  const { extendRelation } = useSelectedComActiveStatExtendRelation();
 
   const [form] = Form.useForm();
 
   const { debounceTriggerPrepareSaveTimeChange } =
     useDebounceTriggerPrepareSaveTimeChange();
 
-  /** 先执行 reset 再执行 setFieldsValue */
-  useEffect(() => {
-    form.resetFields();
-  }, [selectedComponentStatusId]);
+  const { triggerPrepareSaveTimeChange } = useModel(
+    'stageAutoSave',
+    (model) => ({
+      triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
+    }),
+  );
 
-  useEffect(() => {
-    if (settings) {
-      form.setFieldsValue(settings);
-    }
-  }, [settings]);
+  const { lockComExtendField, unlockComExtendField } = useModel(
+    'statusRelations',
+    (model) => ({
+      lockComExtendField: model.lockComExtendSettingField,
+      unlockComExtendField: model.unlockComExtendSettingField,
+    }),
+  );
+
+  // /** 先执行 reset 再执行 setFieldsValue */
+  // useEffect(() => {
+  //   form.resetFields();
+  //   form.setFieldsValue(getSetting());
+  // }, [selectedComponentStatusId]);
+
+  useFormReset(form, settings);
 
   if (!stageSelectNode) {
     consola.info('本次渲染，未选中元素，返回空');
@@ -64,6 +69,7 @@ export const SettingForm = () => {
       wrapperCol={{
         span: 17,
       }}
+      theme="dark-area"
       layout={'horizontal'}
       form={form}
       requiredMark={false}
@@ -73,13 +79,32 @@ export const SettingForm = () => {
         debounceTriggerPrepareSaveTimeChange();
       }}
       renderLabel={(item) => {
+        if (!extendRelation) {
+          return <span>{item.label}</span>;
+        }
+
         return (
-          <SettingInputLabel
-            comId={stageSelectNode.id}
-            extendRelation={extendRelation}
+          <FormItemExtendLabel
+            lockFields={extendRelation.settingLockFields}
             fieldName={item.name}
             label={item.label}
-          ></SettingInputLabel>
+            onUnLockClick={() => {
+              unlockComExtendField(
+                stageSelectNode.id,
+                extendRelation.id,
+                item.name,
+              );
+              triggerPrepareSaveTimeChange();
+            }}
+            onLockClick={() => {
+              lockComExtendField(
+                stageSelectNode.id,
+                extendRelation.id,
+                item.name,
+              );
+              triggerPrepareSaveTimeChange();
+            }}
+          ></FormItemExtendLabel>
         );
       }}
       configInputProps={(item) => {

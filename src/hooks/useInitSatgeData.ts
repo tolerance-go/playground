@@ -10,19 +10,9 @@ export const useInitSatgeData = () => {
     }),
   );
 
-  // const { initData: initComsSettingsData } = useModel(
-  //   'comsActiveSettings',
-  //   (model) => ({
-  //     initData: model?.initData,
-  //   }),
-  // );
-
-  const { initData: initStatusSettings } = useModel(
-    'statusSettings',
-    (model) => ({
-      initData: model?.initData,
-    }),
-  );
+  const { initData: initStatusSettings } = useModel('comsStatus', (model) => ({
+    initData: model?.initData,
+  }));
 
   const { initData: initStatusSettingsDefaults } = useModel(
     'statusSettingsDefaults',
@@ -58,6 +48,12 @@ export const useInitSatgeData = () => {
     };
   });
 
+  const { initData: initComsSettings } = useModel('comsSettings', (model) => {
+    return {
+      initData: model?.initData,
+    };
+  });
+
   const initStageData = useMemoizedFn(async (activePageId: string) => {
     const { success, data } = await PageControllerShow({
       id: activePageId,
@@ -68,12 +64,13 @@ export const useInitSatgeData = () => {
     if (success) {
       initComsTreeData(stageData.comsTree);
       // initComsSettingsData(stageData.comsModel);
+      initComsSettings(stageData.comsSettings);
       initStatusSettings(stageData.comsStatus);
       initStatusSettingsDefaults(stageData.comsStatusDefaults);
       initStatusRelations(stageData.comsStatusRelations);
       initComsActions(stageData.comsActions);
       initComsEvents(stageData.comsEvents);
-      initComsStyles(stageData.comsStyles)
+      initComsStyles(stageData.comsStyles);
     }
   });
 

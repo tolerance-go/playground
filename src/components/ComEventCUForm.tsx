@@ -62,7 +62,7 @@ export default ({
     }),
   );
 
-  const { getComStatus } = useModel('statusSettings', (model) => ({
+  const { getComStatus } = useModel('comsStatus', (model) => ({
     getComStatus: model.getComStatus,
   }));
 

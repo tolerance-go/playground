@@ -13,16 +13,7 @@ export const useSaveStage = () => {
     },
   );
 
-  // const { getData: getComsModelData } = useModel(
-  //   'comsActiveSettings',
-  //   (model) => {
-  //     return {
-  //       getData: model?.getData,
-  //     };
-  //   },
-  // );
-
-  const { getData: getStatusSettings } = useModel('statusSettings', (model) => {
+  const { getData: getStatusSettings } = useModel('comsStatus', (model) => {
     return {
       getData: model?.getData,
     };
@@ -64,6 +55,12 @@ export const useSaveStage = () => {
     };
   });
 
+  const { getData: getComsSettings } = useModel('comsSettings', (model) => {
+    return {
+      getData: model?.getData,
+    };
+  });
+
   const { activePageId } = useModel('pageList', (model) => {
     return {
       activePageId: model?.activePageId,
@@ -85,6 +82,7 @@ export const useSaveStage = () => {
           comsActions: getComsActions(),
           comsEvents: getComsEvents(),
           comsStyles: getComsStyles(),
+          comsSettings: getComsSettings(),
         }),
       );
     }

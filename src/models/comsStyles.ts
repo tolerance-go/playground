@@ -1,4 +1,5 @@
 import { ComId, StatId } from '@/typings/keys';
+import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { CSSProperties, useState } from 'react';
@@ -28,12 +29,11 @@ export type BoxSize = {
 };
 
 export type ComponentStyle = {
-  id: string;
-  marginPosition: BoxPosition;
-  paddingPosition: BoxPosition;
-  positionType: CSSProperties['position'];
-  position: BoxPosition;
-  size: BoxSize;
+  marginPosition?: BoxPosition;
+  paddingPosition?: BoxPosition;
+  positionType?: CSSProperties['position'];
+  position?: BoxPosition;
+  size?: BoxSize;
 };
 
 /**
@@ -51,7 +51,18 @@ export type ComponentsStyles = Record<ComId, ComponentStatusStyles>;
 const useComsStyles = () => {
   const [comsStyles, setComsStyles] = useState<ComponentsStyles>({});
 
-  const setComponentStyle = useMemoizedFn(
+  const { getSelectedComponentStatusId } = useModel(
+    'selectedComponentStatusId',
+    (model) => ({
+      getSelectedComponentStatusId: model.getSelectedComponentStatusId,
+    }),
+  );
+
+  const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    getStageSelectNodeId: model.getStageSelectNodeId,
+  }));
+
+  const setComStatStyle = useMemoizedFn(
     (comId: string, statId: string, style: ComponentStyle) => {
       setComsStyles(
         produce((draft) => {
@@ -59,6 +70,22 @@ const useComsStyles = () => {
             draft[comId] = {};
           }
           draft[comId][statId] = style;
+        }),
+      );
+    },
+  );
+
+  const updateComStatStyle = useMemoizedFn(
+    (comId: string, statId: string, style: ComponentStyle) => {
+      setComsStyles(
+        produce((draft) => {
+          if (draft[comId] === undefined) {
+            draft[comId] = {};
+          }
+          draft[comId][statId] = {
+            ...draft[comId][statId],
+            ...style,
+          };
         }),
       );
     },
@@ -76,11 +103,42 @@ const useComsStyles = () => {
     setComsStyles(from?.comsStyles ?? {});
   });
 
+  /** 拷贝组件 A 状态的配置到 B 状态 */
+  const copyComStyleFromStatToOtherStat = useMemoizedFn(
+    (comId: string, fromStatId: string, toStatId: string) => {
+      setComsStyles(
+        produce((draft) => {
+          if (draft[comId] === undefined) {
+            draft[comId] = {};
+          }
+          draft[comId][toStatId] = draft[comId][fromStatId];
+        }),
+      );
+    },
+  );
+
+  const copySelectedComStyleFromActiveStatToOtherStat = useMemoizedFn(
+    (toStatId: string) => {
+      const stageSelectNodeId = getStageSelectNodeId();
+      const selectedComponentStatusId = getSelectedComponentStatusId();
+      if (stageSelectNodeId && selectedComponentStatusId) {
+        copyComStyleFromStatToOtherStat(
+          stageSelectNodeId,
+          selectedComponentStatusId,
+          toStatId,
+        );
+      }
+    },
+  );
+
   return {
     comsStyles,
     getData,
     initData,
-    setComponentStyle,
+    setComStatStyle,
+    updateComStatStyle,
+    copyComStyleFromStatToOtherStat,
+    copySelectedComStyleFromActiveStatToOtherStat,
   };
 };
 

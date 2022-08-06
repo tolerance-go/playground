@@ -1,10 +1,10 @@
 import { ElementsCxt } from '@/components/ElementsCtx';
-import { useComDefaultSettings } from '@/hooks/useComDefaultSettings';
+import { useComActiveStatSetting } from '@/hooks/useComActiveStatSetting';
+import { useComActiveStatStyle } from '@/hooks/useComActiveStatStyle';
 import { useComDefaultStatId } from '@/hooks/useComDefaultStatId';
-import { useComDefaultStyles } from '@/hooks/useComDefaultStyles';
-import { useComponentSettings } from '@/hooks/useComponentSettings';
+import { useComDefaultStatSetting } from '@/hooks/useComDefaultStatSetting';
+import { useComDefaultStatStyle } from '@/hooks/useComDefaultStatStyle';
 import { useComponentUsedSettings } from '@/hooks/useComponentUsedSettings';
-import { useComSelectedStatStyles } from '@/hooks/useComSelectedStatStyles';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
@@ -26,15 +26,15 @@ export const Atom = (props: StageComponentsModelItem) => {
   }));
 
   const { defaultStatId } = useComDefaultStatId(props.id);
-  const { settings: defaultSettings } = useComDefaultSettings(props.id);
-  const { styles: defaultStyles } = useComDefaultStyles(props.id);
+  const { settings: defaultSettings } = useComDefaultStatSetting(props.id);
+  const { styles: defaultStyles } = useComDefaultStatStyle(props.id);
   const {
     settings: usedSettings,
     styles: usedStyles,
     usedStatId,
   } = useComponentUsedSettings(props.id);
-  const { settings } = useComponentSettings(props.id);
-  const { styles } = useComSelectedStatStyles(props.id);
+  const { settings: activeStatSettings } = useComActiveStatSetting(props.id);
+  const { styles: activeStatStyles } = useComActiveStatStyle(props.id);
 
   consola.info('渲染 atom 组件', props.id);
 
@@ -51,11 +51,11 @@ export const Atom = (props: StageComponentsModelItem) => {
         statId: (usedStatId ?? defaultStatId) as string,
         settings:
           stageSelectNodeId === props.id
-            ? settings ?? usedSettings ?? defaultSettings
+            ? activeStatSettings ?? usedSettings ?? defaultSettings
             : usedSettings ?? defaultSettings,
         styles:
           stageSelectNodeId === props.id
-            ? styles ?? usedStyles ?? defaultStyles
+            ? activeStatStyles ?? usedStyles ?? defaultStyles
             : usedStyles ?? defaultStyles,
         slots,
         slotsOrder,

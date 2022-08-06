@@ -13,6 +13,7 @@ export const ConfigsForm = ({
   onlyFormItem,
   formItemNamePrefix,
   renderFormItemWrapper,
+  theme,
   ...formProps
 }: {
   configs?: SettingFormConfig;
@@ -24,6 +25,7 @@ export const ConfigsForm = ({
   onlyFormItem?: boolean;
   formItemNamePrefix?: string;
   renderFormItemWrapper?: (itemDom: React.ReactNode) => React.ReactNode;
+  theme?: 'dark-area';
 } & FormProps) => {
   const items = configs?.map((item) => {
     const renderInner = () => {
@@ -59,7 +61,11 @@ export const ConfigsForm = ({
           }
           colon={false}
         >
-          <ConfigInput {...configInputProps?.(item)} config={item} />
+          <ConfigInput
+            {...configInputProps?.(item)}
+            config={item}
+            theme={theme}
+          />
         </Form.Item>
       );
 

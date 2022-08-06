@@ -22,10 +22,23 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     open: () => setVisible(true),
   }));
 
-  const { createComponentStatusFromNow } = useModel(
-    'statusSettings',
+  const { createSelectedComponentStat } = useModel('comsStatus', (model) => ({
+    createSelectedComponentStat: model.createSelectedComponentStat,
+  }));
+
+  const { copySelectedComSettingFromActiveStatToOtherStat } = useModel(
+    'comsSettings',
     (model) => ({
-      createComponentStatusFromNow: model.createComponentStatusFromNow,
+      copySelectedComSettingFromActiveStatToOtherStat:
+        model.copySelectedComSettingFromActiveStatToOtherStat,
+    }),
+  );
+
+  const { copySelectedComStyleFromActiveStatToOtherStat } = useModel(
+    'comsStyles',
+    (model) => ({
+      copySelectedComStyleFromActiveStatToOtherStat:
+        model.copySelectedComStyleFromActiveStatToOtherStat,
     }),
   );
 
@@ -57,8 +70,15 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
       submitTimeout={2000}
       onFinish={async (values) => {
         const newStatId = nanoid();
-        createComponentStatusFromNow(newStatId, values.name);
+
+        createSelectedComponentStat(newStatId, values.name);
+
+        copySelectedComSettingFromActiveStatToOtherStat(newStatId);
+
+        copySelectedComStyleFromActiveStatToOtherStat(newStatId);
+
         setSelectedComponentStatusId(newStatId);
+
         message.success('创建成功');
         triggerSave();
         return true;

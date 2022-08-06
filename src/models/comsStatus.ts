@@ -6,16 +6,10 @@ import { DEFAULT_COM_STATUS_NAME } from './../constants/index';
 import { ComId, StatId } from '@/typings/keys';
 import { useState } from 'react';
 
-/** 单个组件的配置 */
-export type ComponentConfigs = {
-  settings: object;
-};
-
 /** 组件状态 */
 export type ComponentStat = {
   id: string;
   name: string;
-  configs: ComponentConfigs;
 };
 
 /** 组件的不同状态 */
@@ -59,21 +53,17 @@ const useStatusSettings = () => {
   });
 
   /** 从当前选中组件，创建新的配置状态 */
-  const createComponentStatusFromNow = useMemoizedFn(
+  const createSelectedComponentStat = useMemoizedFn(
     (newStatId: string, name: string) => {
       setComponentsStatus(
         produce((draft) => {
-          const selectedComponentStatusId = getSelectedComponentStatusId();
           const stageSelectNodeId = getStageSelectNodeId();
 
-          if (selectedComponentStatusId && stageSelectNodeId) {
-            const current = draft[stageSelectNodeId][selectedComponentStatusId];
-
+          if (stageSelectNodeId) {
             draft[stageSelectNodeId] = {
               ...draft[stageSelectNodeId],
               [newStatId]: {
                 id: newStatId,
-                configs: current.configs,
                 name,
               },
             };
@@ -85,68 +75,15 @@ const useStatusSettings = () => {
 
   /** 初始化组件的默认状态 */
   const initComStatus = useMemoizedFn(
-    ({
-      statusId,
-      comId,
-      configs,
-    }: {
-      statusId: string;
-      comId: string;
-      configs: ComponentConfigs;
-    }) => {
+    ({ statusId, comId }: { statusId: string; comId: string }) => {
       setComponentsStatus(
         produce((draft) => {
           draft[comId] = {
             [statusId]: {
               id: statusId,
               name: DEFAULT_COM_STATUS_NAME,
-              configs,
             },
           };
-        }),
-      );
-    },
-  );
-
-  /** 设置组件当前状态下的配置 */
-  const setSelectedComSettings = useMemoizedFn((settings: object) => {
-    const selectedComponentStatusId = getSelectedComponentStatusId();
-    const stageSelectNodeId = getStageSelectNodeId();
-
-    if (stageSelectNodeId && selectedComponentStatusId) {
-      setComponentsStatus(
-        produce((draft) => {
-          draft[stageSelectNodeId][selectedComponentStatusId].configs.settings =
-            settings;
-        }),
-      );
-    }
-  });
-
-  /** 设置指定组件指定状态下的配置 */
-  const setComStatSettings = useMemoizedFn(
-    (comId: string, statId: string, settings: object) => {
-      setComponentsStatus(
-        produce((draft) => {
-          if (draft[comId][statId]?.configs) {
-            draft[comId][statId].configs.settings = settings;
-          }
-        }),
-      );
-    },
-  );
-
-  /** 部分设置指定组件指定状态下的配置 */
-  const updateComStatSettings = useMemoizedFn(
-    (comId: string, statId: string, settings: object) => {
-      setComponentsStatus(
-        produce((draft) => {
-          if (draft[comId][statId]?.configs) {
-            draft[comId][statId].configs.settings = {
-              ...draft[comId][statId].configs.settings,
-              ...settings,
-            };
-          }
         }),
       );
     },
@@ -192,10 +129,7 @@ const useStatusSettings = () => {
   return {
     componentsStatus,
     getComStatus,
-    updateComStatSettings,
     setSelectedComActiveStatName,
-    setSelectedComSettings,
-    setComStatSettings,
     deleteComStatus,
     deleteComStat,
     getData,
@@ -203,7 +137,7 @@ const useStatusSettings = () => {
     getComponentsStatus,
     initComStatus,
     setComponentsStatus,
-    createComponentStatusFromNow,
+    createSelectedComponentStat,
   };
 };
 
