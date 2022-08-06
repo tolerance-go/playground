@@ -17,10 +17,11 @@ export default () => {
     setComponentStyle: model.setComponentStyle,
   }));
 
-  const { getSelectedComponentStatusId } = useModel(
+  const { getSelectedComponentStatusId, selectedComponentStatusId } = useModel(
     'selectedComponentStatusId',
     (model) => ({
       getSelectedComponentStatusId: model.getSelectedComponentStatusId,
+      selectedComponentStatusId: model.selectedComponentStatusId,
     }),
   );
 
@@ -32,6 +33,11 @@ export default () => {
     useDebounceTriggerPrepareSaveTimeChange();
 
   const { style } = useSelectedComActiveStatStyle(stageSelectNode?.id);
+
+  /** 先执行 reset 再执行 setFieldsValue */
+  useEffect(() => {
+    form.resetFields();
+  }, [selectedComponentStatusId]);
 
   useEffect(() => {
     if (style) {

@@ -5,6 +5,7 @@ import { useCurrentComStatExtendRelation } from '@/hooks/useCurrentComStatExtend
 import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { useModel } from '@umijs/max';
 import { Form } from 'antd';
 import consola from 'consola';
 import { useEffect } from 'react';
@@ -26,10 +27,22 @@ export const SettingForm = () => {
 
   const { extendRelation } = useCurrentComStatExtendRelation();
 
+  const { selectedComponentStatusId } = useModel(
+    'selectedComponentStatusId',
+    (model) => ({
+      selectedComponentStatusId: model.selectedComponentStatusId,
+    }),
+  );
+
   const [form] = Form.useForm();
 
   const { debounceTriggerPrepareSaveTimeChange } =
     useDebounceTriggerPrepareSaveTimeChange();
+
+  /** 先执行 reset 再执行 setFieldsValue */
+  useEffect(() => {
+    form.resetFields();
+  }, [selectedComponentStatusId]);
 
   useEffect(() => {
     if (settings) {
@@ -75,7 +88,7 @@ export const SettingForm = () => {
              * 锁住表示不自动同步，那么用户就是可以自定义输入的
              * 这里和界面的图标是相反的
              */
-            !extendRelation.lockFields[item.name]
+            !extendRelation.settingLockFields[item.name]
           : false;
         return {
           disabled,

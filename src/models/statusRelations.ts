@@ -9,7 +9,8 @@ export type ComStatRelation = {
   toStatId: string;
   fromStatId: string;
   /** 锁住的字段，不进行继承同步 */
-  lockFields: Record<string, boolean>;
+  settingLockFields: Record<string, boolean>;
+  styleLockFields: Record<string, boolean>;
 };
 
 /**
@@ -93,7 +94,7 @@ const useStatusRelations = () => {
   /** 获取组件状态的继承锁定字段（不同步修改） */
   const getStatLockFields = useMemoizedFn(
     (comId: string, relationId: string) => {
-      return comsStatusRelations[comId]?.[relationId].lockFields;
+      return comsStatusRelations[comId]?.[relationId].settingLockFields;
     },
   );
 
@@ -102,7 +103,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].lockFields[fieldName] = true;
+          draft[comId][relationId].settingLockFields[fieldName] = true;
         }),
       );
     },
@@ -113,7 +114,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].lockFields[fieldName] = false;
+          draft[comId][relationId].settingLockFields[fieldName] = false;
         }),
       );
     },

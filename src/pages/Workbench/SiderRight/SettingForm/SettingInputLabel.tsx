@@ -36,7 +36,7 @@ export const SettingInputLabel = ({
   return (
     <Space>
       {label}
-      {extendRelation.lockFields[fieldName] ? (
+      {extendRelation.settingLockFields[fieldName] ? (
         /**
          * 锁住表示不自动同步，那么用户就是可以自定义输入的
          * 这里和界面的图标是相反的
