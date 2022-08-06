@@ -16,7 +16,7 @@ const { Sider } = Layout;
 export default function App() {
   const { mode } = useModel('siderRightMode');
 
-  const [activeKey, setActiveKey] = useState('styles');
+  const [activeKey, setActiveKey] = useState('settings');
 
   return (
     <Sider
@@ -46,9 +46,9 @@ export default function App() {
             <Col flex={'none'}>
               <Tabs size="small" onChange={setActiveKey} activeKey={activeKey}>
                 <TabPane tab="配置" key="settings"></TabPane>
+                <TabPane tab="外观" key="styles"></TabPane>
                 <TabPane tab="动作" key="actions"></TabPane>
                 <TabPane tab="事件" key="events"></TabPane>
-                <TabPane tab="外观" key="styles"></TabPane>
               </Tabs>
             </Col>
 
