@@ -17,6 +17,7 @@ specifiers:
   '@umijs/openapi': ^1.6.0
   ahooks: ^3.5.2
   antd: ^4.22.3
+  bignumber.js: ^9.0.2
   clsx: ^1.2.1
   consola: ^2.15.3
   dayjs: ^1.11.3
@@ -44,6 +45,7 @@ dependencies:
   '@umijs/max': 4.0.8_4kelmht5p6seurkgrs525r3njq
   ahooks: 3.5.2
   antd: 4.22.3
+  bignumber.js: 9.0.2
   clsx: 1.2.1
   consola: 2.15.3
   dayjs: 1.11.3
@@ -2938,7 +2940,7 @@ packages:
     peerDependencies:
       react: '>=16.3.0'
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.18.9
       hoist-non-react-statics: 3.3.2
       react: 18.1.0
       react-is: 16.13.1
@@ -5285,6 +5287,10 @@ packages:
 
   /big.js/5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
+
+  /bignumber.js/9.0.2:
+    resolution: {integrity: sha512-GAcQvbpsM0pUb0zw1EI0KhQEZ+lRwR5fYaAp3vPOYuP7aDvGy6cVN6XHLauvF8SOga2y0dcLcjt3iQDTSEliyw==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}

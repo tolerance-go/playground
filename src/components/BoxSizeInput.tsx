@@ -2,6 +2,7 @@ import { UnitNumber } from '@/models/comsStyles';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { useMemoizedFn } from 'ahooks';
 import { Col, InputNumber, Row, Space } from 'antd';
+import BigNumber from 'bignumber.js';
 import { UnitSelect } from './UnitSelect';
 
 export type BoxSizeInputValue = {
@@ -17,14 +18,48 @@ export default (props: {
   onChange?: (value: BoxSizeInputValue) => void;
 }) => {
   const handleChange = useMemoizedFn(
-    (next: number, type: 'width' | 'height') => {
-      props.onChange?.({
+    (val: number, type: 'width' | 'height') => {
+      const nextData = {
         ...props.value,
         [type]: {
           ...props.value?.[type],
-          value: next,
+          value: val,
         },
-      });
+      };
+
+      if (props.value?.lockingWidthRatio) {
+        /** 如果修改的是 宽度，并且高度有值 */
+        if (type === 'width' && props.value.height?.value) {
+          /** 同时如果宽度原来有值，获取放大比例 */
+          if (props.value.width?.value) {
+            const ratio = new BigNumber(val)
+              .div(props.value.width.value)
+              .toNumber();
+            const nextHeight = new BigNumber(props.value.height.value)
+              .multipliedBy(ratio)
+              .toFixed(4);
+            nextData.height = {
+              ...nextData.height,
+              value: parseFloat(nextHeight),
+            };
+          }
+        } else if (type === 'height' && props.value.width?.value) {
+          if (props.value.height?.value) {
+            const ratio = new BigNumber(val)
+              .div(props.value.height.value)
+              .toNumber();
+            const nextWidth = new BigNumber(props.value.width.value)
+              .multipliedBy(ratio)
+              .toFixed(4);
+            nextData.width = {
+              ...nextData.height,
+              value: parseFloat(nextWidth),
+            };
+          }
+        }
+      }
+
+      props.onChange?.(nextData);
     },
   );
 
