@@ -4,9 +4,10 @@ import { ComponentAction } from '@/models/comsActions';
 import { ComponentStyle } from '@/models/comsStyles';
 import { SwitchStatusAction } from '@/typings/actions';
 import { AtomComponentProps } from '@/typings/ElementCenter';
+import { joinUnitNumber } from '@/utils/joinUnitNumber';
 import { useModel } from '@umijs/max';
 import { Button, ButtonProps } from 'antd';
-import { useEffect } from 'react';
+import { CSSProperties, useEffect } from 'react';
 import { AddSlotBtn } from '../AddSlotProxy';
 
 export interface AtomButtonClickHandlerParams extends EventHandlerParams {
@@ -80,6 +81,26 @@ export const AtomButton = (
     };
   }, []);
 
+  const style: CSSProperties = {
+    width: joinUnitNumber(props.styles?.size?.width),
+    height: joinUnitNumber(props.styles?.size?.height),
+    marginTop: joinUnitNumber(props.styles?.marginPosition?.top),
+    marginLeft: joinUnitNumber(props.styles?.marginPosition?.left),
+    marginRight: joinUnitNumber(props.styles?.marginPosition?.right),
+    marginBottom: joinUnitNumber(props.styles?.marginPosition?.bottom),
+    paddingTop: joinUnitNumber(props.styles?.paddingPosition?.top),
+    paddingLeft: joinUnitNumber(props.styles?.paddingPosition?.left),
+    paddingRight: joinUnitNumber(props.styles?.paddingPosition?.right),
+    paddingBottom: joinUnitNumber(props.styles?.paddingPosition?.bottom),
+    position: props.styles?.positionType,
+    top: joinUnitNumber(props.styles?.position?.top),
+    left: joinUnitNumber(props.styles?.position?.left),
+    right: joinUnitNumber(props.styles?.position?.right),
+    bottom: joinUnitNumber(props.styles?.position?.bottom),
+  };
+
+  console.log('style', style);
+
   return (
     <>
       <AddSlotBtn
@@ -90,9 +111,7 @@ export const AtomButton = (
 
       <Button
         {...rest}
-        style={{
-          width: props.styles?.size?.width?.value,
-        }}
+        style={style}
         onClick={() => {
           eventManager.dispatch(
             'click',

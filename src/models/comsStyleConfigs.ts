@@ -31,12 +31,16 @@ const defaultConfigs: SettingFormConfig = [
     label: '定位方式',
     options: [
       {
-        value: 'absloute',
+        value: 'absolute',
         label: '绝对定位',
       },
       {
         value: 'relative',
         label: '相对定位',
+      },
+      {
+        value: 'static',
+        label: '一般定位',
       },
     ],
   },

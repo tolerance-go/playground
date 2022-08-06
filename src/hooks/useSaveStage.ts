@@ -58,6 +58,12 @@ export const useSaveStage = () => {
     };
   });
 
+  const { getData: getComsStyles } = useModel('comsStyles', (model) => {
+    return {
+      getData: model?.getData,
+    };
+  });
+
   const { activePageId } = useModel('pageList', (model) => {
     return {
       activePageId: model?.activePageId,
@@ -78,6 +84,7 @@ export const useSaveStage = () => {
           comsStatusDefaults: getStatusSettingsDefaults(),
           comsActions: getComsActions(),
           comsEvents: getComsEvents(),
+          comsStyles: getComsStyles(),
         }),
       );
     }

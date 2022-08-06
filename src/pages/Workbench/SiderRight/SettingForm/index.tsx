@@ -2,13 +2,12 @@ import { ConfigsForm } from '@/components/ConfigsForm';
 import { useComponentSettings } from '@/hooks/useComponentSettings';
 import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
 import { useCurrentComStatExtendRelation } from '@/hooks/useCurrentComStatExtendRelation';
+import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
-import { useModel } from '@umijs/max';
 import { Form } from 'antd';
 import consola from 'consola';
-import utl from 'lodash';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { SettingInputLabel } from './SettingInputLabel';
 
 // const SettingInputs: Record<string, React.ElementType<any>> = {
@@ -29,16 +28,8 @@ export const SettingForm = () => {
 
   const [form] = Form.useForm();
 
-  const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
-    (model) => ({
-      triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
-    }),
-  );
-
-  const debounceTriggerPrepareSaveTimeChange = useMemo(() => {
-    return utl.debounce(triggerPrepareSaveTimeChange, 350);
-  }, [triggerPrepareSaveTimeChange]);
+  const { debounceTriggerPrepareSaveTimeChange } =
+    useDebounceTriggerPrepareSaveTimeChange();
 
   useEffect(() => {
     if (settings) {

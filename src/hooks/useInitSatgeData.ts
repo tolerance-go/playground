@@ -52,6 +52,12 @@ export const useInitSatgeData = () => {
     };
   });
 
+  const { initData: initComsStyles } = useModel('comsStyles', (model) => {
+    return {
+      initData: model?.initData,
+    };
+  });
+
   const initStageData = useMemoizedFn(async (activePageId: string) => {
     const { success, data } = await PageControllerShow({
       id: activePageId,
@@ -67,6 +73,7 @@ export const useInitSatgeData = () => {
       initStatusRelations(stageData.comsStatusRelations);
       initComsActions(stageData.comsActions);
       initComsEvents(stageData.comsEvents);
+      initComsStyles(stageData.comsStyles)
     }
   });
 

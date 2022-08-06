@@ -1,11 +1,17 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
+import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
+import { useSelectedComActiveStatStyle } from '@/hooks/useSelectedComActiveStatStyle';
 import { useSelectedComStyleConfigs } from '@/hooks/useSelectedComStyleConfigs';
+import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { useModel } from '@umijs/max';
 import { Form } from 'antd';
+import { useEffect } from 'react';
 
 export default () => {
   const { configs } = useSelectedComStyleConfigs();
   const [form] = Form.useForm();
+
+  const { stageSelectNode } = useSelectedNode();
 
   const { setComponentStyle } = useModel('comsStyles', (model) => ({
     setComponentStyle: model.setComponentStyle,
@@ -21,6 +27,17 @@ export default () => {
   const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
     getStageSelectNodeId: model.getStageSelectNodeId,
   }));
+
+  const { debounceTriggerPrepareSaveTimeChange } =
+    useDebounceTriggerPrepareSaveTimeChange();
+
+  const { style } = useSelectedComActiveStatStyle(stageSelectNode?.id);
+
+  useEffect(() => {
+    if (style) {
+      form.setFieldsValue(style);
+    }
+  }, [style]);
 
   return (
     <ConfigsForm
@@ -39,10 +56,16 @@ export default () => {
         const selectedComponentStatusId = getSelectedComponentStatusId();
         const stageSelectNodeId = getStageSelectNodeId();
 
-        setComponentStyle(stageSelectNodeId, selectedComponentStatusId, values);
+        if (stageSelectNodeId && selectedComponentStatusId) {
+          setComponentStyle(
+            stageSelectNodeId,
+            selectedComponentStatusId,
+            values,
+          );
+        }
         // consola.success('同步修改组件配置值', values);
         // setCurrentComSettingsExtendsSettings(values);
-        // debounceTriggerPrepareSaveTimeChange();
+        debounceTriggerPrepareSaveTimeChange();
       }}
       // renderLabel={(item) => {
       //   return (

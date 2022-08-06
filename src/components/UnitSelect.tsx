@@ -10,27 +10,15 @@ export const UnitSelect = (props: {
     <Select
       bordered={props.bordered}
       size="small"
-      defaultValue={'absolute'}
+      defaultValue={'px'}
       value={props.value}
       onChange={props.onChange}
     >
-      <Select.Option value="percentage">
-        <span
-          style={{
-            fontSize: 10,
-          }}
-        >
-          百分比
-        </span>
+      <Select.Option value="%">
+        <span>%</span>
       </Select.Option>
-      <Select.Option value="absolute">
-        <span
-          style={{
-            fontSize: 10,
-          }}
-        >
-          绝对值
-        </span>
+      <Select.Option value="px">
+        <span>px</span>
       </Select.Option>
     </Select>
   );
