@@ -1,4 +1,4 @@
-import { LockFields } from '@/models/statusRelations';
+import { UnsyncFields } from '@/models/statusRelations';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
 
@@ -11,7 +11,7 @@ export const FormItemExtendLabel = ({
 }: {
   label: string;
   fieldName: string;
-  lockFields: LockFields | undefined;
+  lockFields: UnsyncFields | undefined;
   onUnLockClick: () => void;
   onLockClick: () => void;
 }) => {

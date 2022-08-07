@@ -83,7 +83,7 @@ export default () => {
               <FormItemExtendLabel
                 label={entity.name}
                 fieldName={entity.name}
-                lockFields={extendRelation.eventLockFields}
+                lockFields={extendRelation.eventUnsyncFields}
                 onUnLockClick={() => {
                   unlockComExtendEventField(
                     stageSelectNode.id,
@@ -112,7 +112,7 @@ export default () => {
             return [
               isExtendReactionView(
                 extendRelation?.toStatId,
-                extendRelation?.eventLockFields,
+                extendRelation?.eventUnsyncFields,
                 selectedComponentStatusId,
                 item.name,
               ) ? (

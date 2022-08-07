@@ -4,7 +4,7 @@ import { produce } from 'immer';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
-export type LockFields = Record<string, boolean>;
+export type UnsyncFields = Record<string, boolean>;
 
 /** from 是被继承的，to 是继承者 */
 export type ComStatRelation = {
@@ -12,13 +12,13 @@ export type ComStatRelation = {
   toStatId: string;
   fromStatId: string;
   /** 锁住的字段，不进行继承同步 */
-  settingLockFields: LockFields;
+  settingUnsyncFields: UnsyncFields;
   /** 样式锁 */
-  styleLockFields: LockFields;
+  styleUnsyncFields: UnsyncFields;
   /** 动作锁 */
-  actionLockFields: LockFields;
+  actionUnsyncFields: UnsyncFields;
   /** 事件锁 */
-  eventLockFields: LockFields;
+  eventUnsyncFields: UnsyncFields;
 };
 
 /**
@@ -114,25 +114,25 @@ const useStatusRelations = () => {
   /** 获取组件状态的继承锁定字段（不同步修改） */
   const getStatLockSettingFields = useMemoizedFn(
     (comId: string, relationId: string) => {
-      return comsStatusRelations[comId]?.[relationId].settingLockFields;
+      return comsStatusRelations[comId]?.[relationId].settingUnsyncFields;
     },
   );
 
   const getStatLockStyleFields = useMemoizedFn(
     (comId: string, relationId: string) => {
-      return comsStatusRelations[comId]?.[relationId].styleLockFields;
+      return comsStatusRelations[comId]?.[relationId].styleUnsyncFields;
     },
   );
 
   const getStatLockActionFields = useMemoizedFn(
     (comId: string, relationId: string) => {
-      return comsStatusRelations[comId]?.[relationId].actionLockFields;
+      return comsStatusRelations[comId]?.[relationId].actionUnsyncFields;
     },
   );
 
   const getStatLockEventFields = useMemoizedFn(
     (comId: string, relationId: string) => {
-      return comsStatusRelations[comId]?.[relationId].eventLockFields;
+      return comsStatusRelations[comId]?.[relationId].eventUnsyncFields;
     },
   );
 
@@ -141,7 +141,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].settingLockFields[fieldName] = true;
+          draft[comId][relationId].settingUnsyncFields[fieldName] = true;
         }),
       );
     },
@@ -152,7 +152,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].settingLockFields[fieldName] = false;
+          draft[comId][relationId].settingUnsyncFields[fieldName] = false;
         }),
       );
     },
@@ -163,7 +163,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].styleLockFields[fieldName] = true;
+          draft[comId][relationId].styleUnsyncFields[fieldName] = true;
         }),
       );
     },
@@ -174,7 +174,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].styleLockFields[fieldName] = false;
+          draft[comId][relationId].styleUnsyncFields[fieldName] = false;
         }),
       );
     },
@@ -184,7 +184,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].actionLockFields[fieldName] = true;
+          draft[comId][relationId].actionUnsyncFields[fieldName] = true;
         }),
       );
     },
@@ -194,7 +194,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].actionLockFields[fieldName] = false;
+          draft[comId][relationId].actionUnsyncFields[fieldName] = false;
         }),
       );
     },
@@ -204,7 +204,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].eventLockFields[fieldName] = true;
+          draft[comId][relationId].eventUnsyncFields[fieldName] = true;
         }),
       );
     },
@@ -214,7 +214,7 @@ const useStatusRelations = () => {
     (comId: string, relationId: string, fieldName: string) => {
       setComsStatusRelations(
         produce((draft) => {
-          draft[comId][relationId].eventLockFields[fieldName] = false;
+          draft[comId][relationId].eventUnsyncFields[fieldName] = false;
         }),
       );
     },

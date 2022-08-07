@@ -42,11 +42,10 @@ export default ({
     getComStatActions: model.getComStatActions,
   }));
 
-  const { createComStatEvent, updateComStatEvent, comsEvents } = useModel(
+  const { createComStatEvent, comsEvents } = useModel(
     'comsEvents',
     (model) => ({
       createComStatEvent: model.createComStatEvent,
-      updateComStatEvent: model.updateComStatEvent,
       comsEvents: model.comsEvents,
     }),
   );
@@ -102,7 +101,7 @@ export default ({
 
   const disabled =
     eventItem && extendRelation
-      ? !extendRelation.eventLockFields[eventItem.name]
+      ? !extendRelation.eventUnsyncFields[eventItem.name]
       : false;
 
   const renderTrigger = () => {

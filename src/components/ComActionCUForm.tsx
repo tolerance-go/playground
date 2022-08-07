@@ -73,7 +73,7 @@ export default ({
 
   const disabled =
     actionItem && extendRelation
-      ? !extendRelation?.actionLockFields[actionItem.name]
+      ? !extendRelation?.actionUnsyncFields[actionItem.name]
       : false;
 
   const renderTrigger = () => {

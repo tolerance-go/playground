@@ -1,10 +1,10 @@
-import { LockFields } from '@/models/statusRelations';
+import { UnsyncFields } from '@/models/statusRelations';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import utl from 'lodash';
 
 export const useComStatusExtendProps = <P extends object>(options: {
-  getStatLockFields: (comId: string, relationId: string) => LockFields;
+  getStatLockFields: (comId: string, relationId: string) => UnsyncFields;
   updateComStatProps: (
     comId: string,
     statId: string,

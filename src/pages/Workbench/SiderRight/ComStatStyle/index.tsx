@@ -70,7 +70,7 @@ export default () => {
 
         return (
           <FormItemExtendLabel
-            lockFields={extendRelation.styleLockFields}
+            lockFields={extendRelation.styleUnsyncFields}
             fieldName={item.name}
             label={item.label}
             onUnLockClick={() => {
@@ -98,7 +98,7 @@ export default () => {
              * 锁住表示不自动同步，那么用户就是可以自定义输入的
              * 这里和界面的图标是相反的
              */
-            !extendRelation.styleLockFields[item.name]
+            !extendRelation.styleUnsyncFields[item.name]
           : false;
         return {
           disabled,

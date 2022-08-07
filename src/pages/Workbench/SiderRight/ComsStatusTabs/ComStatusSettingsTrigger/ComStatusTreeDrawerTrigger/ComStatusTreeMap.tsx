@@ -110,10 +110,10 @@ export const ComStatusTreeMap = () => {
         createComStatRelation(stageSelectNodeId, {
           fromStatId: dropNode.key as string,
           toStatId: dragNode.key as string,
-          settingLockFields: {},
-          styleLockFields: {},
-          actionLockFields: {},
-          eventLockFields: {},
+          settingUnsyncFields: {},
+          styleUnsyncFields: {},
+          actionUnsyncFields: {},
+          eventUnsyncFields: {},
         });
       } else {
         /** 拖拽组件到同级组件后，此时 dropNode 是同级别的 */
@@ -123,10 +123,10 @@ export const ComStatusTreeMap = () => {
           createComStatRelation(stageSelectNodeId, {
             fromStatId: dropNode.parentStatId as string,
             toStatId: dragNode.key as string,
-            settingLockFields: {},
-            styleLockFields: {},
-            actionLockFields: {},
-            eventLockFields: {},
+            settingUnsyncFields: {},
+            styleUnsyncFields: {},
+            actionUnsyncFields: {},
+            eventUnsyncFields: {},
           });
         }
       }
