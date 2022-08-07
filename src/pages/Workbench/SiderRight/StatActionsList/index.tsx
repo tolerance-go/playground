@@ -1,4 +1,5 @@
 import ComActionCUForm from '@/components/ComActionCUForm';
+import ComActionViewForm from '@/components/ComActionViewForm';
 import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
 import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
@@ -108,11 +109,21 @@ export default () => {
         actions: {
           render: (dom, item) => {
             return [
-              <ComActionCUForm
-                actionId={item.id}
-                mode="edit"
-                key="edit"
-              ></ComActionCUForm>,
+              extendRelation?.toStatId === selectedComponentStatusId &&
+              !extendRelation?.actionLockFields[item.name] ? (
+                <ComActionViewForm
+                  extendRelation={extendRelation}
+                  actionItem={item}
+                  key="edit"
+                />
+              ) : (
+                <ComActionCUForm
+                  extendRelation={extendRelation}
+                  actionItem={item}
+                  mode="edit"
+                  key="edit"
+                ></ComActionCUForm>
+              ),
               <a
                 key="remove"
                 onClick={() => {

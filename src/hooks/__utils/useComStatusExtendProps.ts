@@ -33,6 +33,7 @@ export const useComStatusExtendProps = <P extends object>(options: {
   /** 设置组件所有继承该配置的组件配置 */
   const setComExtendsProps = useMemoizedFn(
     (comId: string, statId: string, props: Partial<P>) => {
+      debugger;
       const extendRelations = getComExtendStatusFromStat(comId, statId);
       extendRelations.forEach((relation) => {
         const lockFields = options.getStatLockFields(comId, relation.id);
@@ -57,6 +58,7 @@ export const useComStatusExtendProps = <P extends object>(options: {
   const setCurrentComPropsExtendsProps = useMemoizedFn((props: P) => {
     const selectedComponentStatusId = getSelectedComponentStatusId();
     const stageSelectNodeId = getStageSelectNodeId();
+    debugger;
 
     if (stageSelectNodeId && selectedComponentStatusId) {
       options.setComStatProps(

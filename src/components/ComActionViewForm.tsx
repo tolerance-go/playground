@@ -1,9 +1,8 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
-import { useComStatusExtendActions } from '@/hooks/useComStatusExtendActions';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { ComponentAction } from '@/models/comsActions';
 import { ComStatRelation } from '@/models/statusRelations';
-import { EditOutlined } from '@ant-design/icons';
+import { EyeOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProFormDependency,
@@ -12,16 +11,13 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Button } from 'antd';
 import { useMemo, useRef } from 'react';
 
 /** 组件的动作编辑和创建表单 */
 export default ({
-  mode,
   actionItem,
   extendRelation,
 }: {
-  mode: 'edit' | 'create';
   actionItem?: ComponentAction;
   extendRelation?: ComStatRelation;
 }) => {
@@ -38,91 +34,38 @@ export default ({
   // const [form] = Form.useForm();
   const formRef = useRef<ProFormInstance>();
 
-  const { createComStatAction, comsActions } = useModel(
-    'comsActions',
-    (model) => ({
-      createComStatAction: model.createComStatAction,
-      comsActions: model.comsActions,
-    }),
-  );
+  const { comsActions } = useModel('comsActions', (model) => ({
+    comsActions: model.comsActions,
+  }));
 
-  const { getStageSelectNodeId, stageSelectNodeId } = useModel(
-    'stageSelectNodeId',
-    (model) => ({
-      getStageSelectNodeId: model.getStageSelectNodeId,
-      stageSelectNodeId: model.stageSelectNodeId,
-    }),
-  );
+  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    stageSelectNodeId: model.stageSelectNodeId,
+  }));
 
-  const { getSelectedComponentStatusId, selectedComponentStatusId } = useModel(
+  const { selectedComponentStatusId } = useModel(
     'selectedComponentStatusId',
     (model) => ({
-      getSelectedComponentStatusId: model.getSelectedComponentStatusId,
       selectedComponentStatusId: model.selectedComponentStatusId,
     }),
   );
 
-  const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
-    (model) => ({
-      triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
-    }),
-  );
-
-  const { setCurrentComActionsExtendsActions } = useComStatusExtendActions();
-
-  const disabled =
-    actionItem && extendRelation
-      ? !extendRelation?.actionLockFields[actionItem.name]
-      : false;
-
-  const renderTrigger = () => {
-    return mode === 'create' ? (
-      <Button disabled={disabled} block>
-        添加动作
-      </Button>
-    ) : (
-      <a
-        style={{
-          color: disabled ? '#aaa' : undefined,
-        }}
-        onClick={(event) => {
-          if (disabled) {
-            event.stopPropagation();
-          }
-        }}
-      >
-        <EditOutlined />
-      </a>
-    );
-  };
-
   const actionData = useMemo(() => {
-    if (
-      mode === 'edit' &&
-      stageSelectNodeId &&
-      selectedComponentStatusId &&
-      actionItem?.id
-    ) {
+    if (stageSelectNodeId && selectedComponentStatusId && actionItem?.id) {
       return comsActions[stageSelectNodeId][selectedComponentStatusId][
         actionItem?.id
       ];
     }
     return undefined;
   }, [
-    mode,
     comsActions,
     actionItem?.id,
     stageSelectNodeId,
     selectedComponentStatusId,
   ]);
 
-  if (disabled) {
-    return renderTrigger();
-  }
-
   return (
     <ModalForm
+      // form={form}
       formRef={formRef}
       initialValues={{
         type: {
@@ -133,42 +76,17 @@ export default ({
         settings: actionData?.settings,
       }}
       modalProps={{
-        destroyOnClose: mode === 'edit' ? true : false,
+        destroyOnClose: true,
       }}
-      title={mode === 'create' ? '新建动作' : '编辑动作'}
-      trigger={renderTrigger()}
+      title={'查看动作'}
+      trigger={
+        <a>
+          <EyeOutlined />
+        </a>
+      }
       width={800}
       submitTimeout={2000}
       autoFocusFirstInput
-      onFinish={async ({ type, name, settings }) => {
-        const selectedComId = getStageSelectNodeId();
-        const selectedComStatId = getSelectedComponentStatusId();
-        if (selectedComId && selectedComStatId) {
-          const actionData = {
-            type: type.value,
-            name,
-            settings,
-            typeZh: type.label,
-          };
-
-          if (mode === 'create') {
-            createComStatAction(selectedComId, selectedComStatId, actionData);
-          } else {
-            if (actionItem?.id) {
-              setCurrentComActionsExtendsActions({
-                /** 这里用 actionItem.name 作为 key，值为旧值 */
-                [actionItem.name]: {
-                  id: actionItem?.id,
-                  ...actionData,
-                },
-              });
-            }
-          }
-
-          triggerPrepareSaveTimeChange();
-        }
-        return true;
-      }}
     >
       <ProFormText
         rules={[
@@ -180,6 +98,7 @@ export default ({
         label="动作名称"
         placeholder="请输入"
         disabled={!!extendRelation}
+        readonly
       />
       <ProFormSelect
         rules={[
@@ -189,6 +108,7 @@ export default ({
         ]}
         name="type"
         label="动作类型"
+        readonly
         placeholder="请选择"
         options={selectedComsActionsConfigs?.map((item) => ({
           label: item.name,

@@ -124,6 +124,12 @@ const useStatusRelations = () => {
     },
   );
 
+  const getStatLockActionFields = useMemoizedFn(
+    (comId: string, relationId: string) => {
+      return comsStatusRelations[comId]?.[relationId].actionLockFields;
+    },
+  );
+
   /** 将组件的继承字段锁起来 */
   const lockComExtendSettingField = useMemoizedFn(
     (comId: string, relationId: string, fieldName: string) => {
@@ -210,6 +216,7 @@ const useStatusRelations = () => {
 
   return {
     comsStatusRelations,
+    getStatLockActionFields,
     deleteComStatRelationFromToStatId,
     lockComExtendEventField,
     unlockComExtendEventField,

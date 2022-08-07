@@ -72,12 +72,99 @@ const useComsActions = () => {
     },
   );
 
+  const setComStatAction = useMemoizedFn(
+    (comId: string, statId: string, action: ComponentAction) => {
+      setComsActions(
+        produce((draft) => {
+          if (draft[comId] === undefined) {
+            draft[comId] = {};
+          }
+          draft[comId][statId][action.id] = action;
+        }),
+      );
+    },
+  );
+
+  const setComStatActionWithName = useMemoizedFn(
+    (
+      comId: string,
+      statId: string,
+      actionWithName: {
+        [actionName: string]: ComponentAction;
+      },
+    ) => {
+      setComsActions(
+        produce((draft) => {
+          if (draft[comId] === undefined) {
+            draft[comId] = {};
+          }
+
+          const actionName = Object.keys(actionWithName)[0];
+          const action = actionWithName[actionName];
+
+          const actionId = Object.keys(draft[comId][statId]).find(
+            (actionId) => {
+              if (draft[comId][statId][actionId].name === actionName) {
+                return true;
+              }
+              return false;
+            },
+          );
+
+          if (actionId) {
+            draft[comId][statId][actionId] = action;
+          }
+        }),
+      );
+    },
+  );
+
+  /** 通过 name 作为 key 找到并更新 */
+  const updateComStatActionWithName = useMemoizedFn(
+    (
+      comId: string,
+      statId: string,
+      actionWithName: Partial<{
+        [actionName: string]: ComponentAction;
+      }>,
+    ) => {
+      setComsActions(
+        produce((draft) => {
+          if (draft[comId] === undefined) {
+            draft[comId] = {};
+          }
+
+          const actionName = Object.keys(actionWithName)[0];
+          const action = actionWithName[actionName];
+
+          const actionId = Object.keys(draft[comId][statId]).find(
+            (actionId) => {
+              if (draft[comId][statId][actionId].name === actionName) {
+                return true;
+              }
+              return false;
+            },
+          );
+
+          if (actionId) {
+            draft[comId][statId][actionId] = {
+              ...draft[comId][statId][actionId],
+              ...action,
+              id: actionId,
+            };
+          }
+        }),
+      );
+    },
+  );
+
   /** 更新动作 */
   const updateComStatAction = useMemoizedFn(
     (
       comId: string,
       statId: string,
-      action: Partial<ComponentAction> & Pick<ComponentAction, 'id'>,
+      action: Omit<Partial<ComponentAction>, 'id'> &
+        Pick<ComponentAction, 'id'>,
     ) => {
       setComsActions(
         produce((draft) => {
@@ -173,6 +260,9 @@ const useComsActions = () => {
 
   return {
     comsActions,
+    setComStatAction,
+    setComStatActionWithName,
+    updateComStatActionWithName,
     copySelectedComActionFromActiveStatToOtherStat,
     copyComActionFromStatToOtherStat,
     getComStatAction,
