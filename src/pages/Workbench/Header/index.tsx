@@ -1,4 +1,4 @@
-import { AppstoreAddOutlined, CommentOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { AppstoreAddOutlined, CommentOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Avatar, Button, Col, Divider, Row, Space } from 'antd';
 import Logo from '../Logo';

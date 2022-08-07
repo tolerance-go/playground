@@ -91,6 +91,8 @@ export default (props: {
             value={props.value?.width?.value}
             addonAfter={
               <UnitSelect
+                bordered={props.bordered}
+                disabled={props.disabled}
                 value={props.value?.width?.unit}
                 onChange={(next) => handleUnitChange(next, 'width')}
               />
@@ -171,6 +173,8 @@ export default (props: {
             value={props.value?.height?.value}
             addonAfter={
               <UnitSelect
+                bordered={props.bordered}
+                disabled={props.disabled}
                 value={props.value?.height?.unit}
                 onChange={(next) => handleUnitChange(next, 'height')}
               />

@@ -5,9 +5,11 @@ export const UnitSelect = (props: {
   value: SelectProps['value'];
   onChange?: SelectProps['onChange'];
   bordered?: boolean;
+  disabled?: boolean;
 }) => {
   return (
     <Select
+      disabled={props.disabled}
       bordered={props.bordered}
       size="small"
       defaultValue={'px'}

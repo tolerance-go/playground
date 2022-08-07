@@ -34,6 +34,14 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     }),
   );
 
+  const { copySelectedComActionFromActiveStatToOtherStat } = useModel(
+    'comsActions',
+    (model) => ({
+      copySelectedComActionFromActiveStatToOtherStat:
+        model.copySelectedComActionFromActiveStatToOtherStat,
+    }),
+  );
+
   const { copySelectedComStyleFromActiveStatToOtherStat } = useModel(
     'comsStyles',
     (model) => ({
@@ -74,6 +82,8 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
         createSelectedComponentStat(newStatId, values.name);
 
         copySelectedComSettingFromActiveStatToOtherStat(newStatId);
+
+        copySelectedComActionFromActiveStatToOtherStat(newStatId);
 
         copySelectedComStyleFromActiveStatToOtherStat(newStatId);
 

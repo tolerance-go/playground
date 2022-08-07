@@ -1,5 +1,9 @@
 import ComActionCUForm from '@/components/ComActionCUForm';
+import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
+import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { ComponentAction } from '@/models/comsActions';
+import { DeleteOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import './index.less';
@@ -36,6 +40,22 @@ export default () => {
     }),
   );
 
+  const { stageSelectNode } = useSelectedNode();
+
+  const { lockComExtendActionField, unlockComExtendActionField } = useModel(
+    'statusRelations',
+    (model) => ({
+      lockComExtendActionField: model.lockComExtendActionField,
+      unlockComExtendActionField: model.unlockComExtendActionField,
+    }),
+  );
+
+  const { extendRelation } = useSelectedComActiveStatExtendRelation();
+
+  if (!stageSelectNode) {
+    return null;
+  }
+
   return (
     <ProList<ComponentAction>
       style={{
@@ -52,6 +72,35 @@ export default () => {
       metas={{
         title: {
           dataIndex: 'name',
+          render: (dom, entity) => {
+            if (!extendRelation) {
+              return dom;
+            }
+
+            return (
+              <FormItemExtendLabel
+                label={entity.name}
+                fieldName={entity.name}
+                lockFields={extendRelation?.actionLockFields}
+                onUnLockClick={() => {
+                  unlockComExtendActionField(
+                    stageSelectNode.id,
+                    extendRelation.id,
+                    entity.name,
+                  );
+                  triggerPrepareSaveTimeChange();
+                }}
+                onLockClick={() => {
+                  lockComExtendActionField(
+                    stageSelectNode.id,
+                    extendRelation.id,
+                    entity.name,
+                  );
+                  triggerPrepareSaveTimeChange();
+                }}
+              ></FormItemExtendLabel>
+            );
+          },
         },
         subTitle: {
           dataIndex: 'typeZh',
@@ -80,7 +129,7 @@ export default () => {
                   color: 'red',
                 }}
               >
-                删除
+                <DeleteOutlined />
               </a>,
             ];
           },

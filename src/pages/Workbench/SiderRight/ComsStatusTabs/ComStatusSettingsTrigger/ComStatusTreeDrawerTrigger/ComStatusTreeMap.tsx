@@ -1,5 +1,5 @@
 import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
-import { ComponentStat } from '@/models/statusSettings';
+import { ComponentStat } from '@/models/comsStatus';
 import { useModel } from '@umijs/max';
 import { Tree } from 'antd';
 import { DataNode, TreeProps } from 'antd/lib/tree';
@@ -112,6 +112,8 @@ export const ComStatusTreeMap = () => {
           toStatId: dragNode.key as string,
           settingLockFields: {},
           styleLockFields: {},
+          actionLockFields: {},
+          eventLockFields: {},
         });
       } else {
         /** 拖拽组件到同级组件后，此时 dropNode 是同级别的 */
@@ -123,6 +125,8 @@ export const ComStatusTreeMap = () => {
             toStatId: dragNode.key as string,
             settingLockFields: {},
             styleLockFields: {},
+            actionLockFields: {},
+            eventLockFields: {},
           });
         }
       }

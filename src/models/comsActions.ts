@@ -1,3 +1,5 @@
+import { ActionId, ComId, StatId } from '@/typings/keys';
+import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
@@ -17,21 +19,34 @@ export type ComponentAction = {
 };
 
 /** key: actionId */
-export type ComponentActions = Record<string, ComponentAction>;
+export type ComponentActions = Record<ActionId, ComponentAction>;
 
-/** 组件的不同状态
+/**
+ * 组件的不同状态
  * key: statId
  */
-export type ComponentStatusActions = Record<string, ComponentActions>;
+export type ComponentStatusActions = Record<StatId, ComponentActions>;
 
-/** 所有组件的所有状态下的配置
+/**
+ * 所有组件的所有状态下的配置
  * key: comId
  */
-export type ComponentsActions = Record<string, ComponentStatusActions>;
+export type ComponentsActions = Record<ComId, ComponentStatusActions>;
 
 /** 组件的动作 */
 const useComsActions = () => {
   const [comsActions, setComsActions] = useState<ComponentsActions>({});
+
+  const { getSelectedComponentStatusId } = useModel(
+    'selectedComponentStatusId',
+    (model) => ({
+      getSelectedComponentStatusId: model.getSelectedComponentStatusId,
+    }),
+  );
+
+  const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    getStageSelectNodeId: model.getStageSelectNodeId,
+  }));
 
   /** 创建新的动作 */
   const createComStatAction = useMemoizedFn(
@@ -112,8 +127,54 @@ const useComsActions = () => {
     },
   );
 
+  /** 拷贝组件 A 状态的配置到 B 状态 */
+  const copyComActionFromStatToOtherStat = useMemoizedFn(
+    (comId: string, fromStatId: string, toStatId: string) => {
+      setComsActions(
+        produce((draft) => {
+          if (draft[comId] === undefined) {
+            draft[comId] = {};
+          }
+
+          if (draft[comId][fromStatId]) {
+            /** 重新创建新的 id */
+            draft[comId][toStatId] = Object.keys(draft[comId][fromStatId])
+              .map((actionId) => {
+                return {
+                  ...draft[comId][fromStatId][actionId],
+                  id: nanoid(),
+                };
+              })
+              .reduce((acc, next) => {
+                return {
+                  ...acc,
+                  [next.id]: next,
+                };
+              }, {});
+          }
+        }),
+      );
+    },
+  );
+
+  const copySelectedComActionFromActiveStatToOtherStat = useMemoizedFn(
+    (toStatId: string) => {
+      const stageSelectNodeId = getStageSelectNodeId();
+      const selectedComponentStatusId = getSelectedComponentStatusId();
+      if (stageSelectNodeId && selectedComponentStatusId) {
+        copyComActionFromStatToOtherStat(
+          stageSelectNodeId,
+          selectedComponentStatusId,
+          toStatId,
+        );
+      }
+    },
+  );
+
   return {
     comsActions,
+    copySelectedComActionFromActiveStatToOtherStat,
+    copyComActionFromStatToOtherStat,
     getComStatAction,
     getComStatActions,
     deleteComStatAction,

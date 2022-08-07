@@ -1,3 +1,4 @@
+import { ComId, RelationId } from '@/typings/keys';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
 import { nanoid } from 'nanoid';
@@ -12,19 +13,24 @@ export type ComStatRelation = {
   fromStatId: string;
   /** 锁住的字段，不进行继承同步 */
   settingLockFields: LockFields;
+  /** 样式锁 */
   styleLockFields: LockFields;
+  /** 动作锁 */
+  actionLockFields: LockFields;
+  /** 事件锁 */
+  eventLockFields: LockFields;
 };
 
 /**
  * key: relationId
  */
-export type ComStatusRelations = Record<string, ComStatRelation>;
+export type ComStatusRelations = Record<RelationId, ComStatRelation>;
 
 /**
  * 所有组件的所有状态下配置之间的关系
  * key: comId
  */
-export type ComsStatusRelations = Record<string, ComStatusRelations>;
+export type ComsStatusRelations = Record<ComId, ComStatusRelations>;
 
 const useStatusRelations = () => {
   const [comsStatusRelations, setComsStatusRelations] =
@@ -64,6 +70,18 @@ const useStatusRelations = () => {
           }
         }),
       );
+    },
+  );
+
+  /** 根据 toStatId 删除关系 */
+  const deleteComStatRelationFromToStatId = useMemoizedFn(
+    (comId: string, toStatId: string) => {
+      Object.keys(comsStatusRelations[comId]).forEach((relationId) => {
+        const relation = comsStatusRelations[comId][relationId];
+        if (relation.toStatId === toStatId) {
+          deleteComStatRelation(comId, relation.id);
+        }
+      });
     },
   );
 
@@ -150,8 +168,53 @@ const useStatusRelations = () => {
     },
   );
 
+  const lockComExtendActionField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].actionLockFields[fieldName] = true;
+        }),
+      );
+    },
+  );
+
+  const unlockComExtendActionField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].actionLockFields[fieldName] = false;
+        }),
+      );
+    },
+  );
+
+  const lockComExtendEventField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].eventLockFields[fieldName] = true;
+        }),
+      );
+    },
+  );
+
+  const unlockComExtendEventField = useMemoizedFn(
+    (comId: string, relationId: string, fieldName: string) => {
+      setComsStatusRelations(
+        produce((draft) => {
+          draft[comId][relationId].eventLockFields[fieldName] = false;
+        }),
+      );
+    },
+  );
+
   return {
     comsStatusRelations,
+    deleteComStatRelationFromToStatId,
+    lockComExtendEventField,
+    unlockComExtendEventField,
+    lockComExtendActionField,
+    unlockComExtendActionField,
     getStatLockStyleFields,
     lockComExtendStyleField,
     unlockComExtendStyleField,

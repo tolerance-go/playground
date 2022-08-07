@@ -39,11 +39,6 @@ export default () => {
     }),
   );
 
-  /** 先执行 reset 再执行 setFieldsValue */
-  // useEffect(() => {
-  //   form.resetFields();
-  // }, [selectedComponentStatusId]);
-
   useFormReset(form, style);
 
   if (!stageSelectNode) {

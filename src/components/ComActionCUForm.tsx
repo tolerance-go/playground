@@ -1,5 +1,6 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { EditOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProFormDependency,
@@ -104,7 +105,9 @@ export default ({
         mode === 'create' ? (
           <Button block>添加动作</Button>
         ) : (
-          <a key="edit">编辑</a>
+          <a>
+            <EditOutlined />
+          </a>
         )
       }
       width={800}

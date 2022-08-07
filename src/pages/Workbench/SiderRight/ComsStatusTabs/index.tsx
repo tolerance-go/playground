@@ -23,6 +23,14 @@ export const ComsStatusTabs = () => {
     }),
   );
 
+  const { deleteComStatRelationFromToStatId } = useModel(
+    'statusRelations',
+    (model) => ({
+      deleteComStatRelationFromToStatId:
+        model.deleteComStatRelationFromToStatId,
+    }),
+  );
+
   const { selectedComDefaultStatId } = useSelectedComDefaultStatId();
 
   const { setNearSelectedComponentStatusId } =
@@ -59,6 +67,9 @@ export const ComsStatusTabs = () => {
             }
 
             deleteComStat(stageSelectNodeId, statId);
+
+            /** 删除继承关系 */
+            deleteComStatRelationFromToStatId(stageSelectNodeId, statId);
           }
         }
       }}

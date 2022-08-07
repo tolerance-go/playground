@@ -50,6 +50,8 @@ export default (props: {
           value={props.value?.top?.value}
           addonAfter={
             <UnitSelect
+              bordered={props.bordered}
+              disabled={props.disabled}
               value={props.value?.top?.unit}
               onChange={(next) => handleUnitChange(next, 'top')}
             />
@@ -71,6 +73,8 @@ export default (props: {
           value={props.value?.left?.value}
           addonAfter={
             <UnitSelect
+              bordered={props.bordered}
+              disabled={props.disabled}
               value={props.value?.left?.unit}
               onChange={(next) => handleUnitChange(next, 'left')}
             />
@@ -85,6 +89,8 @@ export default (props: {
           value={props.value?.right?.value}
           addonAfter={
             <UnitSelect
+              bordered={props.bordered}
+              disabled={props.disabled}
               value={props.value?.right?.unit}
               onChange={(next) => handleUnitChange(next, 'right')}
             />
@@ -101,6 +107,8 @@ export default (props: {
           value={props.value?.bottom?.value}
           addonAfter={
             <UnitSelect
+              bordered={props.bordered}
+              disabled={props.disabled}
               value={props.value?.bottom?.unit}
               onChange={(next) => handleUnitChange(next, 'bottom')}
             />
