@@ -4,6 +4,9 @@ import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
+import { setComStatTypeWithName } from './_utils/setComStatTypeWithName';
+import { updateComStatTypeWithName } from './_utils/updateComStatTypeWithName';
+import { useCopyComPropsFromStatToOtherStat } from './_utils/useCopyComPropsFromStatToOtherStat';
 
 /**
  * eg：
@@ -95,25 +98,7 @@ const useComsActions = () => {
     ) => {
       setComsActions(
         produce((draft) => {
-          if (draft[comId] === undefined) {
-            draft[comId] = {};
-          }
-
-          const actionName = Object.keys(actionWithName)[0];
-          const action = actionWithName[actionName];
-
-          const actionId = Object.keys(draft[comId][statId]).find(
-            (actionId) => {
-              if (draft[comId][statId][actionId].name === actionName) {
-                return true;
-              }
-              return false;
-            },
-          );
-
-          if (actionId) {
-            draft[comId][statId][actionId] = action;
-          }
+          setComStatTypeWithName(comId, statId, actionWithName, draft);
         }),
       );
     },
@@ -130,29 +115,7 @@ const useComsActions = () => {
     ) => {
       setComsActions(
         produce((draft) => {
-          if (draft[comId] === undefined) {
-            draft[comId] = {};
-          }
-
-          const actionName = Object.keys(actionWithName)[0];
-          const action = actionWithName[actionName];
-
-          const actionId = Object.keys(draft[comId][statId]).find(
-            (actionId) => {
-              if (draft[comId][statId][actionId].name === actionName) {
-                return true;
-              }
-              return false;
-            },
-          );
-
-          if (actionId) {
-            draft[comId][statId][actionId] = {
-              ...draft[comId][statId][actionId],
-              ...action,
-              id: actionId,
-            };
-          }
+          updateComStatTypeWithName(comId, statId, actionWithName, draft);
         }),
       );
     },
@@ -215,34 +178,8 @@ const useComsActions = () => {
   );
 
   /** 拷贝组件 A 状态的配置到 B 状态 */
-  const copyComActionFromStatToOtherStat = useMemoizedFn(
-    (comId: string, fromStatId: string, toStatId: string) => {
-      setComsActions(
-        produce((draft) => {
-          if (draft[comId] === undefined) {
-            draft[comId] = {};
-          }
-
-          if (draft[comId][fromStatId]) {
-            /** 重新创建新的 id */
-            draft[comId][toStatId] = Object.keys(draft[comId][fromStatId])
-              .map((actionId) => {
-                return {
-                  ...draft[comId][fromStatId][actionId],
-                  id: nanoid(),
-                };
-              })
-              .reduce((acc, next) => {
-                return {
-                  ...acc,
-                  [next.id]: next,
-                };
-              }, {});
-          }
-        }),
-      );
-    },
-  );
+  const { copyComPropsFromStatToOtherStat: copyComActionFromStatToOtherStat } =
+    useCopyComPropsFromStatToOtherStat(setComsActions);
 
   const copySelectedComActionFromActiveStatToOtherStat = useMemoizedFn(
     (toStatId: string) => {

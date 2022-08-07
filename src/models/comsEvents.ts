@@ -4,6 +4,9 @@ import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
+import { setComStatTypeWithName } from './_utils/setComStatTypeWithName';
+import { updateComStatTypeWithName } from './_utils/updateComStatTypeWithName';
+import { useCopyComPropsFromStatToOtherStat } from './_utils/useCopyComPropsFromStatToOtherStat';
 
 /**
  * eg：
@@ -47,6 +50,17 @@ const useComsEvents = () => {
     eventManager: model.eventManager,
   }));
 
+  const { getSelectedComponentStatusId } = useModel(
+    'selectedComponentStatusId',
+    (model) => ({
+      getSelectedComponentStatusId: model.getSelectedComponentStatusId,
+    }),
+  );
+
+  const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    getStageSelectNodeId: model.getStageSelectNodeId,
+  }));
+
   /** 创建新的事件 */
   const createComStatEvent = useMemoizedFn(
     (comId: string, statId: string, event: Omit<ComponentEvent, 'id'>) => {
@@ -78,6 +92,39 @@ const useComsEvents = () => {
         execComStatId: event.execComStatId,
         execComStatActionId: event.execComStatActionId,
       });
+    },
+  );
+
+  const setComStatEventWithName = useMemoizedFn(
+    (
+      comId: string,
+      statId: string,
+      eventWithName: {
+        [actionName: string]: ComponentEvent;
+      },
+    ) => {
+      setComsEvents(
+        produce((draft) => {
+          setComStatTypeWithName(comId, statId, eventWithName, draft);
+        }),
+      );
+    },
+  );
+
+  /** 通过 name 作为 key 找到并更新 */
+  const updateComStatEventWithName = useMemoizedFn(
+    (
+      comId: string,
+      statId: string,
+      eventWithName: Partial<{
+        [actionName: string]: ComponentEvent;
+      }>,
+    ) => {
+      setComsEvents(
+        produce((draft) => {
+          updateComStatTypeWithName(comId, statId, eventWithName, draft);
+        }),
+      );
     },
   );
 
@@ -155,8 +202,30 @@ const useComsEvents = () => {
     }
   });
 
+  /** 拷贝组件 A 状态的配置到 B 状态 */
+  const { copyComPropsFromStatToOtherStat: copyComEventFromStatToOtherStat } =
+    useCopyComPropsFromStatToOtherStat(setComsEvents);
+
+  const copySelectedComEventFromActiveStatToOtherStat = useMemoizedFn(
+    (toStatId: string) => {
+      const stageSelectNodeId = getStageSelectNodeId();
+      const selectedComponentStatusId = getSelectedComponentStatusId();
+      if (stageSelectNodeId && selectedComponentStatusId) {
+        copyComEventFromStatToOtherStat(
+          stageSelectNodeId,
+          selectedComponentStatusId,
+          toStatId,
+        );
+      }
+    },
+  );
+
   return {
     comsEvents,
+    setComStatEventWithName,
+    updateComStatEventWithName,
+    copySelectedComEventFromActiveStatToOtherStat,
+    copyComEventFromStatToOtherStat,
     createComStatEvent,
     setComsEvents,
     updateComStatEvent,

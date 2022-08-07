@@ -4,6 +4,7 @@ import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
 import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { ComponentAction } from '@/models/comsActions';
+import { isExtendReactionView } from '@/utils/isExtendReactionView';
 import { DeleteOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -109,8 +110,12 @@ export default () => {
         actions: {
           render: (dom, item) => {
             return [
-              extendRelation?.toStatId === selectedComponentStatusId &&
-              !extendRelation?.actionLockFields[item.name] ? (
+              isExtendReactionView(
+                extendRelation?.toStatId,
+                extendRelation?.actionLockFields,
+                selectedComponentStatusId,
+                item.name,
+              ) ? (
                 <ComActionViewForm
                   extendRelation={extendRelation}
                   actionItem={item}

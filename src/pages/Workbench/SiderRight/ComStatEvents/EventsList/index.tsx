@@ -1,5 +1,11 @@
 import ComEventCUForm from '@/components/ComEventCUForm';
+import ComEventViewForm from '@/components/ComEventViewForm';
+import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
+import { useSelectedNode } from '@/hooks/useSelectedNode';
 import { ComponentEvent } from '@/models/comsEvents';
+import { isExtendReactionView } from '@/utils/isExtendReactionView';
+import { DeleteOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import './index.less';
@@ -36,6 +42,22 @@ export default () => {
     }),
   );
 
+  const { extendRelation } = useSelectedComActiveStatExtendRelation();
+
+  const { lockComExtendEventField, unlockComExtendEventField } = useModel(
+    'statusRelations',
+    (model) => ({
+      lockComExtendEventField: model.lockComExtendEventField,
+      unlockComExtendEventField: model.unlockComExtendEventField,
+    }),
+  );
+
+  const { stageSelectNode } = useSelectedNode();
+
+  if (!stageSelectNode) {
+    return null;
+  }
+
   return (
     <ProList<ComponentEvent>
       style={{
@@ -52,6 +74,35 @@ export default () => {
       metas={{
         title: {
           dataIndex: 'name',
+          render: (dom, entity) => {
+            if (!extendRelation) {
+              return dom;
+            }
+
+            return (
+              <FormItemExtendLabel
+                label={entity.name}
+                fieldName={entity.name}
+                lockFields={extendRelation.eventLockFields}
+                onUnLockClick={() => {
+                  unlockComExtendEventField(
+                    stageSelectNode.id,
+                    extendRelation.id,
+                    entity.name,
+                  );
+                  triggerPrepareSaveTimeChange();
+                }}
+                onLockClick={() => {
+                  lockComExtendEventField(
+                    stageSelectNode.id,
+                    extendRelation.id,
+                    entity.name,
+                  );
+                  triggerPrepareSaveTimeChange();
+                }}
+              ></FormItemExtendLabel>
+            );
+          },
         },
         subTitle: {
           dataIndex: 'typeZh',
@@ -59,11 +110,25 @@ export default () => {
         actions: {
           render: (dom, item) => {
             return [
-              <ComEventCUForm
-                eventId={item.id}
-                mode="edit"
-                key="edit"
-              ></ComEventCUForm>,
+              isExtendReactionView(
+                extendRelation?.toStatId,
+                extendRelation?.eventLockFields,
+                selectedComponentStatusId,
+                item.name,
+              ) ? (
+                <ComEventViewForm
+                  extendRelation={extendRelation}
+                  eventItem={item}
+                  key="edit"
+                />
+              ) : (
+                <ComEventCUForm
+                  extendRelation={extendRelation}
+                  eventItem={item}
+                  mode="edit"
+                  key="edit"
+                ></ComEventCUForm>
+              ),
               <a
                 key="remove"
                 onClick={() => {
@@ -80,7 +145,7 @@ export default () => {
                   color: 'red',
                 }}
               >
-                删除
+                <DeleteOutlined />
               </a>,
             ];
           },

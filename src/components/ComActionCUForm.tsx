@@ -86,11 +86,6 @@ export default ({
         style={{
           color: disabled ? '#aaa' : undefined,
         }}
-        onClick={(event) => {
-          if (disabled) {
-            event.stopPropagation();
-          }
-        }}
       >
         <EditOutlined />
       </a>

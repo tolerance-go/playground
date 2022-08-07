@@ -44,6 +44,13 @@ export const ComsStatusTabs = () => {
     }),
   );
 
+  const { triggerPrepareSaveTimeChange } = useModel(
+    'stageAutoSave',
+    (model) => ({
+      triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
+    }),
+  );
+
   return (
     <Tabs
       size="small"
@@ -70,6 +77,8 @@ export const ComsStatusTabs = () => {
 
             /** 删除继承关系 */
             deleteComStatRelationFromToStatId(stageSelectNodeId, statId);
+
+            triggerPrepareSaveTimeChange();
           }
         }
       }}
