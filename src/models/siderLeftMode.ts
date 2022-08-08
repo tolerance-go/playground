@@ -2,7 +2,7 @@ import { useModel } from '@umijs/max';
 import { usePrevious, useUpdateLayoutEffect } from 'ahooks';
 import { useState } from 'react';
 
-export type NormalStatus = 'page' | 'layout' | 'asset';
+export type NormalStatus = 'page' | 'layout' | 'material';
 
 const useSiderLeftMode = () => {
   /**

@@ -1,5 +1,6 @@
 import { useModel } from '@umijs/max';
 import { Col, Divider, Row } from 'antd';
+import ComMaterial from '../ComMaterial';
 import ComTree from './ComTree';
 import PagePanel from './PagePanel';
 import Segmented from './Segmented';
@@ -37,7 +38,10 @@ export default () => {
           if (normalStatus === 'layout') {
             return <ComTree />;
           }
-          return <PagePanel />;
+          if (normalStatus === 'material') {
+            return <ComMaterial />;
+          }
+          return null;
         })()}
       </Col>
     </Row>

@@ -5,6 +5,7 @@ import { produce } from 'immer';
 import { WritableDraft } from 'immer/dist/internal';
 import { useState } from 'react';
 
+/** 物料的组件都是引用该这里 */
 export type StageComponentsModelItem = {
   /** 所在的插槽名称 */
   slotName: string;
@@ -318,7 +319,6 @@ const useStageComponentsModel = () => {
 
         /** 移动是插槽组件，放置的是跟组件 */
       } else if (slotName !== 'root' && targetParentId === 'root') {
-
         setStageComponentsModel(
           produce((prev) => {
             // 找到要移动的元素
