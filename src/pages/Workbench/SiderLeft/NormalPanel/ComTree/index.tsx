@@ -59,6 +59,12 @@ export default () => {
     };
   });
 
+  const { comsMaterialsRootIds } = useModel('comsMaterialsRootIds', (model) => {
+    return {
+      comsMaterialsRootIds: model.comsMaterialsRootIds,
+    };
+  });
+
   const treeData = useMemo(() => {
     const getTree = (
       ids: string[],
@@ -148,8 +154,8 @@ export default () => {
         };
       });
     };
-    return getTree(rootIds, 'root', 'root');
-  }, [stageComponentsModel, showAllSlots, rootIds]);
+    return getTree(comsMaterialsRootIds ?? rootIds, 'root', 'root');
+  }, [stageComponentsModel, comsMaterialsRootIds, showAllSlots, rootIds]);
 
   const handleDrop: TreeProps<SelfTreeDataNode>['onDrop'] = (info) => {
     if (!info.dropToGap) {

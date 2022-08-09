@@ -1,16 +1,12 @@
-import { useInitSatgeData } from '@/hooks/useInitSatgeData';
-import { useModel, useSearchParams } from '@umijs/max';
+import { useModel } from '@umijs/max';
 import { Menu, Skeleton } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import clsx from 'clsx';
-import { useEffect } from 'react';
 import styles from './index.less';
 import { MenuItem } from './MenuItem';
 import { TempInput } from './TempInput';
 
 const PageNav = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const { pageList, fetchListLoading } = useModel('pageList', (model) => ({
     pageList: model?.pageList,
     fetchListLoading: model?.fetchListLoading,
@@ -24,27 +20,6 @@ const PageNav = () => {
       setActivePageId: model?.setActivePageId,
     }),
   );
-
-  const { initStageData } = useInitSatgeData();
-
-  useEffect(() => {
-    /** 根据 url 初始化当前激活的 pageId */
-    const id = searchParams.get('pageId');
-    if (id) {
-      setActivePageId(id);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (activePageId) {
-      /** 同步 url，下次刷新页面的时候可以记住 */
-      searchParams.delete('pageId');
-      searchParams.append('pageId', activePageId);
-      setSearchParams(searchParams);
-
-      initStageData(activePageId);
-    }
-  }, [activePageId]);
 
   return (
     <Skeleton loading={fetchListLoading}>

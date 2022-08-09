@@ -1,9 +1,7 @@
-import { PageControllerUpdate } from '@/services/server/PageController';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
-import { message } from 'antd';
 
-export const useSaveStage = () => {
+export const useGetStageData = () => {
   const { getData: getComsTreeData } = useModel(
     'stageComponentsModel',
     (model) => {
@@ -61,44 +59,21 @@ export const useSaveStage = () => {
     };
   });
 
-  const { getData: getComsMaterials } = useModel('comsMaterials', (model) => {
+  const getStageData = useMemoizedFn(() => {
     return {
-      getData: model.getData,
+      comsStatusRelations: getStatusRelations(),
+      comsTree: getComsTreeData(),
+      // comsModel: getComsModelData(),
+      comsStatus: getStatusSettings(),
+      comsStatusDefaults: getStatusSettingsDefaults(),
+      comsActions: getComsActions(),
+      comsEvents: getComsEvents(),
+      comsStyles: getComsStyles(),
+      comsSettings: getComsSettings(),
     };
-  });
-
-  const { activePageId } = useModel('pageList', (model) => {
-    return {
-      activePageId: model?.activePageId,
-    };
-  });
-
-  const saveStageComsData = useMemoizedFn(() => {
-    if (activePageId) {
-      return PageControllerUpdate(
-        {
-          id: activePageId,
-        },
-        JSON.stringify({
-          comsStatusRelations: getStatusRelations(),
-          comsTree: getComsTreeData(),
-          // comsModel: getComsModelData(),
-          comsStatus: getStatusSettings(),
-          comsStatusDefaults: getStatusSettingsDefaults(),
-          comsActions: getComsActions(),
-          comsEvents: getComsEvents(),
-          comsStyles: getComsStyles(),
-          comsSettings: getComsSettings(),
-          comsMaterials: getComsMaterials(),
-        }),
-      );
-    }
-    message.warn('缺少 ID 信息，无法正常保存');
-
-    return { success: false };
   });
 
   return {
-    saveStageComsData,
+    getStageData,
   };
 };

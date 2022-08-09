@@ -1,11 +1,11 @@
-import { ComMaterial } from '@/models/comsMaterials';
+import { ComMaterial } from '@/models/comsMaterialList';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
 
 export default () => {
-  const { createComMaterial } = useModel('comsMaterials', (model) => ({
+  const { createComMaterial } = useModel('comsMaterialList', (model) => ({
     createComMaterial: model.createComMaterial,
   }));
 

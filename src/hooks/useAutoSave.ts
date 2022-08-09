@@ -1,9 +1,9 @@
-import { useSaveStage } from '@/hooks/useSaveStage';
+import { useSaveStageDataWithPage } from '@/hooks/useSaveStageDataWithPage';
 import { useModel, useRequest } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
 
 export const useAutoSave = () => {
-  const { saveStageComsData } = useSaveStage();
+  const { saveStageDataWithPage: saveStageComsData } = useSaveStageDataWithPage();
 
   const { prepareSaveTime, updateAutoSaveTime } = useModel('stageAutoSave');
 

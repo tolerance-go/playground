@@ -1,13 +1,22 @@
-import { ComMaterial } from '@/models/comsMaterials';
+import { ComMaterial } from '@/models/comsMaterialList';
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import styles from './index.less';
 import MaterialCreator from './MaterialCreator';
 
 export default () => {
-  const { comsMaterials } = useModel('comsMaterials', (model) => ({
+  const { comsMaterials } = useModel('comsMaterialList', (model) => ({
     comsMaterials: model.comsMaterials,
   }));
+
+  const { setComActiveMaterialId } = useModel(
+    'comActiveMaterialId',
+    (model) => {
+      return {
+        setComActiveMaterialId: model.setComActiveMaterialId,
+      };
+    },
+  );
 
   return (
     <ProList<ComMaterial>
@@ -17,10 +26,7 @@ export default () => {
       }}
       split
       rowKey="id"
-      dataSource={Object.keys(comsMaterials ?? {}).map((actionId) => {
-        const action = comsMaterials[actionId];
-        return action;
-      })}
+      dataSource={comsMaterials}
       showActions="hover"
       metas={{
         title: {
@@ -28,6 +34,20 @@ export default () => {
         },
         description: {
           dataIndex: 'desc',
+        },
+        actions: {
+          render: (dom, entity) => {
+            return [
+              <a
+                key="apply"
+                onClick={() => {
+                  setComActiveMaterialId(entity.id);
+                }}
+              >
+                应用
+              </a>,
+            ];
+          },
         },
       }}
       headerTitle={'暂存组件'}

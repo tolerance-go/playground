@@ -2,7 +2,6 @@ import { SlotPosition } from '@/models/slotsInsert';
 // import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
-import { WritableDraft } from 'immer/dist/internal';
 import { useState } from 'react';
 
 /** 物料的组件都是引用该这里 */
@@ -209,27 +208,6 @@ const useStageComponentsModel = () => {
         targetSlotName,
       } = options;
 
-      const removePrevCom = (
-        comsModel: WritableDraft<StageComponentsModel> | undefined,
-      ) => {
-        // 找到要移动的元素
-        const toMoveNode = comsModel?.[comId];
-
-        if (toMoveNode) {
-          /**
-           * 从原来位置删除
-           * 只是从父组件插槽相应删除
-           */
-          const parentNode = comsModel?.[parentId];
-          if (parentNode) {
-            const index = parentNode.slots[slotName].findIndex(
-              (slotComId) => slotComId === comId,
-            );
-            parentNode.slots[slotName].splice(index, 1);
-          }
-        }
-      };
-
       /** 移动的是跟组件，放置的目标是跟组件 */
       if (parentId === 'root' && targetSlotName === 'root') {
         setRootIds(
@@ -414,12 +392,65 @@ const useStageComponentsModel = () => {
     return stageComponentsModel;
   });
 
+  /**
+   * 从舞台上删除指定组件，但是相关配置依旧保留
+   * 用在删除并在物料中保存索引
+   */
+  const removeTargetComsAndSaveTheirSettings = useMemoizedFn(
+    (comIds: string[]) => {
+      const inRootIds: { index: number; id: string }[] = [];
+      const notInRootIds: string[] = [];
+
+      comIds.forEach((comId) => {
+        const index = rootIds.findIndex((item) => item === comId);
+        if (index > -1) {
+          inRootIds.push({
+            id: comId,
+            index,
+          });
+        } else {
+          notInRootIds.push(comId);
+        }
+      });
+
+      if (inRootIds.length) {
+        setRootIds(
+          produce((draft) => {
+            inRootIds.forEach((item) => {
+              draft.splice(item.index, 1);
+            });
+          }),
+        );
+      }
+
+      if (notInRootIds.length) {
+        setStageComponentsModel(
+          produce((draft) => {
+            notInRootIds.forEach((comId) => {
+              if (draft?.[comId].parentId) {
+                Object.keys(draft?.[draft?.[comId].parentId].slots).forEach(
+                  (slotName) => {
+                    const slots =
+                      draft?.[draft?.[comId].parentId].slots[slotName];
+                    const index = slots.findIndex((item) => item === comId);
+                    slots.splice(index, 1);
+                  },
+                );
+              }
+            });
+          }),
+        );
+      }
+    },
+  );
+
   window.__consola.info('model:', 'stageComponentsModel', stageComponentsModel);
   window.__consola.info('model:', 'rootIds', rootIds);
 
   return {
     rootIds,
     stageComponentsModel,
+    removeTargetComsAndSaveTheirSettings,
     addComponentToStage,
     getData,
     initData,

@@ -1,13 +1,13 @@
 import { useSearchParams } from '@/.umi/exports';
 import Stage from '@/components/Stage';
-import { useInitSatgeData } from '@/hooks/useInitSatgeData';
+import { useInitSatgeDataWithPage } from '@/hooks/useInitSatgeDataWithPage';
 import { message } from 'antd';
 import { useEffect } from 'react';
 
 export default function App() {
   const [searchParams] = useSearchParams();
 
-  const { initStageData } = useInitSatgeData();
+  const { initSatgeDataWithPage: initStageData } = useInitSatgeDataWithPage();
 
   useEffect(() => {
     /** 同步 url，下次刷新页面的时候可以记住 */
