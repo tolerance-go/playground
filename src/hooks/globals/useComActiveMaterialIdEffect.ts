@@ -1,6 +1,7 @@
 import { useModel, useSearchParams } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
 import { useEffect } from 'react';
+import { useInitSatgeDataWithMaterial } from '../useInitSatgeDataWithMaterial';
 
 export const useComActiveMaterialIdEffect = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,26 +16,18 @@ export const useComActiveMaterialIdEffect = () => {
     },
   );
 
-  const { setComsMaterialsRootIds } = useModel(
-    'comsMaterialsRootIds',
-    (model) => {
-      return {
-        setComsMaterialsRootIds: model.setComsMaterialsRootIds,
-      };
-    },
-  );
+  const { initSatgeDataWithMaterial } = useInitSatgeDataWithMaterial();
 
-  const { getComMaterial } = useModel('comsMaterialList', (model) => {
-    return {
-      getComMaterial: model.getComMaterial,
-    };
-  });
+  const { setActivePageId } = useModel('pageList', (model) => ({
+    setActivePageId: model?.setActivePageId,
+  }));
 
   useEffect(() => {
     /** 根据 url 初始化当前激活的 pageId */
     const id = searchParams.get('materialId');
     if (id) {
-      setComActiveMaterialId(id);
+      setComActiveMaterialId(Number(id));
+      initSatgeDataWithMaterial(id);
     }
   }, []);
 
@@ -42,19 +35,16 @@ export const useComActiveMaterialIdEffect = () => {
     if (comActiveMaterialId) {
       /** 同步 url，下次刷新页面的时候可以记住 */
       searchParams.delete('materialId');
-      searchParams.append('materialId', comActiveMaterialId);
+      searchParams.append('materialId', String(comActiveMaterialId));
+      searchParams.delete('pageId');
       setSearchParams(searchParams);
+      setActivePageId(undefined);
     }
   }, [comActiveMaterialId]);
 
   useUpdateEffect(() => {
     if (comActiveMaterialId) {
-      const material = getComMaterial(comActiveMaterialId);
-      if (material) {
-        setComsMaterialsRootIds(material.rootIds);
-      }
-    } else {
-      setComsMaterialsRootIds(undefined);
+      initSatgeDataWithMaterial(String(comActiveMaterialId));
     }
   }, [comActiveMaterialId]);
 };

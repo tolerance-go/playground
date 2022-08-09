@@ -25,17 +25,11 @@ export default function Stage() {
     },
   );
 
-  const { comsMaterialsRootIds } = useModel('comsMaterialsRootIds', (model) => {
-    return {
-      comsMaterialsRootIds: model.comsMaterialsRootIds,
-    };
-  });
-
   const rootNodeModels = useMemo(() => {
-    return (comsMaterialsRootIds ?? rootIds)
+    return rootIds
       .map((id) => stageComponentsModel?.[id])
       .filter((item): item is StageComponentsModelItem => item !== undefined);
-  }, [rootIds, comsMaterialsRootIds, stageComponentsModel]);
+  }, [rootIds, stageComponentsModel]);
 
   if (!rootNodeModels) {
     return null;

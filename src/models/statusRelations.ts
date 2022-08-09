@@ -1,6 +1,7 @@
 import { ComId, RelationId } from '@/typings/keys';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
+import utl from 'lodash';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
@@ -85,10 +86,27 @@ const useStatusRelations = () => {
     },
   );
 
+
+  const deleteComsStatusRelationslByIds = useMemoizedFn((comIds: string[]) => {
+    setComsStatusRelations(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   /** 获取数据，准备持久化 */
   const getData = useMemoizedFn(() => {
     return {
       comsStatusRelations,
+    };
+  });
+
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      comsStatusRelations: utl.pick(comsStatusRelations, comIds),
     };
   });
 
@@ -222,6 +240,8 @@ const useStatusRelations = () => {
 
   return {
     comsStatusRelations,
+    deleteComsStatusRelationslByIds,
+    getSliceData,
     getStatLockEventFields,
     getStatLockActionFields,
     deleteComStatRelationFromToStatId,

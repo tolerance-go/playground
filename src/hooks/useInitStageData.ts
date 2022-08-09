@@ -56,7 +56,6 @@ export const useInitSatgeData = () => {
   const initStageData = useMemoizedFn(
     async (stageData: Record<string, any>) => {
       initComsTreeData(stageData.comsTree);
-      // initComsSettingsData(stageData.comsModel);
       initComsSettings(stageData.comsSettings);
       initStatusSettings(stageData.comsStatus);
       initStatusSettingsDefaults(stageData.comsStatusDefaults);

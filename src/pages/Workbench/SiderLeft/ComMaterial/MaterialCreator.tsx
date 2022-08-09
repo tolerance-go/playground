@@ -1,3 +1,5 @@
+import { useDeleteComsFromStage } from '@/hooks/useDeleteComsFromStage';
+import { useGetSliceStageData } from '@/hooks/useGetSliceStageData';
 import { ComponentControllerCreate } from '@/services/server/ComponentController';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
@@ -21,6 +23,10 @@ export default () => {
     }),
   );
 
+  const { deleteComsFromStage } = useDeleteComsFromStage();
+
+  const { getSliceStageData } = useGetSliceStageData();
+
   return (
     <ModalForm<{
       name: string;
@@ -32,10 +38,9 @@ export default () => {
       autoFocusFirstInput
       submitTimeout={2000}
       onFinish={async (values) => {
-        // const stageData = getSliceStageData(values.rootId);
-        const stageData = {};
+        const stageData = getSliceStageData([values.rootId]);
 
-        const { success } = await ComponentControllerCreate({
+        const { success, data } = await ComponentControllerCreate({
           name: values.name,
           desc: values.desc,
           app_id: appId as string,
@@ -44,14 +49,12 @@ export default () => {
 
         if (success) {
           message.success('提交成功');
+          createComMaterial(data!);
+          deleteComsFromStage([values.rootId]);
+          triggerPrepareSaveTimeChange();
         }
 
-        createComMaterial(values.name, [values.rootId], values.desc);
-
-        // deleteComsFromStage(values.rootId);
-
-        triggerPrepareSaveTimeChange();
-        return true;
+        return success;
       }}
     >
       <ProFormText

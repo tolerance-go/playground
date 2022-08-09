@@ -4,6 +4,7 @@ import produce from 'immer';
 import { DEFAULT_COM_STATUS_NAME } from './../constants/index';
 
 import { ComId, StatId } from '@/typings/keys';
+import utl from 'lodash';
 import { useState } from 'react';
 
 /** 组件状态 */
@@ -112,10 +113,26 @@ const useStatusSettings = () => {
     return componentsStatus[comId];
   });
 
+  const deleteComStatuslByIds = useMemoizedFn((comIds: string[]) => {
+    setComponentsStatus(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   /** 获取数据，准备持久化 */
   const getData = useMemoizedFn(() => {
     return {
       componentsStatus,
+    };
+  });
+
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      componentsStatus: utl.pick(componentsStatus, comIds),
     };
   });
 
@@ -128,6 +145,8 @@ const useStatusSettings = () => {
 
   return {
     componentsStatus,
+    deleteComStatuslByIds,
+    getSliceData,
     getComStatus,
     setSelectedComActiveStatName,
     deleteComStatus,

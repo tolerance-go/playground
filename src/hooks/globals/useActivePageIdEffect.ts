@@ -5,18 +5,19 @@ import { useInitSatgeDataWithPage } from '../useInitSatgeDataWithPage';
 
 export const useActivePageIdEffect = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { initSatgeDataWithPage: initStageData } = useInitSatgeDataWithPage();
+  const { initSatgeDataWithPage } = useInitSatgeDataWithPage();
 
   const { activePageId, setActivePageId } = useModel('pageList', (model) => ({
     activePageId: model?.activePageId,
     setActivePageId: model?.setActivePageId,
   }));
 
-  const { cleanComsMaterialsRootIds } = useModel(
-    'comsMaterialsRootIds',
+
+  const {  setComActiveMaterialId } = useModel(
+    'comActiveMaterialId',
     (model) => {
       return {
-        cleanComsMaterialsRootIds: model.cleanComsMaterialsRootIds,
+        setComActiveMaterialId: model.setComActiveMaterialId,
       };
     },
   );
@@ -24,8 +25,10 @@ export const useActivePageIdEffect = () => {
   useEffect(() => {
     /** 根据 url 初始化当前激活的 pageId */
     const id = searchParams.get('pageId');
+
     if (id) {
       setActivePageId(id);
+      initSatgeDataWithPage(id);
     }
   }, []);
 
@@ -33,12 +36,12 @@ export const useActivePageIdEffect = () => {
     if (activePageId) {
       /** 同步 url，下次刷新页面的时候可以记住 */
       searchParams.delete('pageId');
+      searchParams.delete('materialId');
       searchParams.append('pageId', activePageId);
       setSearchParams(searchParams);
+      setComActiveMaterialId(undefined)
 
-      initStageData(activePageId);
-
-      cleanComsMaterialsRootIds();
+      initSatgeDataWithPage(activePageId);
     }
   }, [activePageId]);
 };

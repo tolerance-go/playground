@@ -1,6 +1,10 @@
-import { ComponentControllerIndex } from '@/services/server/ComponentController';
+import {
+  ComponentControllerDestroy,
+  ComponentControllerIndex,
+} from '@/services/server/ComponentController';
 import { ProList } from '@ant-design/pro-components';
 import { useModel, useRequest } from '@umijs/max';
+import { Spin } from 'antd';
 import qs from 'qs';
 import styles from './index.less';
 import MaterialCreator from './MaterialCreator';
@@ -10,11 +14,12 @@ export default () => {
     ignoreQueryPrefix: true,
   });
   const { appId } = query;
-  const { comsMaterials, setComsMaterials } = useModel(
+  const { comsMaterials, setComsMaterialList, removeComMaterial } = useModel(
     'comsMaterialList',
     (model) => ({
       comsMaterials: model.comsMaterialList,
-      setComsMaterials: model.setComsMaterialList,
+      setComsMaterialList: model.setComsMaterialList,
+      removeComMaterial: model.removeComMaterial,
     }),
   );
 
@@ -36,7 +41,23 @@ export default () => {
     },
     {
       onSuccess: (data) => {
-        setComsMaterials(data);
+        setComsMaterialList(data);
+      },
+    },
+  );
+
+  const { loading: removeLoading, run } = useRequest(
+    async (id: API.Component['id']) => {
+      return await ComponentControllerDestroy({
+        id: String(id),
+      });
+    },
+    {
+      manual: true,
+      onSuccess: (data) => {
+        if (data?.id) {
+          removeComMaterial(data?.id);
+        }
       },
     },
   );
@@ -76,6 +97,15 @@ export default () => {
               >
                 应用
               </a>,
+              <Spin key="remove" spinning={removeLoading}>
+                <a
+                  onClick={() => {
+                    run(entity.id);
+                  }}
+                >
+                  删除
+                </a>
+              </Spin>,
             ];
           },
         },

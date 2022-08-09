@@ -16,9 +16,8 @@ export const useComDefaultStatSetting = (comId?: string) => {
 
   if (comId) {
     const defaultStatId = statusSettingsDefaults[comId];
-
     const settings = comsSettings[comId]?.[defaultStatId];
-    return { settings, defaultStatId };
+    return { settings };
   }
 
   return {

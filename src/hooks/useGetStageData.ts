@@ -6,14 +6,14 @@ export const useGetStageData = () => {
     'stageComponentsModel',
     (model) => {
       return {
-        getData: model?.getData,
+        getData: model.getData,
       };
     },
   );
 
   const { getData: getStatusSettings } = useModel('comsStatus', (model) => {
     return {
-      getData: model?.getData,
+      getData: model.getData,
     };
   });
 
@@ -21,7 +21,7 @@ export const useGetStageData = () => {
     'statusSettingsDefaults',
     (model) => {
       return {
-        getData: model?.getData,
+        getData: model.getData,
       };
     },
   );
@@ -30,32 +30,32 @@ export const useGetStageData = () => {
     'statusRelations',
     (model) => {
       return {
-        getData: model?.getData,
+        getData: model.getData,
       };
     },
   );
 
   const { getData: getComsActions } = useModel('comsActions', (model) => {
     return {
-      getData: model?.getData,
+      getData: model.getData,
     };
   });
 
   const { getData: getComsEvents } = useModel('comsEvents', (model) => {
     return {
-      getData: model?.getData,
+      getData: model.getData,
     };
   });
 
   const { getData: getComsStyles } = useModel('comsStyles', (model) => {
     return {
-      getData: model?.getData,
+      getData: model.getData,
     };
   });
 
   const { getData: getComsSettings } = useModel('comsSettings', (model) => {
     return {
-      getData: model?.getData,
+      getData: model.getData,
     };
   });
 

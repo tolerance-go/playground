@@ -107,6 +107,60 @@ const useStageComponentsModel = () => {
     },
   );
 
+  /** 删除组件单独根据 comId */
+  const deleteComModelByIds = useMemoizedFn((comIds: string[]) => {
+    setRootIds(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          const index = draft.findIndex((item) => item === comId);
+          if (index > -1) {
+            draft.splice(index, 1);
+          }
+        });
+      }),
+    );
+
+    setStageComponentsModel(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          const comModel = draft?.[comId];
+          if (comModel) {
+            const { parentId, slotName } = comModel;
+
+            /** 从父级中删除自己 */
+            const parent = draft?.[parentId];
+            if (parent) {
+              const targetSlots = parent.slots?.[slotName];
+              const slotIndex = targetSlots.findIndex((item) => item === comId);
+              targetSlots.splice(slotIndex, 1);
+            }
+
+            /** 删除所有子组件 */
+            let allSlots: string[] = [];
+            const collectAllSlotComIds = (id: string) => {
+              const target = stageComponentsModel?.[id];
+              if (!target) return;
+              Object.keys(target.slots).forEach((slotName) => {
+                const slotComIds = target.slots[slotName];
+                allSlots = allSlots.concat(slotComIds);
+                slotComIds.forEach((slotComId) =>
+                  collectAllSlotComIds(slotComId),
+                );
+              });
+            };
+            collectAllSlotComIds(comId);
+            allSlots.forEach((slotComId) => {
+              delete draft?.[slotComId];
+            });
+
+            /** 删除自身 */
+            delete draft?.[comId];
+          }
+        });
+      }),
+    );
+  });
+
   /** 删除组件 */
   const removeComFromTree = useMemoizedFn(
     (options: { comId: string; parentId: string; slotName: string }) => {
@@ -324,48 +378,6 @@ const useStageComponentsModel = () => {
           }),
         );
       }
-
-      // setStageComponentsModel(
-      //   produce((prev) => {
-      //     // 找到要移动的元素
-      //     const toMoveNode = prev?.[comId];
-
-      //     if (toMoveNode) {
-      //       /**
-      //        * 从原来位置删除
-      //        * 只是从父组件插槽相应删除
-      //        */
-      //       const parentNode = prev?.[parentId];
-      //       if (parentNode) {
-      //         const index = parentNode.slots[slotName].findIndex(
-      //           (slotComId) => slotComId === comId,
-      //         );
-      //         parentNode.slots[slotName].splice(index, 1);
-      //       } else {
-      //         window.__consola.debug(
-      //           'debug:',
-      //           'moveComFromTree',
-      //           '没有找到父元素',
-      //           parentId,
-      //         );
-      //       }
-
-      //       // 在新的组件指定插槽下的指定顺序放置
-      //       const targetParentNode = prev?.[targetComId];
-
-      //       // 可能是跟组件位置
-      //       if (targetParentNode) {
-      //         targetParentNode.slots[targetSlotName].splice(
-      //           targetIndex,
-      //           0,
-      //           comId,
-      //         );
-      //       }
-      //     }
-
-      //     return prev;
-      //   }),
-      // );
     },
   );
 
@@ -374,6 +386,36 @@ const useStageComponentsModel = () => {
     return {
       rootIds,
       stageComponentsModel,
+    };
+  });
+
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    /** 递归获取所有组件 */
+    const getSliceStageComponentsModel = (
+      ids?: string[],
+    ): StageComponentsModel | undefined => {
+      return ids?.reduce((acc, nextId) => {
+        return {
+          ...acc,
+          [nextId]: stageComponentsModel?.[nextId],
+          ...Object.keys(stageComponentsModel?.[nextId].slots ?? {}).reduce(
+            (slotAcc, slotName) => {
+              return {
+                ...slotAcc,
+                ...getSliceStageComponentsModel(
+                  stageComponentsModel?.[nextId].slots[slotName],
+                ),
+              };
+            },
+            {},
+          ),
+        };
+      }, {});
+    };
+
+    return {
+      rootIds: comIds,
+      stageComponentsModel: getSliceStageComponentsModel(comIds),
     };
   });
 
@@ -450,6 +492,8 @@ const useStageComponentsModel = () => {
   return {
     rootIds,
     stageComponentsModel,
+    deleteComModelByIds,
+    getSliceData,
     removeTargetComsAndSaveTheirSettings,
     addComponentToStage,
     getData,

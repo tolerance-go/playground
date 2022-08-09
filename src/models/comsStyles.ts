@@ -2,6 +2,7 @@ import { ComId, StatId } from '@/typings/keys';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
+import utl from 'lodash';
 import { CSSProperties, useState } from 'react';
 
 /** 单位数字 */
@@ -98,6 +99,12 @@ const useComsStyles = () => {
     };
   });
 
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      comsStyles: utl.pick(comsStyles, comIds),
+    };
+  });
+
   /** 初始化 */
   const initData = useMemoizedFn((from?: { comsStyles: ComponentsStyles }) => {
     setComsStyles(from?.comsStyles ?? {});
@@ -131,8 +138,20 @@ const useComsStyles = () => {
     },
   );
 
+  const deleteComsStylesByIds = useMemoizedFn((comIds: string[]) => {
+    setComsStyles(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   return {
     comsStyles,
+    deleteComsStylesByIds,
+    getSliceData,
     getData,
     initData,
     setComStatStyle,

@@ -24,12 +24,26 @@ const useComsMaterialList = () => {
     // removeTargetComsAndSaveTheirSettings(rootIds);
   });
 
+  const removeComMaterial = useMemoizedFn((id: number) => {
+    setComsMaterialList(
+      produce((draft) => {
+        if (draft) {
+          const index = draft.findIndex((item) => item.id === id);
+          if (index > -1) {
+            draft.splice(index, 1);
+          }
+        }
+      }),
+    );
+  });
+
   const getComMaterial = useMemoizedFn((id: number) => {
     return comsMaterialList?.find((item) => item.id === id);
   });
 
   return {
     comsMaterialList,
+    removeComMaterial,
     getComMaterial,
     setComsMaterialList,
     createComMaterial,

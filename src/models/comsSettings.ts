@@ -2,6 +2,7 @@ import { ComId, StatId } from '@/typings/keys';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
+import utl from 'lodash';
 import { useState } from 'react';
 
 export type ComponentSetting = Record<string, any>;
@@ -106,6 +107,12 @@ const useComsSettings = () => {
     };
   });
 
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      comsSettings: utl.pick(comsSettings, comIds),
+    };
+  });
+
   /** 初始化 */
   const initData = useMemoizedFn(
     (from?: { comsSettings: ComponentsSettings }) => {
@@ -113,8 +120,20 @@ const useComsSettings = () => {
     },
   );
 
+  const deleteComsSettingsByIds = useMemoizedFn((comIds: string[]) => {
+    setComsSettings(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   return {
     comsSettings,
+    deleteComsSettingsByIds,
+    getSliceData,
     copyComSettingFromStatToOtherStat,
     copySelectedComSettingFromActiveStatToOtherStat,
     setSelectedComSettings,

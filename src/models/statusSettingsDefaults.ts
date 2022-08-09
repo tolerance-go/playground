@@ -1,9 +1,11 @@
+import { ComId } from '@/typings/keys';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
+import utl from 'lodash';
 import { useState } from 'react';
 
-export type StatusSettingsDefaults = Record<string, string>;
+export type StatusSettingsDefaults = Record<ComId, string>;
 
 /** 每个组件的默认应用状态 */
 const useStatusSettingsDefaults = () => {
@@ -36,10 +38,26 @@ const useStatusSettingsDefaults = () => {
     },
   );
 
+  const deleteComSettingsDefaultslByIds = useMemoizedFn((comIds: string[]) => {
+    setStatusSettingsDefaults(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   /** 获取数据，准备持久化 */
   const getData = useMemoizedFn(() => {
     return {
       statusSettingsDefaults,
+    };
+  });
+
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      statusSettingsDefaults: utl.pick(statusSettingsDefaults, comIds),
     };
   });
 
@@ -65,6 +83,8 @@ const useStatusSettingsDefaults = () => {
 
   return {
     statusSettingsDefaults,
+    deleteComSettingsDefaultslByIds,
+    getSliceData,
     getComDefaultStatId,
     initData,
     getData,

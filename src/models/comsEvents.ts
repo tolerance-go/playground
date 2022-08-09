@@ -2,6 +2,7 @@ import { ComId, EventId, StatId } from '@/typings/keys';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
+import utl from 'lodash';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { setComStatTypeWithName } from './_utils/setComStatTypeWithName';
@@ -177,6 +178,12 @@ const useComsEvents = () => {
     };
   });
 
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      comsEvents: utl.pick(comsEvents, comIds),
+    };
+  });
+
   /** 初始化 */
   const initData = useMemoizedFn((from?: { comsEvents: ComponentsEvents }) => {
     setComsEvents(from?.comsEvents ?? {});
@@ -220,8 +227,19 @@ const useComsEvents = () => {
     },
   );
 
+  const deleteComsEventsByIds = useMemoizedFn((comIds: string[]) => {
+    setComsEvents(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   return {
     comsEvents,
+    deleteComsEventsByIds,
     setComStatEventWithName,
     updateComStatEventWithName,
     copySelectedComEventFromActiveStatToOtherStat,
@@ -232,6 +250,7 @@ const useComsEvents = () => {
     deleteComStatEvent,
     getData,
     initData,
+    getSliceData,
   };
 };
 

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { setComStatTypeWithName } from './_utils/setComStatTypeWithName';
 import { updateComStatTypeWithName } from './_utils/updateComStatTypeWithName';
 import { useCopyComPropsFromStatToOtherStat } from './_utils/useCopyComPropsFromStatToOtherStat';
+import utl from 'lodash';
 
 /**
  * eg：
@@ -158,6 +159,12 @@ const useComsActions = () => {
     };
   });
 
+  const getSliceData = useMemoizedFn((comIds: string[]) => {
+    return {
+      comsActions: utl.pick(comsActions, comIds),
+    };
+  });
+
   /** 初始化 */
   const initData = useMemoizedFn(
     (from?: { comsActions: ComponentsActions }) => {
@@ -195,8 +202,21 @@ const useComsActions = () => {
     },
   );
 
+
+  const deleteComsActionsByIds = useMemoizedFn((comIds: string[]) => {
+    setComsActions(
+      produce((draft) => {
+        comIds.forEach((comId) => {
+          delete draft[comId];
+        });
+      }),
+    );
+  });
+
   return {
     comsActions,
+    deleteComsActionsByIds,
+    getSliceData,
     setComStatAction,
     setComStatActionWithName,
     updateComStatActionWithName,
