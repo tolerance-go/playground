@@ -1,10 +1,15 @@
-import { ComMaterial } from '@/models/comsMaterialList';
+import { ComponentControllerCreate } from '@/services/server/ComponentController';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
+import qs from 'qs';
 
 export default () => {
+  const query = qs.parse(location.search, {
+    ignoreQueryPrefix: true,
+  });
+  const { appId } = query;
   const { createComMaterial } = useModel('comsMaterialList', (model) => ({
     createComMaterial: model.createComMaterial,
   }));
@@ -17,19 +22,34 @@ export default () => {
   );
 
   return (
-    <ModalForm<
-      Omit<ComMaterial, 'rootIds'> & {
-        rootId: string;
-      }
-    >
+    <ModalForm<{
+      name: string;
+      rootId: string;
+      desc?: string;
+    }>
       title="新建物料"
       trigger={<PlusOutlined />}
       autoFocusFirstInput
       submitTimeout={2000}
       onFinish={async (values) => {
-        console.log(values.name);
-        message.success('提交成功');
+        // const stageData = getSliceStageData(values.rootId);
+        const stageData = {};
+
+        const { success } = await ComponentControllerCreate({
+          name: values.name,
+          desc: values.desc,
+          app_id: appId as string,
+          stage_data: JSON.stringify(stageData),
+        });
+
+        if (success) {
+          message.success('提交成功');
+        }
+
         createComMaterial(values.name, [values.rootId], values.desc);
+
+        // deleteComsFromStage(values.rootId);
+
         triggerPrepareSaveTimeChange();
         return true;
       }}

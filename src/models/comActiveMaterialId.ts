@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 const useComActiveMaterialId = () => {
-  const [comActiveMaterialId, setComActiveMaterialId] = useState<string>();
+  const [comActiveMaterialId, setComActiveMaterialId] =
+    useState<API.Component['id']>();
 
   return {
     comActiveMaterialId,

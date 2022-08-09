@@ -56,11 +56,66 @@ declare namespace API {
     showType?: number;
   };
 
+  type Component = {
+    id: number;
+    name: string;
+    desc?: string;
+    app_id: string;
+    stage_data?: string;
+  };
+
+  type ComponentControllerDestroyParams = {
+    /** id  */
+    id: string;
+  };
+
+  type ComponentControllerIndexParams = {
+    /** appId  */
+    appId?: number;
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+  };
+
+  type ComponentControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type ComponentControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type ComponentListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: Component[];
+  };
+
+  type ComponentShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: Component;
+  };
+
   type CreationApp = {
     title: string;
     desc?: string;
     app_data?: string;
     labels?: string[];
+  };
+
+  type CreationComponent = {
+    name: string;
+    desc?: string;
+    app_id: string;
+    stage_data?: string;
   };
 
   type CreationPage = {

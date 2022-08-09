@@ -1,33 +1,63 @@
-import { ComMaterial } from '@/models/comsMaterialList';
+import { ComponentControllerIndex } from '@/services/server/ComponentController';
 import { ProList } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
+import { useModel, useRequest } from '@umijs/max';
+import qs from 'qs';
 import styles from './index.less';
 import MaterialCreator from './MaterialCreator';
 
 export default () => {
-  const { comsMaterials } = useModel('comsMaterialList', (model) => ({
-    comsMaterials: model.comsMaterials,
-  }));
+  const query = qs.parse(location.search, {
+    ignoreQueryPrefix: true,
+  });
+  const { appId } = query;
+  const { comsMaterials, setComsMaterials } = useModel(
+    'comsMaterialList',
+    (model) => ({
+      comsMaterials: model.comsMaterialList,
+      setComsMaterials: model.setComsMaterialList,
+    }),
+  );
 
-  const { setComActiveMaterialId } = useModel(
+  const { setComActiveMaterialId, comActiveMaterialId } = useModel(
     'comActiveMaterialId',
     (model) => {
       return {
         setComActiveMaterialId: model.setComActiveMaterialId,
+        comActiveMaterialId: model.comActiveMaterialId,
       };
     },
   );
 
+  const { loading } = useRequest(
+    async () => {
+      return await ComponentControllerIndex({
+        appId: Number(appId),
+      });
+    },
+    {
+      onSuccess: (data) => {
+        setComsMaterials(data);
+      },
+    },
+  );
+
   return (
-    <ProList<ComMaterial>
+    <ProList<API.Component>
       className={styles.list}
       style={{
         marginTop: 10,
       }}
       split
+      loading={loading}
       rowKey="id"
       dataSource={comsMaterials}
       showActions="hover"
+      onRow={(record) => {
+        return {
+          className:
+            record.id === comActiveMaterialId ? styles.active : undefined,
+        };
+      }}
       metas={{
         title: {
           dataIndex: 'name',
