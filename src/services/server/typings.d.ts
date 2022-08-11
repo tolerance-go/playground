@@ -118,6 +118,13 @@ declare namespace API {
     stage_data?: string;
   };
 
+  type CreationData = {
+    name: string;
+    desc?: string;
+    data?: string;
+    app_id: string;
+  };
+
   type CreationPage = {
     path: string;
     app_id: string;
@@ -129,6 +136,54 @@ declare namespace API {
     name: string;
     app_id: string;
     pageIds?: number[];
+  };
+
+  type Data = {
+    id: number;
+    name: string;
+    desc?: string;
+    data?: string;
+    app_id: string;
+  };
+
+  type DataControllerDestroyParams = {
+    /** id  */
+    id: string;
+  };
+
+  type DataControllerIndexParams = {
+    /** appId  */
+    appId?: number;
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+  };
+
+  type DataControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type DataControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type DataListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: Data[];
+  };
+
+  type DataShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: Data;
   };
 
   type Page = {

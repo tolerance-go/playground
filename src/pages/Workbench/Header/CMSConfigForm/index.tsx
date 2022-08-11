@@ -18,6 +18,7 @@ export default () => {
         数据
       </Button>
       <Drawer
+        push={false}
         visible={visible}
         title="数据管理"
         onClose={() => setVisible(false)}
@@ -27,7 +28,7 @@ export default () => {
         }}
       >
         <Row
-          gutter={20}
+          gutter={30}
           wrap={false}
           style={{
             height: '100%',

@@ -1,57 +1,77 @@
+import { RequestButton } from '@/components/RequestButton';
+import { DataControllerDestroy } from '@/services/server/DataController';
 import { ProList } from '@ant-design/pro-components';
-import { Button, Popconfirm } from 'antd';
+import { useModel } from '@umijs/max';
+import { message } from 'antd';
+import Creator from './Creator';
 
-const dataSource = [
-  {
-    name: '集合1',
-    image:
-      'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
-    desc: 'xxxxx',
-  },
-];
+export default () => {
+  const { dataList, deleteData } = useModel('dataList', (model) => ({
+    dataList: model.dataList,
+    deleteData: model.deleteData,
+  }));
 
-export default () => (
-  <ProList
-    toolBarRender={() => {
-      return [
-        <Button key="add" type="primary">
-          新建
-        </Button>,
-      ];
-    }}
-    pagination={{
-      defaultPageSize: 10,
-      size: 'small',
-    }}
-    onRow={(record: any) => {
-      return {
-        onMouseEnter: () => {
-          console.log(record);
+  const { setSelectedDataId, selectedDataId } = useModel(
+    'selectedDataId',
+    (model) => ({
+      setSelectedDataId: model.setSelectedDataId,
+      selectedDataId: model.selectedDataId,
+    }),
+  );
+
+  return (
+    <ProList<API.Data>
+      toolBarRender={() => {
+        return [<Creator key="create" />];
+      }}
+      pagination={{
+        defaultPageSize: 10,
+        size: 'small',
+      }}
+      onRow={(record) => {
+        return {
+          onClick: () => {
+            setSelectedDataId(record.id);
+          },
+          className:
+            selectedDataId === record.id ? 'selectedProListItem' : undefined,
+        };
+      }}
+      rowKey="name"
+      headerTitle="集合列表"
+      dataSource={dataList}
+      metas={{
+        title: {
+          dataIndex: 'name',
         },
-        onClick: () => {
-          console.log(record);
+        description: {
+          dataIndex: 'desc',
         },
-      };
-    }}
-    rowKey="name"
-    headerTitle="集合列表"
-    dataSource={dataSource}
-    metas={{
-      title: {
-        dataIndex: 'name',
-      },
-      description: {
-        dataIndex: 'desc',
-      },
-      actions: {
-        render: () => [
-          <Popconfirm key={'remove'} title="确认删除吗?">
-            <Button size="small" key="link" type="link" danger>
+        actions: {
+          render: (dom, entity) => [
+            <RequestButton
+              key={'remove'}
+              size="small"
+              type="link"
+              danger
+              request={async () => {
+                return await DataControllerDestroy({
+                  id: String(entity.id),
+                });
+              }}
+              onSuccess={() => {
+                message.success('删除成功');
+                deleteData(entity.id);
+              }}
+              popconfirm={{
+                title: '确认删除吗？',
+              }}
+            >
               删除
-            </Button>
-          </Popconfirm>,
-        ],
-      },
-    }}
-  />
-);
+            </RequestButton>,
+          ],
+        },
+      }}
+    />
+  );
+};
