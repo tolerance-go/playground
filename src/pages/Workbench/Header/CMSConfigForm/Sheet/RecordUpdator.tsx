@@ -1,6 +1,6 @@
 import { useSelectedData } from '@/hooks/useSelectedData';
+import { DataItem } from '@/models/dataList';
 import { DataControllerUpdate } from '@/services/server/DataController';
-import { PlusOutlined } from '@ant-design/icons';
 import {
   BetaSchemaForm,
   DrawerForm,
@@ -9,10 +9,9 @@ import {
 } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Button, message } from 'antd';
-import { nanoid } from 'nanoid';
 import { useMemo, useRef } from 'react';
 
-export default () => {
+export default (props: { record: DataItem }) => {
   const formRef = useRef<ProFormInstance>();
 
   const { selectedData } = useSelectedData();
@@ -23,13 +22,12 @@ export default () => {
     selectedDataId: model.selectedDataId,
   }));
 
-  const { getColumnDataMetaAfterPushDataSource, pushDataSource } = useModel(
+  const { getColumnDataMetaAfterUpdateDataSource, updateDataSource } = useModel(
     'dataList',
     (model) => ({
-      getColumnDataMetaAfterPushDataSource:
-        model.getColumnDataMetaAfterPushDataSource,
-
-      pushDataSource: model.pushDataSource,
+      getColumnDataMetaAfterUpdateDataSource:
+        model.getColumnDataMetaAfterUpdateDataSource,
+      updateDataSource: model.updateDataSource,
     }),
   );
 
@@ -55,9 +53,17 @@ export default () => {
     }>
       title="新增一条"
       formRef={formRef}
+      initialValues={props.record}
       trigger={
-        <Button key="button" icon={<PlusOutlined />} type="primary">
-          新增一条
+        <Button
+          key="link"
+          type="link"
+          size="small"
+          style={{
+            padding: '0 2px',
+          }}
+        >
+          编辑
         </Button>
       }
       autoFocusFirstInput
@@ -67,10 +73,8 @@ export default () => {
       submitTimeout={2000}
       onFinish={async (values) => {
         if (!selectedDataId) return;
-        const id = nanoid();
 
-        const record = {
-          id,
+        const patchRecord = {
           ...values,
         };
 
@@ -79,14 +83,17 @@ export default () => {
             id: String(selectedDataId),
           },
           JSON.stringify(
-            getColumnDataMetaAfterPushDataSource(selectedDataId, record).data ??
-              {},
+            getColumnDataMetaAfterUpdateDataSource(
+              selectedDataId,
+              props.record.id,
+              patchRecord,
+            ).data ?? {},
           ),
         );
 
         if (success) {
-          message.success('新增成功');
-          pushDataSource(selectedDataId, record);
+          message.success('更新成功');
+          updateDataSource(selectedDataId, props.record.id, patchRecord);
         }
 
         // 不返回不会关闭弹框

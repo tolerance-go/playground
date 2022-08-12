@@ -2,7 +2,7 @@ import { ConfigsForm } from '@/components/ConfigsForm';
 import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
 import { useComStatusExtendStyles } from '@/hooks/useComStatusExtendStyles';
 import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
-import { useFormReset } from '@/hooks/useFormReset';
+import { useComStatFormReset } from '@/hooks/useComStatFormReset';
 import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
 import { useSelectedComActiveStatStyle } from '@/hooks/useSelectedComActiveStatStyle';
 import { useSelectedComStyleConfigs } from '@/hooks/useSelectedComStyleConfigs';
@@ -39,7 +39,7 @@ export default () => {
     }),
   );
 
-  useFormReset(form, style);
+  useComStatFormReset(form, style);
 
   if (!stageSelectNode) {
     return null;

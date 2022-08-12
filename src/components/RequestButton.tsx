@@ -2,10 +2,10 @@ import { useMemoizedFn } from 'ahooks';
 import { Button, ButtonProps, Popconfirm, PopconfirmProps } from 'antd';
 import { useState } from 'react';
 
-export const RequestButton = (
+export const RequestButton = <P extends any>(
   props: ButtonProps & {
-    request?: () => Promise<{ success: boolean }>;
-    onSuccess?: () => void;
+    request?: () => Promise<{ success: boolean; params?: P }>;
+    onSuccess?: (params?: P) => void;
     popconfirm?: PopconfirmProps;
   },
 ) => {
@@ -16,7 +16,7 @@ export const RequestButton = (
       setLoading(true);
       const result = await props.request();
       if (result.success) {
-        props.onSuccess?.();
+        props.onSuccess?.(result.params);
       }
       setLoading(false);
     }

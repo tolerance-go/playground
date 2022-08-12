@@ -1,32 +1,134 @@
+import { RequestButton } from '@/components/RequestButton';
 import { useSelectedData } from '@/hooks/useSelectedData';
-import { DataItem } from '@/models/dataList';
+import { DataItem, DataTableColumn } from '@/models/dataList';
+import { DataControllerUpdate } from '@/services/server/DataController';
 import type { ActionType } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Button, Dropdown, Empty, Menu } from 'antd';
-import { useRef } from 'react';
-import {
-  ColumnsConfigModal,
-  ColumnsConfigModalAPI,
-} from './ColumnsConfigModal';
+import { useMemoizedFn } from 'ahooks';
+import { Button, Dropdown, Empty, Menu, message } from 'antd';
+import { nanoid } from 'nanoid';
+import { useMemo, useRef } from 'react';
+import { ColumnsConfigModal } from './ColumnsConfigModal';
 import RecordCreator from './RecordCreator';
+import RecordUpdator from './RecordUpdator';
 
 export default () => {
   const { selectedData } = useSelectedData();
 
-  const { columns, dataSource } = selectedData?.data ?? {};
+  const { columns, dataSource, columnsSettings } = selectedData?.data ?? {};
 
   const actionRef = useRef<ActionType>();
 
-  const modalRef = useRef<ColumnsConfigModalAPI>(null);
+  // const modalRef = useRef<ColumnsConfigModalAPI>(null);
 
-  const { addColumn } = useModel('dataList', (model) => ({
-    addColumn: model.addColumn,
-  }));
+  const { addColumn, getColumnDataMetaAfterAddColumn } = useModel(
+    'dataList',
+    (model) => ({
+      addColumn: model.addColumn,
+      getColumnDataMetaAfterAddColumn: model.getColumnDataMetaAfterAddColumn,
+    }),
+  );
+
+  const { openModal, setSelectedColumnFieldId } = useModel(
+    'dataFieldsConfig',
+    (model) => ({
+      openModal: model.openModal,
+      setSelectedColumnFieldId: model.setSelectedColumnFieldId,
+    }),
+  );
 
   const { selectedDataId } = useModel('selectedDataId', (model) => ({
     selectedDataId: model.selectedDataId,
   }));
+
+  const { getColumnDataMetaAfterRemoveDataSource, removeDataSource } = useModel(
+    'dataList',
+    (model) => ({
+      getColumnDataMetaAfterRemoveDataSource:
+        model.getColumnDataMetaAfterRemoveDataSource,
+      removeDataSource: model.removeDataSource,
+    }),
+  );
+
+  const addColumnAndSync = useMemoizedFn(async (newCol: DataTableColumn) => {
+    if (!selectedDataId) return;
+
+    const id = newCol.key;
+
+    const { success } = await DataControllerUpdate(
+      {
+        id: String(selectedDataId),
+      },
+      JSON.stringify(
+        getColumnDataMetaAfterAddColumn(selectedDataId, newCol).data ?? {},
+      ),
+    );
+
+    if (success) {
+      addColumn(selectedDataId, newCol);
+      openModal();
+      setSelectedColumnFieldId(id);
+    }
+  });
+
+  const mergedColumns = useMemo(() => {
+    return columns
+      ?.map((col) => {
+        return {
+          ...col,
+          title: columnsSettings?.[col.key].title ?? col.title,
+        };
+      })
+      .concat({
+        title: '操作',
+        width: 180,
+        key: 'option',
+        valueType: 'option',
+        render: (dom, entity) => [
+          <RecordUpdator record={entity} key="edit" />,
+          <RequestButton
+            style={{
+              padding: '0 2px',
+            }}
+            danger
+            key="link2"
+            type="link"
+            size="small"
+            popconfirm={{
+              title: '确认删除吗？',
+            }}
+            request={async () => {
+              if (!selectedDataId) return { success: false };
+
+              const { success } = await DataControllerUpdate(
+                {
+                  id: String(selectedDataId),
+                },
+                JSON.stringify(
+                  getColumnDataMetaAfterRemoveDataSource(
+                    selectedDataId,
+                    entity.id,
+                  ).data ?? {},
+                ),
+              );
+
+              return {
+                success,
+              };
+            }}
+            onSuccess={() => {
+              if (selectedDataId) {
+                message.success('删除成功');
+                removeDataSource(selectedDataId, entity.id);
+              }
+            }}
+          >
+            删除
+          </RequestButton>,
+        ],
+      });
+  }, [columnsSettings, columns]);
 
   if (!selectedDataId) {
     return <Empty />;
@@ -35,7 +137,7 @@ export default () => {
   return (
     <>
       <ProTable<DataItem>
-        columns={columns}
+        columns={mergedColumns}
         dataSource={dataSource}
         actionRef={actionRef}
         cardBordered
@@ -78,17 +180,28 @@ export default () => {
                   {
                     label: '文本',
                     key: 'text',
-                    onClick: () => {
-                      addColumn(selectedDataId, {
+                    onClick: async () => {
+                      const id = nanoid();
+                      addColumnAndSync({
                         title: '文本',
-                        dataIndex: 'text',
-                        key: 'text',
+                        dataIndex: `text-${id}`,
+                        key: id,
+                        valueType: 'text',
                       });
                     },
                   },
                   {
                     label: '日期',
                     key: 'date',
+                    onClick: () => {
+                      const id = nanoid();
+                      addColumnAndSync({
+                        title: '日期',
+                        dataIndex: `date-${id}`,
+                        key: id,
+                        valueType: 'date',
+                      });
+                    },
                   },
                   {
                     type: 'divider',
@@ -97,7 +210,7 @@ export default () => {
                     label: '编辑列',
                     key: 'editColumns',
                     onClick: () => {
-                      modalRef.current?.open();
+                      openModal();
                     },
                   },
                 ]}
@@ -108,7 +221,7 @@ export default () => {
           </Dropdown>,
         ]}
       />
-      <ColumnsConfigModal ref={modalRef} />
+      <ColumnsConfigModal />
     </>
   );
 };

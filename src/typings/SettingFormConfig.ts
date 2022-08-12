@@ -1,4 +1,4 @@
-import { ComponentStatus } from '@/models/statusSettings';
+import { ComponentStatus } from '@/models/comsStatus';
 import { NamePath } from 'antd/lib/form/interface';
 
 export type SettingFormConfig = ((

@@ -2,9 +2,11 @@ import { useModel } from '@umijs/max';
 import { useMemo } from 'react';
 
 export const useSelectedData = () => {
-  const { dataList } = useModel('dataList', (model) => ({
-    dataList: model.dataList,
-  }));
+  const { dataList } = useModel('dataList', (model) => {
+    return {
+      dataList: model.dataList,
+    };
+  });
 
   const { selectedDataId } = useModel('selectedDataId', (model) => ({
     selectedDataId: model.selectedDataId,
@@ -16,8 +18,9 @@ export const useSelectedData = () => {
     }
     return undefined;
   }, [dataList, selectedDataId]);
-
+  
   return {
     selectedData,
+    selectedDataId,
   };
 };

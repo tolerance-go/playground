@@ -1,20 +1,13 @@
-import { useModel } from '@umijs/max';
 import { FormInstance } from 'antd';
 import { useLayoutEffect } from 'react';
 
 export const useFormReset = (
   form: FormInstance,
+  selectedId?: string | number,
   data?: Record<string, any>,
 ) => {
-  const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
-    (model) => ({
-      selectedComponentStatusId: model.selectedComponentStatusId,
-    }),
-  );
-
   useLayoutEffect(() => {
     form.resetFields();
     form.setFieldsValue(data);
-  }, [selectedComponentStatusId]);
+  }, [selectedId]);
 };

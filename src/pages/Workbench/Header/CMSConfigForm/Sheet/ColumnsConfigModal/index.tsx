@@ -1,25 +1,28 @@
+import { useModel } from '@umijs/max';
 import { Col, Modal, Row } from 'antd';
-import React, { useImperativeHandle, useState } from 'react';
 import { ColumnsTree } from './ColumnsTree';
+import { ColumSettingsForm } from './ColumSettingsForm';
 
-export type ColumnsConfigModalAPI = {
-  open: () => void;
-};
+// export type ColumnsConfigModalAPI = {
+//   open: () => void;
+// };
 
-export const ColumnsConfigModal = React.forwardRef<
-  ColumnsConfigModalAPI,
-  unknown
->((props, ref) => {
-  const [visible, setVisible] = useState(false);
-
-  useImperativeHandle(ref, () => ({
-    open: () => setVisible(true),
+export const ColumnsConfigModal = () => {
+  const { visible, setVisible } = useModel('dataFieldsConfig', (model) => ({
+    visible: model.visible,
+    setVisible: model.setVisible,
   }));
 
   return (
     <>
-      <Modal width={'50%'} visible={visible} onCancel={() => setVisible(false)}>
-        <Row>
+      <Modal
+        title="列配置"
+        width={'50%'}
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        footer={false}
+      >
+        <Row gutter={20}>
           <Col
             span={8}
             style={{
@@ -28,9 +31,11 @@ export const ColumnsConfigModal = React.forwardRef<
           >
             <ColumnsTree />
           </Col>
-          <Col span={16}></Col>
+          <Col span={16}>
+            <ColumSettingsForm />
+          </Col>
         </Row>
       </Modal>
     </>
   );
-});
+};

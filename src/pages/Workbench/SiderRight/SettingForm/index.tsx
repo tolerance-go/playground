@@ -3,7 +3,7 @@ import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
 import { useComActiveStatSetting } from '@/hooks/useComActiveStatSetting';
 import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
 import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
-import { useFormReset } from '@/hooks/useFormReset';
+import { useComStatFormReset } from '@/hooks/useComStatFormReset';
 import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
 import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
@@ -53,7 +53,7 @@ export const SettingForm = () => {
   //   form.setFieldsValue(getSetting());
   // }, [selectedComponentStatusId]);
 
-  useFormReset(form, settings);
+  useComStatFormReset(form, settings);
 
   if (!stageSelectNode) {
     consola.info('本次渲染，未选中元素，返回空');

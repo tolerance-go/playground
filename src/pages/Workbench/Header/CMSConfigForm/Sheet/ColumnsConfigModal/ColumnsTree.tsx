@@ -1,5 +1,6 @@
 import { useSelectedData } from '@/hooks/useSelectedData';
 import { DataTableColumn } from '@/models/dataList';
+import { useModel } from '@umijs/max';
 import { Tree } from 'antd';
 import { DataNode, TreeProps } from 'antd/lib/tree';
 import { useMemo } from 'react';
@@ -13,14 +14,19 @@ export const ColumnsTree = () => {
   const { selectedData } = useSelectedData();
   const { columns } = selectedData?.data ?? {};
 
+  const { selectedFieldId, setSelectedColumnFieldId } = useModel(
+    'dataFieldsConfig',
+    (model) => ({
+      selectedFieldId: model.selectedColumnFieldId,
+      setSelectedColumnFieldId: model.setSelectedColumnFieldId,
+    }),
+  );
+
   /** 用 relations 和 maps 构建 tree */
   const treeData = useMemo(() => {
     const mapColumns = (cols: DataTableColumn[]): TreeNode[] => {
       return cols.map((col) => {
-        const key = col.key ?? col.dataIndex?.toString();
-        if (key === undefined) {
-          throw new Error('key not defined');
-        }
+        const key = col.key;
         return {
           key,
           title: col.title,
@@ -42,8 +48,14 @@ export const ColumnsTree = () => {
       draggable
       blockNode
       selectable
+      selectedKeys={selectedFieldId ? [selectedFieldId] : undefined}
       treeData={treeData}
       onDrop={handleDrop}
+      onSelect={(selectedKeys) => {
+        if (selectedKeys[0]) {
+          setSelectedColumnFieldId(String(selectedKeys[0]));
+        }
+      }}
     />
   );
 };
