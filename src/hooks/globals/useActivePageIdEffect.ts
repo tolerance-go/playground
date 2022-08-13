@@ -12,8 +12,7 @@ export const useActivePageIdEffect = () => {
     setActivePageId: model?.setActivePageId,
   }));
 
-
-  const {  setComActiveMaterialId } = useModel(
+  const { setComActiveMaterialId } = useModel(
     'comActiveMaterialId',
     (model) => {
       return {
@@ -28,7 +27,6 @@ export const useActivePageIdEffect = () => {
 
     if (id) {
       setActivePageId(id);
-      initSatgeDataWithPage(id);
     }
   }, []);
 
@@ -39,7 +37,7 @@ export const useActivePageIdEffect = () => {
       searchParams.delete('materialId');
       searchParams.append('pageId', activePageId);
       setSearchParams(searchParams);
-      setComActiveMaterialId(undefined)
+      setComActiveMaterialId(undefined);
 
       initSatgeDataWithPage(activePageId);
     }

@@ -390,10 +390,19 @@ const useDataList = () => {
     );
   });
 
+  /** 获取数据集合的表格数据 */
+  const getTableDataSourceByDataId = useMemoizedFn((dataId: number) => {
+    const dataItem = dataList.find((item) => item.id === dataId);
+    if (dataItem) {
+      return dataItem.data?.dataSource;
+    }
+  });
+
   return {
     dataList,
     loading,
     dataColumnSettingsConfigs,
+    getTableDataSourceByDataId,
     getColumnDataMetaAfterRemoveDataSource,
     removeDataSource,
     getColumnDataMetaAfterUpdateDataSource,

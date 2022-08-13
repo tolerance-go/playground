@@ -1,5 +1,11 @@
 import Stage from '@/components/Stage';
+import Executor from './Executor';
 
 export default function App() {
-  return <Stage />;
+  return (
+    <>
+      <Executor />
+      <Stage />
+    </>
+  );
 }

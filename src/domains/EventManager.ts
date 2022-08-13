@@ -108,6 +108,34 @@ export class EventManager {
     return eventHandlerId;
   }
 
+  public listenAll(
+    eventTypes: string[],
+    callback: (data: any) => void,
+    target: {
+      comId: string;
+      statId: string;
+    },
+  ) {
+    return eventTypes.map((eventType) =>
+      this.listen(eventType, callback, target),
+    );
+  }
+
+  public unlistenAll(
+    eventTypes: string[],
+    handlerIds: string[],
+    target: {
+      comId: string;
+      statId: string;
+    },
+  ) {
+    eventTypes.forEach((eventType) => {
+      handlerIds.forEach((handlerId) => {
+        this.unlisten(eventType, handlerId, target);
+      });
+    });
+  }
+
   public unlisten(
     eventType: string,
     handlerId: string,
@@ -148,7 +176,7 @@ export class EventManager {
         const eventHandlers =
           this.handlerCenter[event.execComId][event.execComStatId][eventType];
 
-        Object.keys(eventHandlers).forEach((eventHandlerId) => {
+        Object.keys(eventHandlers ?? {}).forEach((eventHandlerId) => {
           eventHandlers[eventHandlerId]?.({
             event,
             data,

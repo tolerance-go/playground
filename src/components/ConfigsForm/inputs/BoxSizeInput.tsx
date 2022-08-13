@@ -3,7 +3,7 @@ import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { useMemoizedFn } from 'ahooks';
 import { Col, InputNumber, Row, Space } from 'antd';
 import BigNumber from 'bignumber.js';
-import { UnitSelect } from './UnitSelect';
+import { UnitSelect } from '../../UnitSelect';
 
 export type BoxSizeInputValue = {
   width?: UnitNumber;

@@ -1,3 +1,5 @@
+import { AtomButtonSettings } from '@/components/atomComs/AtomButton';
+import { AtomTableSettings } from '@/components/atomComs/AtomTable';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { LineConfig } from '@ant-design/plots';
 import { useMemoizedFn } from 'ahooks';
@@ -10,11 +12,9 @@ import { useState } from 'react';
 const useComponentsSettingConfigs = () => {
   const [comsInitalSettings, setComsInitalSettings] = useState<
     {
-      button?: {
-        text?: string;
-        type?: string;
-      };
-      line?: Partial<LineConfig>;
+      button: AtomButtonSettings;
+      line: Partial<LineConfig>;
+      table: AtomTableSettings;
     } & Record<string, Record<string, any>>
   >({
     button: {
@@ -24,6 +24,7 @@ const useComponentsSettingConfigs = () => {
     line: {
       smooth: false,
     },
+    table: {},
   });
   const [componentsSettingsConfigs, setComponentsSettingsConfigs] = useState<
     Record<string, SettingFormConfig>
@@ -57,6 +58,39 @@ const useComponentsSettingConfigs = () => {
         type: 'boolean',
         name: 'smooth',
         label: '平滑绘制',
+      },
+    ],
+    table: [
+      {
+        type: 'list',
+        name: 'columns',
+        label: '列配置',
+        columns: [
+          {
+            title: '标题',
+            dataIndex: 'title',
+            formItemProps: {
+              rules: [
+                {
+                  required: true,
+                  message: '此项为必填项',
+                },
+              ],
+            },
+          },
+          {
+            title: '数据映射',
+            dataIndex: 'dataIndex',
+            formItemProps: {
+              rules: [
+                {
+                  required: true,
+                  message: '此项为必填项',
+                },
+              ],
+            },
+          },
+        ],
       },
     ],
   });

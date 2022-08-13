@@ -38,9 +38,9 @@ const useComsLayout = () => {
     const stageComponentsModel = getLatestStageComponentsModel();
 
     const findAllParentsId = (comId: string, dist: string[] = []) => {
-      if (comId === 'root' || stageComponentsModel?.[comId].parentId === 'root')
+      if (comId === 'root' || stageComponentsModel?.[comId]?.parentId === 'root')
         return dist;
-      const parentId = stageComponentsModel?.[comId].parentId;
+      const parentId = stageComponentsModel?.[comId]?.parentId;
 
       if (parentId) {
         const slotName = stageComponentsModel?.[comId].slotName;

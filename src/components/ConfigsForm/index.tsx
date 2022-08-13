@@ -1,9 +1,6 @@
-import { SettingFormConfig } from '@/typings/SettingFormConfig';
-import { ProFormDependency } from '@ant-design/pro-components';
-import { Form, FormProps } from 'antd';
-import clsx from 'clsx';
-import React from 'react';
-import { ConfigInput, ConfigInputProps } from './ConfigInput';
+import { ConfigsFormProps } from '@/components/ConfigsForm/typings/ConfigsFormProps';
+import { ProForm, ProFormDependency } from '@ant-design/pro-components';
+import { ConfigFormItem } from './ConfigFormItem';
 import styles from './index.less';
 
 export const ConfigsForm = ({
@@ -15,58 +12,17 @@ export const ConfigsForm = ({
   renderFormItemWrapper,
   theme,
   ...formProps
-}: {
-  configs?: SettingFormConfig;
-  renderLabel?: (config: SettingFormConfig[number]) => React.ReactNode;
-  configInputProps?: (
-    config: SettingFormConfig[number],
-  ) => Omit<ConfigInputProps, 'config'>;
-  /** 只渲染 form item */
-  onlyFormItem?: boolean;
-  formItemNamePrefix?: string;
-  renderFormItemWrapper?: (itemDom: React.ReactNode) => React.ReactNode;
-  theme?: 'dark-area';
-} & FormProps) => {
+}: ConfigsFormProps) => {
   const items = configs?.map((item) => {
     const renderInner = () => {
       const formControl = (
-        <Form.Item
-          className={clsx({
-            [styles.labelAlignLeft]: item.labelAlignLeft ?? true,
-            [styles.formItemSplit]: item.formItemSplit,
-          })}
-          rules={[
-            ...(item.required
-              ? [
-                  {
-                    required: true,
-                  },
-                ]
-              : []),
-          ]}
-          {...(item.verticalLayout
-            ? {
-                labelCol: {
-                  span: 24,
-                },
-                wrapperCol: {
-                  span: 24,
-                },
-              }
-            : undefined)}
-          key={item.name}
-          label={renderLabel?.(item) ?? item.label}
-          name={
-            formItemNamePrefix ? [formItemNamePrefix, item.name] : item.name
-          }
-          colon={false}
-        >
-          <ConfigInput
-            {...configInputProps?.(item)}
-            config={item}
-            theme={theme}
-          />
-        </Form.Item>
+        <ConfigFormItem
+          item={item}
+          formItemNamePrefix={formItemNamePrefix}
+          theme={theme}
+          renderLabel={renderLabel}
+          configInputProps={configInputProps}
+        />
       );
 
       if (item.visible) {
@@ -95,8 +51,14 @@ export const ConfigsForm = ({
   return onlyFormItem ? (
     <>{items}</>
   ) : (
-    <Form {...formProps} className={styles.wrapper}>
+    <ProForm
+      {...formProps}
+      className={styles.wrapper}
+      submitter={{
+        render: () => false,
+      }}
+    >
       {items}
-    </Form>
+    </ProForm>
   );
 };

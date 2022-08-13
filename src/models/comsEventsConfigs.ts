@@ -11,11 +11,12 @@ const useComsEventsConfigs = () => {
   const [comsEventsConfigs, setComsEventsConfigs] = useState<
     {
       button?: ComEventsConfig[];
+      table?: ComEventsConfig[];
     } & Record<string, ComEventsConfig[]>
   >({
     button: [
       {
-        type: 'click',
+        type: 'button:click',
         name: '点击事件',
         settingsConfigs: [
           {
@@ -25,6 +26,13 @@ const useComsEventsConfigs = () => {
             required: false,
           },
         ],
+      },
+    ],
+    table: [
+      {
+        type: 'table:didMount',
+        name: '组件装载完成',
+        settingsConfigs: [],
       },
     ],
   });

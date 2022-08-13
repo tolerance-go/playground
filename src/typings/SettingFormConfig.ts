@@ -1,4 +1,5 @@
 import { ComponentStatus } from '@/models/comsStatus';
+import { ProFormColumnsType } from '@ant-design/pro-components';
 import { NamePath } from 'antd/lib/form/interface';
 
 export type SettingFormConfig = ((
@@ -13,6 +14,10 @@ export type SettingFormConfig = ((
     }
   | {
       type: 'boxPosition';
+    }
+  | {
+      type: 'list';
+      columns: ProFormColumnsType[];
     }
   | {
       type: 'select';

@@ -1,18 +1,9 @@
 import { SegmentedSwitch } from '@/components/SegmentedSwitch';
 import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
-import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { Input, Select } from 'antd';
-import BoxPositionInput from '../BoxPositionInput';
-import BoxSizeInput from '../BoxSizeInput';
-
-export type ConfigInputProps = {
-  disabled?: boolean;
-  config: SettingFormConfig[number];
-  value?: any;
-  onChange?: (next: any) => void;
-  bordered?: boolean;
-  theme?: 'dark-area';
-};
+import BoxPositionInput from './inputs/BoxPositionInput';
+import BoxSizeInput from './inputs/BoxSizeInput';
+import { ConfigInputProps } from './typings/ConfigInputProps';
 
 export const ConfigInput = ({
   config,

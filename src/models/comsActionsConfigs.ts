@@ -7,12 +7,45 @@ export type ComActionsConfig = {
   settingsConfigs?: SettingFormConfig;
 };
 
-const useComsActionsConfigs = () => {
-  const [comsActionsConfigs, setcomsActionsConfigs] = useState<
+const switchStatusAction: ComActionsConfig = {
+  type: 'switchStatus',
+  name: '切换状态',
+  settingsConfigs: [
     {
-      button?: ComActionsConfig[];
-    } & Record<string, ComActionsConfig[]>
-  >({
+      type: 'string',
+      name: 'targetComId',
+      label: '目标组件',
+      required: true,
+    },
+    {
+      type: 'select',
+      name: 'targetStatId',
+      label: '目标状态',
+      required: true,
+      visible: [
+        ({ settings }) => !!settings?.targetComId,
+        {
+          name: ['targetComId'],
+        },
+      ],
+      options: ({ getSelectedComStatus }) => {
+        const comStatus = getSelectedComStatus();
+        return Object.keys(comStatus ?? {}).map((statId) => {
+          return {
+            label: comStatus?.[statId].name,
+            value: statId,
+          };
+        });
+      },
+    },
+  ],
+};
+
+const useComsActionsConfigs = () => {
+  const [comsActionsConfigs, setcomsActionsConfigs] = useState<{
+    button?: ComActionsConfig[];
+    table?: ComActionsConfig[];
+  }>({
     button: [
       {
         type: 'request',
@@ -43,39 +76,22 @@ const useComsActionsConfigs = () => {
           },
         ],
       },
+      { ...switchStatusAction },
+    ],
+    table: [
       {
-        type: 'switchStatus',
-        name: '切换状态',
+        type: 'table:requestDataSource',
+        name: '请求数据集',
         settingsConfigs: [
           {
             type: 'string',
-            name: 'targetComId',
-            label: '目标组件',
+            name: 'dataId',
+            label: '数据集合id',
             required: true,
-          },
-          {
-            type: 'select',
-            name: 'targetStatId',
-            label: '目标状态',
-            required: true,
-            visible: [
-              ({ settings }) => !!settings?.targetComId,
-              {
-                name: ['targetComId'],
-              },
-            ],
-            options: ({ getSelectedComStatus }) => {
-              const comStatus = getSelectedComStatus();
-              return Object.keys(comStatus ?? {}).map((statId) => {
-                return {
-                  label: comStatus?.[statId].name,
-                  value: statId,
-                };
-              });
-            },
           },
         ],
       },
+      { ...switchStatusAction },
     ],
   });
 

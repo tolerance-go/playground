@@ -1,7 +1,9 @@
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
-import { LineConfig } from '@ant-design/plots';
 import { useMemoizedFn } from 'ahooks';
 import { useState } from 'react';
+import { ComponentCommonStyle } from './comsStyles';
+
+export type DefaultStylesValue = ComponentCommonStyle;
 
 const defaultConfigs: SettingFormConfig = [
   {
@@ -52,70 +54,28 @@ const defaultConfigs: SettingFormConfig = [
   },
 ];
 
+export type ComsInitalStyles = {
+  button: DefaultStylesValue;
+  line: DefaultStylesValue;
+  table: DefaultStylesValue;
+};
+
 /**
  * 组件对应样式表单的描述信息
  * 及其组件对应初始化样式信息
  */
 const useComsStyleConfigs = () => {
-  const [comsInitalStyles, setComsInitalStyles] = useState<
-    {
-      button?: {
-        text?: string;
-        type?: string;
-      };
-      line?: Partial<LineConfig>;
-    } & Record<string, Record<string, any>>
-  >({
-    button: {
-      text: '按钮',
-      type: 'primary',
-    },
-    line: {
-      smooth: false,
-    },
+  const [comsInitalStyles, setComsInitalStyles] = useState<ComsInitalStyles>({
+    button: {},
+    line: {},
+    table: {},
   });
   const [comsStylesConfigs, setComsStylesConfigs] = useState<
-    Record<string, SettingFormConfig>
+    Record<keyof ComsInitalStyles, SettingFormConfig>
   >({
-    button: [
-      ...defaultConfigs,
-      // {
-      //   type: 'string',
-      //   name: 'text',
-      //   label: '内容',
-      //   required: true,
-      // },
-      // {
-      //   type: 'select',
-      //   name: 'type',
-      //   label: '类型',
-      //   multiple: false,
-      //   options: [
-      //     {
-      //       label: 'primary',
-      //       value: 'primary',
-      //     },
-      //     {
-      //       label: 'ghost',
-      //       value: 'ghost',
-      //     },
-      //   ],
-      // },
-    ],
-    line: [
-      {
-        type: 'boolean',
-        name: 'smooth',
-        label: '平滑绘制',
-      },
-    ],
-    default: [
-      {
-        type: 'boxSize',
-        name: 'marginSize',
-        label: '外边距',
-      },
-    ],
+    button: [...defaultConfigs],
+    line: [...defaultConfigs],
+    table: [...defaultConfigs],
   });
 
   const getComsInitalStyles = useMemoizedFn(() => {

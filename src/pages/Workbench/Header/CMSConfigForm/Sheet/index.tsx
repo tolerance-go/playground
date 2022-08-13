@@ -2,11 +2,19 @@ import { RequestButton } from '@/components/RequestButton';
 import { useSelectedData } from '@/hooks/useSelectedData';
 import { DataItem, DataTableColumn } from '@/models/dataList';
 import { DataControllerUpdate } from '@/services/server/DataController';
-import type { ActionType } from '@ant-design/pro-components';
+import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
-import { Button, Dropdown, Empty, Menu, message } from 'antd';
+import {
+  Button,
+  Dropdown,
+  Empty,
+  Menu,
+  message,
+  Space,
+  Typography,
+} from 'antd';
 import { nanoid } from 'nanoid';
 import { useMemo, useRef } from 'react';
 import { ColumnsConfigModal } from './ColumnsConfigModal';
@@ -72,14 +80,42 @@ export default () => {
     }
   });
 
-  const mergedColumns = useMemo(() => {
+  const mergedColumns = useMemo((): ProTableProps<
+    DataItem,
+    unknown,
+    'text'
+  >['columns'] => {
     return columns
-      ?.map((col) => {
-        return {
-          ...col,
-          title: columnsSettings?.[col.key].title ?? col.title,
-        };
-      })
+      ?.map(
+        (
+          col,
+        ): Required<
+          ProTableProps<DataItem, unknown, 'text'>
+        >['columns'][number] => {
+          return {
+            ...col,
+            title: (__, type) =>
+              type === 'table' ? (
+                <Space>
+                  <span>{columnsSettings?.[col.key].title ?? col.title}</span>
+                  <Typography.Text
+                    type="secondary"
+                    copyable={{
+                      text: `${col.valueType}-${col.key}`,
+                    }}
+                    style={{
+                      fontSize: 10,
+                    }}
+                  >
+                    ID: {col.key.slice(0, 4)}
+                  </Typography.Text>
+                </Space>
+              ) : (
+                columnsSettings?.[col.key].title ?? col.title
+              ),
+          };
+        },
+      )
       .concat({
         title: '操作',
         width: 180,
@@ -164,7 +200,21 @@ export default () => {
           pageSize: 5,
         }}
         dateFormatter="string"
-        headerTitle={selectedData?.name}
+        headerTitle={
+          selectedData ? (
+            <Space>
+              {selectedData.name}
+              <Typography.Text
+                copyable={{
+                  text: String(selectedData.id),
+                }}
+                type="secondary"
+              >
+                ID: {selectedData.id}
+              </Typography.Text>
+            </Space>
+          ) : null
+        }
         toolBarRender={() => [
           <RecordCreator key="button"></RecordCreator>,
           <Dropdown

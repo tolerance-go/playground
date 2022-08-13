@@ -29,7 +29,7 @@ export type BoxSize = {
   lockingWidthRatio?: boolean;
 };
 
-export type ComponentStyle = {
+export type ComponentCommonStyle = {
   marginPosition?: BoxPosition;
   paddingPosition?: BoxPosition;
   positionType?: CSSProperties['position'];
@@ -41,7 +41,7 @@ export type ComponentStyle = {
  * 组件的不同状态
  * key: statId
  */
-export type ComponentStatusStyles = Record<StatId, ComponentStyle>;
+export type ComponentStatusStyles = Record<StatId, ComponentCommonStyle>;
 
 /** 所有组件的所有状态下的配置
  * key: comId
@@ -64,7 +64,7 @@ const useComsStyles = () => {
   }));
 
   const setComStatStyle = useMemoizedFn(
-    (comId: string, statId: string, style: ComponentStyle) => {
+    (comId: string, statId: string, style: ComponentCommonStyle) => {
       setComsStyles(
         produce((draft) => {
           if (draft[comId] === undefined) {
@@ -77,7 +77,7 @@ const useComsStyles = () => {
   );
 
   const updateComStatStyle = useMemoizedFn(
-    (comId: string, statId: string, style: ComponentStyle) => {
+    (comId: string, statId: string, style: ComponentCommonStyle) => {
       setComsStyles(
         produce((draft) => {
           if (draft[comId] === undefined) {

@@ -1,7 +1,7 @@
 import { BoxPosition, UnitNumber } from '@/models/comsStyles';
 import { useMemoizedFn } from 'ahooks';
 import { InputNumber, Row } from 'antd';
-import { UnitSelect } from './UnitSelect';
+import { UnitSelect } from '../../UnitSelect';
 
 export default (props: {
   disabled?: boolean;

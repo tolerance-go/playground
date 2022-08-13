@@ -1,4 +1,5 @@
 import { RequestButton } from '@/components/RequestButton';
+import { DataListItem } from '@/models/dataList';
 import { DataControllerDestroy } from '@/services/server/DataController';
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -20,7 +21,7 @@ export default () => {
   );
 
   return (
-    <ProList<API.Data>
+    <ProList<DataListItem>
       toolBarRender={() => {
         return [<Creator key="create" />];
       }}

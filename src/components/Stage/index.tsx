@@ -1,17 +1,19 @@
 import { Atom } from '@/components/Atom';
-import { AtomButton } from '@/components/AtomButton';
+import { AtomButton } from '@/components/atomComs/AtomButton';
 import { ElementsCxt } from '@/components/ElementsCtx';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { ElementCenter } from '@/typings/ElementCenter';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
 import { useMemo } from 'react';
-import { AtomLine } from '../AtomLine';
+import { AtomTable } from '../atomComs/AtomTable';
+import { AtomLine } from '../atomComs/AtomLine';
 
 /** 根据 type 静态注册组件对象 */
 const Elements: ElementCenter = {
   button: AtomButton,
   line: AtomLine,
+  table: AtomTable,
 };
 
 export default function Stage() {
@@ -35,7 +37,7 @@ export default function Stage() {
     return null;
   }
 
-  consola.info('渲染跟节点组件');
+  consola.info('渲染跟节点组件', rootIds, stageComponentsModel);
 
   return (
     <div>
