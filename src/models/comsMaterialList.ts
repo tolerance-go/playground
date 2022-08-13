@@ -1,9 +1,17 @@
+import { ComponentControllerIndex } from '@/services/server/ComponentController';
+import { useRequest } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
+import qs from 'qs';
 import { useState } from 'react';
 
 const useComsMaterialList = () => {
   const [comsMaterialList, setComsMaterialList] = useState<API.Component[]>();
+
+  const query = qs.parse(location.search, {
+    ignoreQueryPrefix: true,
+  });
+  const { appId } = query;
 
   // const { removeTargetComsAndSaveTheirSettings } = useModel(
   //   'stageComponentsModel',
@@ -41,7 +49,21 @@ const useComsMaterialList = () => {
     return comsMaterialList?.find((item) => item.id === id);
   });
 
+  const { loading } = useRequest(
+    async () => {
+      return await ComponentControllerIndex({
+        appId: Number(appId),
+      });
+    },
+    {
+      onSuccess: (data) => {
+        setComsMaterialList(data);
+      },
+    },
+  );
+
   return {
+    comsMaterialListLoading: loading,
     comsMaterialList,
     removeComMaterial,
     getComMaterial,

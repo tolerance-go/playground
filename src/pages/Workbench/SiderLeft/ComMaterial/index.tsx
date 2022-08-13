@@ -1,27 +1,17 @@
-import {
-  ComponentControllerDestroy,
-  ComponentControllerIndex,
-} from '@/services/server/ComponentController';
+import { ComponentControllerDestroy } from '@/services/server/ComponentController';
 import { ProList } from '@ant-design/pro-components';
 import { useModel, useRequest } from '@umijs/max';
 import { Spin } from 'antd';
-import qs from 'qs';
 import styles from './index.less';
 import MaterialCreator from './MaterialCreator';
 
 export default () => {
-  const query = qs.parse(location.search, {
-    ignoreQueryPrefix: true,
-  });
-  const { appId } = query;
-  const { comsMaterials, setComsMaterialList, removeComMaterial } = useModel(
-    'comsMaterialList',
-    (model) => ({
+  const { comsMaterials, comsMaterialListLoading, removeComMaterial } =
+    useModel('comsMaterialList', (model) => ({
       comsMaterials: model.comsMaterialList,
-      setComsMaterialList: model.setComsMaterialList,
+      comsMaterialListLoading: model.comsMaterialListLoading,
       removeComMaterial: model.removeComMaterial,
-    }),
-  );
+    }));
 
   const { setComActiveMaterialId, comActiveMaterialId } = useModel(
     'comActiveMaterialId',
@@ -30,19 +20,6 @@ export default () => {
         setComActiveMaterialId: model.setComActiveMaterialId,
         comActiveMaterialId: model.comActiveMaterialId,
       };
-    },
-  );
-
-  const { loading } = useRequest(
-    async () => {
-      return await ComponentControllerIndex({
-        appId: Number(appId),
-      });
-    },
-    {
-      onSuccess: (data) => {
-        setComsMaterialList(data);
-      },
     },
   );
 
@@ -69,7 +46,7 @@ export default () => {
         marginTop: 10,
       }}
       split
-      loading={loading}
+      loading={comsMaterialListLoading}
       rowKey="id"
       dataSource={comsMaterials}
       showActions="hover"
@@ -77,6 +54,9 @@ export default () => {
         return {
           className:
             record.id === comActiveMaterialId ? styles.active : undefined,
+          onClick: () => {
+            setComActiveMaterialId(record.id);
+          },
         };
       }}
       metas={{
@@ -89,14 +69,6 @@ export default () => {
         actions: {
           render: (dom, entity) => {
             return [
-              <a
-                key="apply"
-                onClick={() => {
-                  setComActiveMaterialId(entity.id);
-                }}
-              >
-                应用
-              </a>,
               <Spin key="remove" spinning={removeLoading}>
                 <a
                   onClick={() => {

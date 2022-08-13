@@ -11,6 +11,7 @@ const useComponentsSlots = () => {
   >({
     button: ['children', SLOTS_NAME.ADDON_AFTER, SLOTS_NAME.ADDON_BEFORE],
     line: [SLOTS_NAME.ADDON_AFTER, SLOTS_NAME.ADDON_BEFORE],
+    table: [SLOTS_NAME.ADDON_AFTER, SLOTS_NAME.ADDON_BEFORE],
   });
 
   return {

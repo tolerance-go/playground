@@ -57,3 +57,7 @@ src/models/comsActionsConfigs.ts
 ## 6. 添加新的事件类型
 
 src/models/comsEventsConfigs.ts
+
+## 7. 添加插槽类型
+
+src/models/componentsSlots.ts

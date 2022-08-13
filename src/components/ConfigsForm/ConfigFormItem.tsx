@@ -43,6 +43,8 @@ export const ConfigFormItem = ({
     colon: false,
   };
 
+  const extraInputProps = configInputProps?.(item);
+
   if (item.type === 'list') {
     return (
       <ProFormList
@@ -75,7 +77,16 @@ export const ConfigFormItem = ({
           );
         }}
       >
-        <BetaSchemaForm layoutType="Embed" columns={item.columns} />
+        <BetaSchemaForm
+          layoutType="Embed"
+          columns={item.columns.map((col) => ({
+            ...col,
+            fieldProps: {
+              ...col.fieldProps,
+              disabled: extraInputProps?.disabled,
+            },
+          }))}
+        />
       </ProFormList>
     );
   }
@@ -93,7 +104,7 @@ export const ConfigFormItem = ({
           : []),
       ]}
     >
-      <ConfigInput {...configInputProps?.(item)} config={item} theme={theme} />
+      <ConfigInput {...extraInputProps} config={item} theme={theme} />
     </Form.Item>
   );
 };
