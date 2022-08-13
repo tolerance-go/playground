@@ -13,6 +13,7 @@ export default () => {
     <Content
       style={{
         overflow: 'auto',
+        background: '#f0f2f5',
       }}
       onClick={() => {
         /** 点击舞台，回复左边栏状态 */

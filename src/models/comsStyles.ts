@@ -12,7 +12,7 @@ export type UnitNumber = {
    * percentage 百分比
    * absolute 绝对值
    */
-  unit?: 'percentage' | 'absolute';
+  unit?: 'px' | '%';
 };
 
 export type BoxPosition = {

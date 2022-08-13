@@ -26,7 +26,14 @@ export default function App() {
   };
 
   return (
-    <Sider ref={siderRef} theme="light" width={300}>
+    <Sider
+      ref={siderRef}
+      theme="light"
+      width={300}
+      style={{
+        borderRight: '1px solid rgb(242, 242, 242)',
+      }}
+    >
       <Row
         style={{
           flexDirection: 'column',

@@ -24,6 +24,7 @@ export default function App() {
       width={320}
       style={{
         padding: '15px 10px 15px 15px',
+        borderLeft: '1px solid rgb(242, 242, 242)',
       }}
     >
       {mode === 'normal' ? null : (

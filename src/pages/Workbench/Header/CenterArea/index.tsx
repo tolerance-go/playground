@@ -1,7 +1,8 @@
 import { VersionControllerShow } from '@/services/server/VersionController';
-import { CloseOutlined, ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined } from '@ant-design/icons';
 import { useModel, useRequest } from '@umijs/max';
 import { Divider, Space, Spin, Tag, Tooltip, Typography } from 'antd';
+import { StageSizeManager } from './StageSizeManager';
 
 export default () => {
   const { activeVersionId, setActiveVersionId } = useModel(
@@ -60,15 +61,7 @@ export default () => {
       }}
     >
       <Space size={'small'}>
-        <Typography.Text type="secondary">
-          1000{' '}
-          <CloseOutlined
-            style={{
-              fontSize: 10,
-            }}
-          />{' '}
-          600
-        </Typography.Text>
+        <StageSizeManager />
         {/* <Space>
           <InputNumber
             style={{
