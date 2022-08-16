@@ -1,50 +1,65 @@
+import utl from 'lodash';
 import { nanoid } from 'nanoid';
 import { EventManager } from './EventManager';
 
+export type RecoverParams<S = any, C = any> = {
+  index: number;
+  state: S;
+  commitInfo: C;
+  prevNode?: SnapshotsNode<S, C>;
+  nextNode?: SnapshotsNode<S, C>;
+  direction: 'back' | 'forward' | 'stand';
+  offset: number;
+};
+
 export type HistoryAreaInitParams = {
   name: string;
-  pull: () => any;
-  recover: (state: any) => Promise<boolean>;
-  backLatestRecover: () => void;
+  recover: (opts: RecoverParams) => Promise<boolean>;
+  backRecover: (opts: RecoverParams) => Promise<boolean>;
+  initialState?: () => any;
 };
 
 export class HistoryArea {
   public name: string;
-  private _pull: () => void;
-  private _backLatestRecover: () => void;
-  private _recover: (state: any) => Promise<boolean>;
+  private _backRecover: (opts: RecoverParams) => Promise<boolean>;
+  private _recover: (opts: RecoverParams) => Promise<boolean>;
+  private _initialState?: () => any;
 
   constructor({
     name,
-    pull,
     recover,
-    backLatestRecover,
+    backRecover: backLatestRecover,
+    initialState,
   }: HistoryAreaInitParams) {
     this.name = name;
-    this._pull = pull;
-    this._backLatestRecover = backLatestRecover;
+    this._backRecover = backLatestRecover;
     this._recover = recover;
-  }
-
-  /** 返回支持 recover 的数据 */
-  public pull() {
-    return this._pull();
+    this._initialState = initialState;
   }
 
   /** 恢复到指定快照 */
-  public recover(state: any) {
-    return this._recover(state);
+  public recover(opts: RecoverParams) {
+    return this._recover(opts);
   }
 
   /** recover 的反操作 */
-  public backLatestRecover() {
-    return this._backLatestRecover();
+  public backLatestRecover(opts: RecoverParams) {
+    return this._backRecover(opts);
+  }
+
+  public getInitialState() {
+    return this._initialState?.();
   }
 }
 
-export type SnapshotNode = {
+export type AreaSnapshot<S = any, C = any> = {
+  state: S;
+  commitInfo: C;
+};
+
+export type SnapshotsNode<S = any, C = any> = {
   id: string;
-  state: any;
+  areasSnapshots: Record<string, AreaSnapshot<S, C>>;
 };
 
 export class HistoryManager {
@@ -52,7 +67,7 @@ export class HistoryManager {
   public areas: Record<string, HistoryArea> = {};
 
   /** 所有区域的线形历史状态集 */
-  public snapshotsStack: Record<string, SnapshotNode>[] = [];
+  public snapshotsStack: SnapshotsNode[] = [];
 
   /**
    * 当前快照栈的下标位置
@@ -85,7 +100,7 @@ export class HistoryManager {
   }
 
   /** 初始化快照数据 */
-  public init(shs: Record<string, any>[]) {
+  public init(shs: SnapshotsNode[]) {
     this.snapshotsStack = shs;
     this.eventCenter.dispatch('inited', {
       data: {
@@ -95,21 +110,44 @@ export class HistoryManager {
   }
 
   /** 栈顶部增加一个快照节点 */
-  public commit() {
+  public commit(
+    ...infoArr: [
+      string,
+      {
+        commitInfo: any;
+        state: any;
+      },
+    ][]
+  ) {
+    /**
+     * 如果当前 index 在中间位置，新增 commit 前要丢弃后面的 commit
+     * @TODO 增加异步同步
+     */
     if (this.index < this.snapshotsStack.length - 1) {
       this.snapshotsStack = this.snapshotsStack.slice(0, this.index + 1);
     }
 
-    const nodeId = nanoid();
-    const node = Object.keys(this.areas).reduce((acc, areaName) => {
-      return {
-        ...acc,
-        [areaName]: {
-          id: nodeId,
-          state: this.areas[areaName].pull(),
-        },
-      };
-    }, {});
+    const infos = utl.fromPairs(infoArr);
+
+    const commitId = nanoid();
+    const node = Object.keys(infos).reduce(
+      (acc, areaName) => {
+        return {
+          ...acc,
+          areasSnapshots: {
+            ...acc.areasSnapshots,
+            [areaName]: {
+              state: infos[areaName].state,
+              commitInfo: infos[areaName].commitInfo,
+            },
+          },
+        };
+      },
+      {
+        id: commitId,
+        areasSnapshots: {},
+      } as SnapshotsNode,
+    );
     this.snapshotsStack.push(node);
     this.index = this.snapshotsStack.length - 1;
   }
@@ -135,7 +173,7 @@ export class HistoryManager {
   }
 
   /** 移动到某个 commit */
-  private move(offset: number) {
+  public move(offset: number) {
     const nextIndex = this.getNextIndex(offset);
     if (nextIndex < -1 || nextIndex > this.snapshotsStack.length - 1) {
       return;
@@ -165,23 +203,52 @@ export class HistoryManager {
 
     /**
      * 如果快照数量为 1，并且 offset 为 -1
-     * 那么退回的状态为空状态，交由组件自己处理
+     * 那么退回的状态为空状态
      */
     const nextIndex = this.getNextIndex(offset);
-    const node: Record<string, SnapshotNode> | undefined =
-      this.snapshotsStack[nextIndex];
+    const node = this.snapshotsStack[nextIndex] as SnapshotsNode | undefined;
+    const prevNode = this.snapshotsStack[nextIndex - 1] as
+      | SnapshotsNode
+      | undefined;
+    const nextNode = this.snapshotsStack[nextIndex + 1] as
+      | SnapshotsNode
+      | undefined;
 
     this.eventCenter.dispatch('reverting', {});
 
     const results = await Promise.all(
-      Object.keys(this.areas).map((areaName) => {
-        const meta = node?.[areaName];
-        return this.areas[areaName].recover(meta?.state).then((result) => {
-          return {
-            areaName,
-            result,
-          };
-        });
+      /**
+       * 如果 nextIndex 为 -1，则找到 index 为 0 的 node，
+       * 因为它存在的 areas 就是变化量的 areas，对应的 state
+       * 我们取对应的 initialState
+       */
+      Object.keys(
+        nextIndex === -1
+          ? this.snapshotsStack[0].areasSnapshots
+          : node?.areasSnapshots ?? {},
+      ).map((areaName) => {
+        const meta = node?.areasSnapshots?.[areaName] as
+          | AreaSnapshot
+          | undefined;
+        return this.areas[areaName]
+          .recover({
+            state:
+              nextIndex === -1
+                ? this.areas[areaName].getInitialState()
+                : meta?.state,
+            commitInfo: meta?.commitInfo,
+            index: nextIndex,
+            prevNode,
+            nextNode,
+            direction: offset < 0 ? 'back' : offset === 0 ? 'stand' : 'forward',
+            offset,
+          })
+          .then((result) => {
+            return {
+              areaName,
+              result,
+            };
+          });
       }),
     );
 

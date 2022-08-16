@@ -1,12 +1,18 @@
-import { DataControllerIndex } from '@/services/server/DataController';
+import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import {
+  DataControllerCreate,
+  DataControllerDestroy,
+  DataControllerIndex,
+} from '@/services/server/DataController';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { ProColumns, ProFieldValueType } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import { useModel, useRequest } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { message } from 'antd';
 import produce from 'immer';
 import qs from 'qs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { RecoverParams } from './../domains/HistoryManager';
 
 export type DataItem = Record<string, any> & {
   id: string;
@@ -73,6 +79,14 @@ const useDataList = () => {
     date: [...defaultDataColumnsSettingsType],
   });
 
+  const { historyManager } = useModel('appStateHistory', (model) => ({
+    historyManager: model.historyManager,
+  }));
+
+  const getDataList = useMemoizedFn(() => {
+    return dataList;
+  });
+
   const { loading } = useRequest(
     async () => {
       const query = qs.parse(location.search, {
@@ -105,19 +119,43 @@ const useDataList = () => {
 
   /** 尾部插入 */
   const pushData = useMemoizedFn((item: DataListItem) => {
-    setDataList((prev) => prev?.concat(item));
+    setDataList((prev) => {
+      historyManager.commit([
+        HistoryAreaNames.DataList,
+        {
+          commitInfo: {
+            type: 'addDataListItem',
+            data: item,
+          },
+          state: prev?.concat(item),
+        },
+      ]);
+      return prev?.concat(item);
+    });
   });
 
   /** 删除 path */
   const deleteData = useMemoizedFn((id: number) => {
-    setDataList(
-      produce((draft) => {
-        const index = draft?.findIndex((item) => item.id === id);
-        if (index !== undefined && index > -1) {
-          draft?.splice(index, 1);
-        }
-      }),
-    );
+    setDataList((prev) => {
+      const index = prev?.findIndex((item) => item.id === id);
+      if (index !== undefined && index > -1) {
+        const draft = [...prev];
+        const removed = draft.splice(index, 1);
+        historyManager.commit([
+          HistoryAreaNames.DataList,
+          {
+            commitInfo: {
+              type: 'deleteDataListItem',
+              data: removed[0],
+            },
+            state: draft,
+          },
+        ]);
+        return draft;
+      }
+
+      return prev;
+    });
   });
 
   const updateData = useMemoizedFn(
@@ -398,25 +436,96 @@ const useDataList = () => {
     }
   });
 
+  // useUpdateEffect(() => {
+  //   if (recoverUpdatingRef.current) {
+  //   } else {
+  //     historyManager.commit();
+  //   }
+
+  //   recoverUpdatingRef.current = false;
+  // }, [dataList]);
+
+  useEffect(() => {
+    historyManager.registerArea({
+      name: HistoryAreaNames.DataList,
+      /** state 为空的情况，表示 index 为 -1，组件需要恢复到最初状态 */
+      recover: async ({
+        index,
+        state: currentState,
+        commitInfo,
+        nextNode,
+        direction,
+      }: RecoverParams<
+        DataListItem[],
+        {
+          type: 'deleteDataListItem';
+          data: DataListItem;
+        }
+      >) => {
+        if (index === -1) {
+          setDataList([]);
+          return true;
+        }
+
+        if (
+          direction === 'back' &&
+          nextNode?.areasSnapshots[HistoryAreaNames.DataList].commitInfo
+            .type === 'deleteDataListItem'
+        ) {
+          const removedItem = commitInfo.data;
+          const { success } = await DataControllerCreate({
+            // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
+            name: removedItem.name,
+            desc: removedItem.desc,
+            data: JSON.stringify(removedItem.data),
+            app_id: removedItem.app_id,
+          });
+          if (success) {
+            setDataList(currentState);
+            return true;
+          }
+        }
+
+        if (
+          direction === 'forward' &&
+          commitInfo.type === 'deleteDataListItem'
+        ) {
+          const removedItem = commitInfo.data;
+          const { success } = await DataControllerDestroy({
+            id: String(removedItem.id),
+          });
+          if (success) {
+            setDataList(currentState);
+            return true;
+          }
+        }
+
+        return false;
+      },
+      backRecover: () => {},
+    });
+  }, []);
+
   return {
     dataList,
     loading,
     dataColumnSettingsConfigs,
-    getTableDataSourceByDataId,
-    getColumnDataMetaAfterRemoveDataSource,
     removeDataSource,
-    getColumnDataMetaAfterUpdateDataSource,
     updateDataSource,
-    getColumnDataMetaAfterPushDataSource,
     pushDataSource,
-    getColumnDataMetaAfterUpdateColumnSettings,
     updateColumn,
-    getColumnDataMetaAfterAddColumn,
     addColumn,
     updateData,
     setDataList,
     pushData,
     deleteData,
+    getDataList,
+    getColumnDataMetaAfterUpdateColumnSettings,
+    getColumnDataMetaAfterPushDataSource,
+    getColumnDataMetaAfterUpdateDataSource,
+    getColumnDataMetaAfterRemoveDataSource,
+    getTableDataSourceByDataId,
+    getColumnDataMetaAfterAddColumn,
   };
 };
 

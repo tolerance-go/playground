@@ -28,7 +28,7 @@ const useAppStateHistory = () => {
      * 从初始化状态进入最近一次快照状态，比如 modal 的 visible
      */
     const initHandlerId = historyManager.listen('inited', () => {
-      historyManager.moveTarget(0);
+      historyManager.move(0);
     });
 
     const revertingHandlerId = historyManager.listen('reverting', () => {
