@@ -7,7 +7,5 @@ export const HistoryRevertor = (props: PropsWithChildren) => {
     reverting: model.reverting,
   }));
 
-  console.log('revertingrevertingrevertingreverting2222', reverting)
-
   return <Spin spinning={reverting}>{props.children}</Spin>;
 };

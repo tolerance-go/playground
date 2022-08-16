@@ -31,6 +31,7 @@ const useDataMaskVisible = () => {
           visible: getVisible(),
         };
       },
+      /** state 为空的情况，表示 index 为 -1，组件需要恢复到最初状态 */
       recover: async (state?: { visible: boolean }) => {
         // await delay(1000);
 

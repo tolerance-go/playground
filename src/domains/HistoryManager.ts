@@ -63,13 +63,13 @@ export class HistoryManager {
   private eventCenter: EventManager = new EventManager();
 
   /** 内部标志，当前是否正在回撤 */
-  private reverting: boolean = false;
+  private moving: boolean = false;
 
   /**
    * revert 队列，等待上一个 revert 结束会自动
    * 检索该队列
    */
-  private revertQueue: {
+  private moveQueue: {
     createTime: number;
     offset: number;
   }[] = [];
@@ -115,27 +115,48 @@ export class HistoryManager {
   }
 
   /** 恢复到上一个 commit */
-  public revert(offset: number = -1) {
-    if (this.index < 0) {
+  public revert() {
+    return this.move(-1);
+  }
+
+  /** revert 的反操作 */
+  public unRevert() {
+    return this.move(1);
+  }
+
+  /** 监听事件 */
+  public listen(type: string, handler: () => void) {
+    return this.eventCenter.listen(type, handler);
+  }
+
+  /** 解除监听 */
+  public unlisten(type: string, handerId: string) {
+    this.eventCenter.unlisten(type, handerId);
+  }
+
+  /** 移动到某个 commit */
+  private move(offset: number) {
+    const nextIndex = this.getNextIndex(offset);
+    if (nextIndex < -1 || nextIndex > this.snapshotsStack.length - 1) {
       return;
     }
 
-    if (this.reverting) {
-      this.revertQueue.push({
+    if (this.moving) {
+      this.moveQueue.push({
         createTime: new Date().getTime(),
         offset: offset,
       });
       return;
     }
 
-    return this.revertTarget(offset);
+    return this.moveTarget(offset);
   }
 
   /**
    * 恢复到指定的 commit
    * offset 是从栈顶部开始，0 表示当前为栈顶，-1 表示从栈顶倒退 1 次
    */
-  public revertTarget = async (offset: number) => {
+  private moveTarget = async (offset: number) => {
     if (this.snapshotsStack.length === 0) {
       return;
     }
@@ -146,7 +167,7 @@ export class HistoryManager {
      * 如果快照数量为 1，并且 offset 为 -1
      * 那么退回的状态为空状态，交由组件自己处理
      */
-    const nextIndex = this.index + offset;
+    const nextIndex = this.getNextIndex(offset);
     const node: Record<string, SnapshotNode> | undefined =
       this.snapshotsStack[nextIndex];
 
@@ -182,7 +203,7 @@ export class HistoryManager {
     } else {
       this.index = nextIndex;
 
-      if (this.revertQueue.length) {
+      if (this.moveQueue.length) {
         this.nextRevert();
       } else {
         this.stopReverting();
@@ -196,36 +217,30 @@ export class HistoryManager {
     }
   };
 
-  /** 监听事件 */
-  public listen(type: string, handler: () => void) {
-    return this.eventCenter.listen(type, handler);
-  }
-
-  /** 解除监听 */
-  public unlisten(type: string, handerId: string) {
-    this.eventCenter.unlisten(type, handerId);
-  }
+  private getNextIndex = (offset: number) => {
+    return this.index + offset;
+  };
 
   /** 检测并开始队列中的下一个 revert */
   private nextRevert() {
-    if (this.revertQueue.length) {
-      const item = this.revertQueue.shift();
+    if (this.moveQueue.length) {
+      const item = this.moveQueue.shift();
       if (item) {
-        this.revert(item.offset);
+        this.move(item.offset);
       }
     }
   }
 
   /** 丢弃所有 revertQueue */
   private dropAllRevertQueue() {
-    this.revertQueue = [];
+    this.moveQueue = [];
   }
 
   private stopReverting() {
-    this.reverting = false;
+    this.moving = false;
   }
 
   private startReverting() {
-    this.reverting = true;
+    this.moving = true;
   }
 }

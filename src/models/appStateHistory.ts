@@ -28,7 +28,7 @@ const useAppStateHistory = () => {
      * 从初始化状态进入最近一次快照状态，比如 modal 的 visible
      */
     const initHandlerId = historyManager.listen('inited', () => {
-      historyManager.revertTarget(0);
+      historyManager.moveTarget(0);
     });
 
     const revertingHandlerId = historyManager.listen('reverting', () => {
@@ -51,6 +51,10 @@ const useAppStateHistory = () => {
   /** 响应键盘事件 */
   useHotkeys('ctrl+z', () => {
     historyManager.revert();
+  });
+
+  useHotkeys('ctrl+shift+z', () => {
+    historyManager.unRevert();
   });
 
   return {
