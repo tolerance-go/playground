@@ -1,5 +1,5 @@
 import { SLOTS_NAME } from '@/constants';
-import { EventHandlerParams } from '@/domains/EventManager';
+import { EventHandlerParams } from '@/domains/StageEventManager';
 import { ComponentAction } from '@/models/comsActions';
 import { ComponentCommonStyle } from '@/models/comsStyles';
 import { RecordType } from '@/typings';
@@ -56,7 +56,6 @@ export const AtomTable = (
     const handlerIds = eventManager.listenAll(
       ['table:didMount', 'button:click'],
       (params: AtomTableDidMountHandlerParams) => {
-        debugger;
         commonActionHandler(params, (action) => {
           const { event } = params;
 
@@ -83,7 +82,6 @@ export const AtomTable = (
   }, []);
 
   useEffect(() => {
-    debugger;
     eventManager.dispatch(
       'table:didMount',
       {},

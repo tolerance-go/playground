@@ -1,4 +1,4 @@
-import { EventHandlerParams } from '@/domains/EventManager';
+import { EventHandlerParams } from '@/domains/StageEventManager';
 import { ComponentAction } from '@/models/comsActions';
 import { SwitchStatusAction } from '@/typings/actions';
 import { useModel } from '@umijs/max';

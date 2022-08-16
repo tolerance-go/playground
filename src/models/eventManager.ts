@@ -1,4 +1,4 @@
-import { EventManager } from '@/domains/EventManager';
+import { EventManager } from '@/domains/StageEventManager';
 import { useState } from 'react';
 
 /** 事件处理中心 */

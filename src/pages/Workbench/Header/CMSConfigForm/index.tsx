@@ -1,22 +1,17 @@
-import { DatabaseOutlined } from '@ant-design/icons';
-import { Button, Col, Drawer, Row } from 'antd';
-import { useState } from 'react';
+import { useModel } from '@umijs/max';
+import { Col, Drawer, Row } from 'antd';
 import List from './List';
 import Sheet from './Sheet';
+import { Trigger } from './Trigger';
 
 export default () => {
-  const [visible, setVisible] = useState(false);
+  const { visible, setVisible } = useModel('dataMaskVisible', (model) => ({
+    visible: model.visible,
+    setVisible: model.setVisible,
+  }));
   return (
     <>
-      <Button
-        type="text"
-        icon={<DatabaseOutlined />}
-        onClick={() => {
-          setVisible(true);
-        }}
-      >
-        数据
-      </Button>
+      <Trigger />
       <Drawer
         push={false}
         visible={visible}

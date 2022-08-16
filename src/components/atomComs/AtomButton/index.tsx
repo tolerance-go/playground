@@ -1,5 +1,5 @@
 import { SLOTS_NAME } from '@/constants';
-import { EventHandlerParams } from '@/domains/EventManager';
+import { EventHandlerParams } from '@/domains/StageEventManager';
 import { ComponentCommonStyle } from '@/models/comsStyles';
 import { AtomComponentProps } from '@/typings/ElementCenter';
 import { useModel } from '@umijs/max';

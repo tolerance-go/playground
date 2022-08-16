@@ -32,6 +32,7 @@ specifiers:
   prettier-plugin-organize-imports: ^2
   prettier-plugin-packagejson: ^2
   qs: ^6.11.0
+  react-hotkeys-hook: ^3.4.7
   swagger-ui-dist: ^4.12.0
   typescript: ^4.1.2
 
@@ -55,6 +56,7 @@ dependencies:
   lodash: 4.17.21
   nanoid: 4.0.0
   qs: 6.11.0
+  react-hotkeys-hook: 3.4.7
 
 devDependencies:
   '@types/consola': 2.2.5
@@ -8447,6 +8449,10 @@ packages:
     dependencies:
       lru-cache: 6.0.0
 
+  /hotkeys-js/3.9.4:
+    resolution: {integrity: sha512-2zuLt85Ta+gIyvs4N88pCYskNrxf1TFv3LR9t5mdAZIX8BcgQQ48F2opUptvHa6m8zsy5v/a0i9mWzTrlNWU0Q==}
+    dev: false
+
   /hpack.js/2.1.6:
     resolution: {integrity: sha512-zJxVehUdMGIKsRaNt7apO2Gqp0BdqW5yaiGHXXmbpvxgBYVZnAql+BJb4RO5ad2MgpbZKn5G6nMnegrH1FcNYQ==}
     dependencies:
@@ -11830,6 +11836,15 @@ packages:
 
   /react-error-overlay/6.0.9:
     resolution: {integrity: sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==}
+
+  /react-hotkeys-hook/3.4.7:
+    resolution: {integrity: sha512-+bbPmhPAl6ns9VkXkNNyxlmCAIyDAcWbB76O4I0ntr3uWCRuIQf/aRLartUahe9chVMPj+OEzzfk3CQSjclUEQ==}
+    peerDependencies:
+      react: '>=16.8.1'
+      react-dom: '>=16.8.1'
+    dependencies:
+      hotkeys-js: 3.9.4
+    dev: false
 
   /react-intl/3.12.1:
     resolution: {integrity: sha512-cgumW29mwROIqyp8NXStYsoIm27+8FqnxykiLSawWjOxGIBeLuN/+p2srei5SRIumcJefOkOIHP+NDck05RgHg==}
