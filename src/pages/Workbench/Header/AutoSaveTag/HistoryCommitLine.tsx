@@ -14,9 +14,11 @@ export const HistoryCommitLine = () => {
     virtualInitialNode: model.virtualInitialNode,
   }));
 
+  console.log('snapshotsStack', snapshotsStack);
+
   return (
     <Timeline>
-      {snapshotsStack
+      {[...snapshotsStack]
         .reverse()
         .concat(virtualInitialNode ?? [])
         .map((item, index) => {

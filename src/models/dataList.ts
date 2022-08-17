@@ -1,10 +1,10 @@
 import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
 import { RecoverParams } from '@/domains/HistoryManager';
 import {
-  DataControllerCreate,
-  DataControllerDestroy,
-  DataControllerIndex,
-} from '@/services/server/DataController';
+  DatabaseControllerCreate,
+  DatabaseControllerDestroy,
+  DatabaseControllerIndex,
+} from '@/services/server/DatabaseController';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { ProColumns, ProFieldValueType } from '@ant-design/pro-components';
 import { useModel, useRequest } from '@umijs/max';
@@ -99,7 +99,7 @@ const useDataList = () => {
         return;
       }
 
-      return DataControllerIndex({
+      return DatabaseControllerIndex({
         appId: Number(appId),
       });
     },
@@ -149,7 +149,7 @@ const useDataList = () => {
                 const removedItem =
                   nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
                     .commitInfo.data;
-                const { success } = await DataControllerCreate({
+                const { success } = await DatabaseControllerCreate({
                   // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
                   name: removedItem.name,
                   desc: removedItem.desc,
@@ -168,7 +168,7 @@ const useDataList = () => {
                 const addedItem =
                   nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
                     .commitInfo.data;
-                const { success } = await DataControllerDestroy({
+                const { success } = await DatabaseControllerDestroy({
                   id: String(addedItem.id),
                 });
                 if (success) {
@@ -184,7 +184,7 @@ const useDataList = () => {
                   .commitInfo.type === 'deleteDataListItem'
               ) {
                 const removedItem = commitInfo.data;
-                const { success } = await DataControllerDestroy({
+                const { success } = await DatabaseControllerDestroy({
                   id: String(removedItem.id),
                 });
                 if (success) {
@@ -198,7 +198,7 @@ const useDataList = () => {
                   .commitInfo.type === 'addDataListItem'
               ) {
                 const removedItem = commitInfo.data;
-                const { success } = await DataControllerCreate({
+                const { success } = await DatabaseControllerCreate({
                   // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
                   name: removedItem.name,
                   desc: removedItem.desc,

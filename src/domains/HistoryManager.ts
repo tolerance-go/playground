@@ -95,6 +95,9 @@ export class HistoryManager {
   /** 内部标志，当前是否正在回撤 */
   private moving: boolean = false;
 
+  /** 标记虚拟初始化 node 是否已经异步初始化过了 */
+  private virtualInitialNodeIsAsyncInited: boolean = false;
+
   /** 虚拟的初始化 commit node，下标对应为 -1 */
   private virtualInitialNode: SnapshotsNode = {
     id: HistoryManager.VirtualInitialNodeId,
@@ -121,26 +124,40 @@ export class HistoryManager {
     const area = new HistoryArea(params);
     this.areas[area.name] = area;
 
-    this.virtualInitialNode.areasSnapshots[area.name] = {
-      state: area.getInitialState(),
-      commitInfo: {
-        type: 'virtualInitialNodeCommitInfo',
-      },
-    };
-    /** 初始化的时候，所有都作为初始化 */
-    this.virtualInitialNode.changedAreasSnapshots[area.name] = {
-      ...this.virtualInitialNode.areasSnapshots[area.name],
-    };
+    if (this.virtualInitialNodeIsAsyncInited === false) {
+      this.virtualInitialNode.areasSnapshots[area.name] = {
+        state: area.getInitialState(),
+        commitInfo: {
+          type: 'virtualInitialNodeCommitInfo',
+        },
+      };
+      /** 初始化的时候，所有都作为初始化 */
+      this.virtualInitialNode.changedAreasSnapshots[area.name] = {
+        ...this.virtualInitialNode.areasSnapshots[area.name],
+      };
+    }
   }
 
   /** 初始化快照数据 */
-  public init(shs: SnapshotsNode[], index: number) {
-    this.snapshotsStack = shs;
-    this.index = index;
-    this.eventCenter.dispatch('inited', {
-      snapshotsStack: this.snapshotsStack,
-      index: this.index,
-    });
+  public init({
+    snapshotsStack,
+    index,
+    virtualInitialNode,
+  }: {
+    snapshotsStack?: SnapshotsNode[];
+    index?: number;
+    virtualInitialNode?: SnapshotsNode;
+  }) {
+    this.snapshotsStack = snapshotsStack ?? this.snapshotsStack;
+    this.index = index ?? this.index;
+    this.virtualInitialNode = virtualInitialNode ?? this.virtualInitialNode;
+
+    if (virtualInitialNode) {
+      /** 防止后续注册 area 覆盖服务器缓存数据 */
+      this.virtualInitialNodeIsAsyncInited = true;
+    }
+
+    this.eventCenter.dispatch('inited', this.getUpdateEventData());
   }
 
   /** 栈顶部增加一个快照节点 */

@@ -71,7 +71,7 @@ export const AutoSaveTag = () => {
       trigger={['click']}
       overlayClassName={styles.overlay}
     >
-      <Tooltip title="查看历史版本">
+      <Tooltip title="查看修改记录">
         <Text>
           {autoSaveLastTime ? (
             <Space>

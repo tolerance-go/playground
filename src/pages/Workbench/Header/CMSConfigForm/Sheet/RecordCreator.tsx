@@ -1,5 +1,5 @@
 import { useSelectedData } from '@/hooks/useSelectedData';
-import { DataControllerUpdate } from '@/services/server/DataController';
+import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   BetaSchemaForm,
@@ -74,7 +74,7 @@ export default () => {
           ...values,
         };
 
-        const { success } = await DataControllerUpdate(
+        const { success } = await DatabaseControllerUpdate(
           {
             id: String(selectedDataId),
           },

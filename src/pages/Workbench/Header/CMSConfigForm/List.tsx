@@ -1,6 +1,6 @@
 import { RequestButton } from '@/components/RequestButton';
 import { DataListItem } from '@/models/dataList';
-import { DataControllerDestroy } from '@/services/server/DataController';
+import { DatabaseControllerDestroy } from '@/services/server/DatabaseController';
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { message } from 'antd';
@@ -56,7 +56,7 @@ export default () => {
               type="link"
               danger
               request={async () => {
-                return await DataControllerDestroy({
+                return await DatabaseControllerDestroy({
                   id: String(entity.id),
                 });
               }}

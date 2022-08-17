@@ -1,6 +1,6 @@
 import { useSelectedData } from '@/hooks/useSelectedData';
 import { DataItem } from '@/models/dataList';
-import { DataControllerUpdate } from '@/services/server/DataController';
+import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import {
   BetaSchemaForm,
   DrawerForm,
@@ -78,7 +78,7 @@ export default (props: { record: DataItem }) => {
           ...values,
         };
 
-        const { success } = await DataControllerUpdate(
+        const { success } = await DatabaseControllerUpdate(
           {
             id: String(selectedDataId),
           },

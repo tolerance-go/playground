@@ -71,7 +71,7 @@ export const VersionTag = () => {
         trigger={['click']}
         overlayClassName={styles.overlay}
       >
-        {renderVersion()}
+        <Tooltip title="查看历史版本">{renderVersion()}</Tooltip>
       </Popover>
     </Spin>
   );

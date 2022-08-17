@@ -1,7 +1,7 @@
 import { RequestButton } from '@/components/RequestButton';
 import { useSelectedData } from '@/hooks/useSelectedData';
 import { DataItem, DataTableColumn } from '@/models/dataList';
-import { DataControllerUpdate } from '@/services/server/DataController';
+import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
@@ -64,7 +64,7 @@ export default () => {
 
     const id = newCol.key;
 
-    const { success } = await DataControllerUpdate(
+    const { success } = await DatabaseControllerUpdate(
       {
         id: String(selectedDataId),
       },
@@ -137,7 +137,7 @@ export default () => {
             request={async () => {
               if (!selectedDataId) return { success: false };
 
-              const { success } = await DataControllerUpdate(
+              const { success } = await DatabaseControllerUpdate(
                 {
                   id: String(selectedDataId),
                 },

@@ -1,4 +1,4 @@
-import { DataControllerCreate } from '@/services/server/DataController';
+import { DatabaseControllerCreate } from '@/services/server/DatabaseController';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useModel, useSearchParams } from '@umijs/max';
@@ -27,7 +27,7 @@ export default () => {
           return message.warn('appId 未找到');
         }
 
-        const { success, data } = await DataControllerCreate({
+        const { success, data } = await DatabaseControllerCreate({
           name: values.name,
           desc: values.desc,
           app_id: appId,

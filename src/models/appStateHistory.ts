@@ -22,7 +22,7 @@ const useAppStateHistory = () => {
     },
     {
       onSuccess: (snapshotsStack) => {
-        historyManager.init([]);
+        historyManager.init({});
       },
     },
   );
@@ -32,14 +32,14 @@ const useAppStateHistory = () => {
      * 当快照加载完毕，应该拿到顶部数据，通知所有 areas 进行 recover 一次，让一些不做持久化的状态，
      * 从初始化状态进入最近一次快照状态，比如 modal 的 visible
      */
-    const initHandlerId = historyManager.listen('inited', () => {
+    const initHandlerId = historyManager.listen('inited', (event) => {
       historyManager.move(0);
+      setVirtualInitialNode(event.data.virtualInitialNode);
     });
 
     const updatedHandlerId = historyManager.listen('updated', (event) => {
       setSnapshotsStack(event.data.snapshotsStack);
       setIndex(event.data.index);
-      setVirtualInitialNode(event.data.virtualInitialNode);
     });
 
     const revertingHandlerId = historyManager.listen('reverting', () => {

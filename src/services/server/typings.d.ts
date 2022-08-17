@@ -118,11 +118,16 @@ declare namespace API {
     stage_data?: string;
   };
 
-  type CreationData = {
+  type CreationDatabase = {
     name: string;
     desc?: string;
     data?: string;
     app_id: string;
+  };
+
+  type CreationHistory = {
+    app_id: string;
+    data?: string;
   };
 
   type CreationPage = {
@@ -138,7 +143,7 @@ declare namespace API {
     pageIds?: number[];
   };
 
-  type Data = {
+  type Database = {
     id: number;
     name: string;
     desc?: string;
@@ -146,12 +151,12 @@ declare namespace API {
     app_id: string;
   };
 
-  type DataControllerDestroyParams = {
+  type DatabaseControllerDestroyParams = {
     /** id  */
     id: string;
   };
 
-  type DataControllerIndexParams = {
+  type DatabaseControllerIndexParams = {
     /** appId  */
     appId?: number;
     /** limit  */
@@ -160,30 +165,76 @@ declare namespace API {
     offset?: number;
   };
 
-  type DataControllerShowParams = {
+  type DatabaseControllerShowParams = {
     /** id  */
     id: string;
   };
 
-  type DataControllerUpdateParams = {
+  type DatabaseControllerUpdateParams = {
     /** id  */
     id: string;
   };
 
-  type DataListResponse = {
+  type DatabaseListResponse = {
     success: boolean;
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Data[];
+    data?: Database[];
   };
 
-  type DataShowResponse = {
+  type DatabaseShowResponse = {
     success: boolean;
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Data;
+    data?: Database;
+  };
+
+  type History = {
+    id: number;
+    app_id: string;
+    data?: string;
+  };
+
+  type HistoryControllerDestroyParams = {
+    /** id  */
+    id: string;
+  };
+
+  type HistoryControllerIndexParams = {
+    /** appId  */
+    appId?: number;
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+  };
+
+  type HistoryControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type HistoryControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type HistoryListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: History[];
+  };
+
+  type HistoryShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: History;
   };
 
   type Page = {

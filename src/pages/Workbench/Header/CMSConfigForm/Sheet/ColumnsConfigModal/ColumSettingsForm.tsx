@@ -1,7 +1,7 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { useFormReset } from '@/hooks/useFormReset';
 import { useSelectedData } from '@/hooks/useSelectedData';
-import { DataControllerUpdate } from '@/services/server/DataController';
+import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { Empty, Form, message, Result } from 'antd';
@@ -42,7 +42,7 @@ export const ColumSettingsForm = () => {
         values,
       );
 
-      const { success } = await DataControllerUpdate(
+      const { success } = await DatabaseControllerUpdate(
         {
           id: String(selectedDataId),
         },
