@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import utl from 'lodash';
 import { nanoid } from 'nanoid';
 import { EventManager } from './EventManager';
@@ -6,35 +7,37 @@ export type RecoverParams<S = any, C = any> = {
   index: number;
   state: S;
   commitInfo: C;
+  areaName: string;
+  currentNode: SnapshotsNode<S, C>;
   prevNode?: SnapshotsNode<S, C>;
   nextNode?: SnapshotsNode<S, C>;
   direction: 'back' | 'forward' | 'stand';
   offset: number;
 };
 
+export type RecoverResult = {
+  success: boolean;
+  errorMessage?: string;
+};
+
 export type HistoryAreaInitParams = {
   name: string;
-  recover: (opts: RecoverParams) => Promise<boolean>;
-  backRecover: (opts: RecoverParams) => Promise<boolean>;
-  initialState?: () => any;
+  pull: () => any;
+  recover: (opts: RecoverParams) => Promise<RecoverResult>;
+  getInitialState: () => any;
 };
 
 export class HistoryArea {
   public name: string;
-  private _backRecover: (opts: RecoverParams) => Promise<boolean>;
-  private _recover: (opts: RecoverParams) => Promise<boolean>;
-  private _initialState?: () => any;
+  private _recover: (opts: RecoverParams) => Promise<RecoverResult>;
+  private _getInitialState: () => any;
+  private _pull: () => any;
 
-  constructor({
-    name,
-    recover,
-    backRecover: backLatestRecover,
-    initialState,
-  }: HistoryAreaInitParams) {
+  constructor({ name, pull, recover, getInitialState }: HistoryAreaInitParams) {
     this.name = name;
-    this._backRecover = backLatestRecover;
     this._recover = recover;
-    this._initialState = initialState;
+    this._pull = pull;
+    this._getInitialState = getInitialState;
   }
 
   /** 恢复到指定快照 */
@@ -42,13 +45,12 @@ export class HistoryArea {
     return this._recover(opts);
   }
 
-  /** recover 的反操作 */
-  public backLatestRecover(opts: RecoverParams) {
-    return this._backRecover(opts);
+  public getInitialState() {
+    return this._getInitialState();
   }
 
-  public getInitialState() {
-    return this._initialState?.();
+  public pull() {
+    return this._pull();
   }
 }
 
@@ -59,7 +61,17 @@ export type AreaSnapshot<S = any, C = any> = {
 
 export type SnapshotsNode<S = any, C = any> = {
   id: string;
+  changedAreasSnapshots: Record<string, AreaSnapshot<S, C>>;
   areasSnapshots: Record<string, AreaSnapshot<S, C>>;
+  areasRecoverErrors?: {
+    direction: RecoverParams['direction'];
+    errors: Record<
+      string,
+      {
+        message: string;
+      }
+    >;
+  };
 };
 
 export class HistoryManager {
@@ -80,13 +92,20 @@ export class HistoryManager {
   /** 内部标志，当前是否正在回撤 */
   private moving: boolean = false;
 
+  /** 虚拟的初始化 commit node，下标对应为 -1 */
+  private virtualInitialNode: SnapshotsNode = {
+    id: 'virtualInitialNode',
+    changedAreasSnapshots: {},
+    areasSnapshots: {},
+  };
+
   /**
    * revert 队列，等待上一个 revert 结束会自动
    * 检索该队列
    */
   private moveQueue: {
     createTime: number;
-    offset: number;
+    offset: 1 | -1 | 0;
   }[] = [];
 
   /** 注册区域 */
@@ -97,14 +116,27 @@ export class HistoryManager {
 
     const area = new HistoryArea(params);
     this.areas[area.name] = area;
+
+    this.virtualInitialNode.areasSnapshots[area.name] = {
+      state: area.getInitialState(),
+      commitInfo: {
+        type: 'virtualInitialNodeCommitInfo',
+      },
+    };
+    /** 初始化的时候，所有都作为初始化 */
+    this.virtualInitialNode.changedAreasSnapshots[area.name] = {
+      ...this.virtualInitialNode.areasSnapshots[area.name],
+    };
   }
 
   /** 初始化快照数据 */
-  public init(shs: SnapshotsNode[]) {
+  public init(shs: SnapshotsNode[], index: number) {
     this.snapshotsStack = shs;
+    this.index = index;
     this.eventCenter.dispatch('inited', {
       data: {
         snapshotsStack: this.snapshotsStack,
+        index: this.index,
       },
     });
   }
@@ -132,24 +164,44 @@ export class HistoryManager {
     const commitId = nanoid();
     const node = Object.keys(infos).reduce(
       (acc, areaName) => {
+        const areaSnapshot = {
+          state: infos[areaName].state,
+          commitInfo: infos[areaName].commitInfo,
+        };
+
         return {
           ...acc,
+          changedAreasSnapshots: {
+            ...acc.changedAreasSnapshots,
+            [areaName]: areaSnapshot,
+          },
+          /** 这里注意对全量快照进行覆盖，因为 pull 可能拉到的是老的数据 */
           areasSnapshots: {
             ...acc.areasSnapshots,
-            [areaName]: {
-              state: infos[areaName].state,
-              commitInfo: infos[areaName].commitInfo,
-            },
+            [areaName]: areaSnapshot,
           },
         };
       },
       {
         id: commitId,
-        areasSnapshots: {},
+        changedAreasSnapshots: {},
+        areasSnapshots: Object.keys(this.areas).reduce((acc, areaName) => {
+          return {
+            ...acc,
+            [areaName]: {
+              state: this.areas[areaName].pull(),
+              commitInfo: undefined,
+            },
+          };
+        }, {}),
       } as SnapshotsNode,
     );
     this.snapshotsStack.push(node);
     this.index = this.snapshotsStack.length - 1;
+
+    this.eventCenter.dispatch('updated', {
+      data: this.getUpdateEventData(),
+    });
   }
 
   /** 恢复到上一个 commit */
@@ -173,7 +225,7 @@ export class HistoryManager {
   }
 
   /** 移动到某个 commit */
-  public move(offset: number) {
+  public move(offset: -1 | 1 | 0) {
     const nextIndex = this.getNextIndex(offset);
     if (nextIndex < -1 || nextIndex > this.snapshotsStack.length - 1) {
       return;
@@ -193,26 +245,53 @@ export class HistoryManager {
   /**
    * 恢复到指定的 commit
    * offset 是从栈顶部开始，0 表示当前为栈顶，-1 表示从栈顶倒退 1 次
+   * this.index 的活动范围为 [-1, snapshotsStack.length - 1]
+   *
+   * @TODO 目前 offset 幅度只能为 1，超过 1 需要处理的情况比较繁琐，后续再支持
    */
-  private moveTarget = async (offset: number) => {
+  private moveTarget = async (offset: -1 | 1 | 0) => {
     if (this.snapshotsStack.length === 0) {
       return;
     }
 
-    this.startReverting();
+    /** 未移动，当前的 node */
+    const currentNode =
+      this.index === -1
+        ? this.virtualInitialNode
+        : this.snapshotsStack[this.index];
 
     /**
      * 如果快照数量为 1，并且 offset 为 -1
      * 那么退回的状态为空状态
      */
-    const nextIndex = this.getNextIndex(offset);
-    const node = this.snapshotsStack[nextIndex] as SnapshotsNode | undefined;
-    const prevNode = this.snapshotsStack[nextIndex - 1] as
+    const movedIndex = this.getNextIndex(offset);
+    const movedNode =
+      movedIndex === -1
+        ? this.virtualInitialNode
+        : this.snapshotsStack[movedIndex];
+    const movedPrevNode = this.snapshotsStack[movedIndex - 1] as
       | SnapshotsNode
       | undefined;
-    const nextNode = this.snapshotsStack[nextIndex + 1] as
+    const movedNextNode = this.snapshotsStack[movedIndex + 1] as
       | SnapshotsNode
       | undefined;
+    const direction = offset < 0 ? 'back' : offset === 0 ? 'stand' : 'forward';
+
+    /**
+     * 如果上次移动存在错误未解决
+     * 1. 这次移动的方向必须和上一次发生错误的方向一致，否则提示用户信息
+     * 2. 本次移动 recover 的范围从上次剩余错误中继续
+     */
+    if (currentNode.areasRecoverErrors) {
+      if (currentNode.areasRecoverErrors.direction !== direction) {
+        message.warn(
+          '上次回退操作存在错误，避免数据不一致，请继续执行相同操作',
+        );
+        return;
+      }
+    }
+
+    this.startReverting();
 
     this.eventCenter.dispatch('reverting', {});
 
@@ -223,25 +302,23 @@ export class HistoryManager {
        * 我们取对应的 initialState
        */
       Object.keys(
-        nextIndex === -1
-          ? this.snapshotsStack[0].areasSnapshots
-          : node?.areasSnapshots ?? {},
+        // 本次移动 recover 的范围从上次剩余错误中继续
+        currentNode.areasRecoverErrors?.errors ??
+          (direction === 'forward' ? movedNode : currentNode)
+            .changedAreasSnapshots,
       ).map((areaName) => {
-        const meta = node?.areasSnapshots?.[areaName] as
-          | AreaSnapshot
-          | undefined;
+        const meta = movedNode.areasSnapshots[areaName];
         return this.areas[areaName]
           .recover({
-            state:
-              nextIndex === -1
-                ? this.areas[areaName].getInitialState()
-                : meta?.state,
+            state: meta.state,
             commitInfo: meta?.commitInfo,
-            index: nextIndex,
-            prevNode,
-            nextNode,
-            direction: offset < 0 ? 'back' : offset === 0 ? 'stand' : 'forward',
+            areaName,
+            index: movedIndex,
+            currentNode: movedNode,
+            prevNode: movedPrevNode,
+            nextNode: movedNextNode,
             offset,
+            direction,
           })
           .then((result) => {
             return {
@@ -252,10 +329,22 @@ export class HistoryManager {
       }),
     );
 
-    if (results.some((item) => item.result === false)) {
-      const falses = results.filter((item) => item.result === false);
+    if (results.some((item) => item.result.success === false)) {
+      const falses = results.filter((item) => item.result.success === false);
+
+      /**
+       * 每次到这里都重置错误项目
+       * 因为 recover 是从上次错误项范围开始的
+       */
+      currentNode.areasRecoverErrors = {
+        direction,
+        errors: {},
+      };
+
       falses.forEach((item) => {
-        this.areas[item.areaName].backLatestRecover();
+        currentNode.areasRecoverErrors!.errors[item.areaName] = {
+          message: item.result.errorMessage ?? '',
+        };
       });
 
       this.stopReverting();
@@ -268,7 +357,9 @@ export class HistoryManager {
 
       return false;
     } else {
-      this.index = nextIndex;
+      currentNode.areasRecoverErrors = undefined;
+
+      this.index = movedIndex;
 
       if (this.moveQueue.length) {
         this.nextRevert();
@@ -280,8 +371,19 @@ export class HistoryManager {
         });
       }
 
+      this.eventCenter.dispatch('updated', {
+        data: this.getUpdateEventData(),
+      });
+
       return true;
     }
+  };
+
+  private getUpdateEventData = () => {
+    return {
+      index: this.index,
+      snapshotsStack: this.snapshotsStack,
+    };
   };
 
   private getNextIndex = (offset: number) => {

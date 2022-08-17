@@ -1,17 +1,23 @@
 import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
 import { RecoverParams } from '@/domains/HistoryManager';
 import { useModel } from '@umijs/max';
-import { useUpdateEffect } from 'ahooks';
+import { useMemoizedFn, useUpdateEffect } from 'ahooks';
 import { useEffect, useRef, useState } from 'react';
 
+const defaultVisible = false;
+
 const useDataMaskVisible = () => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(defaultVisible);
 
   const recoverUpdatingRef = useRef(false);
 
   const { historyManager } = useModel('appStateHistory', (model) => ({
     historyManager: model.historyManager,
   }));
+
+  const getVisible = useMemoizedFn(() => {
+    return visible;
+  });
 
   useUpdateEffect(() => {
     if (recoverUpdatingRef.current) {
@@ -32,15 +38,20 @@ const useDataMaskVisible = () => {
 
   useEffect(() => {
     historyManager.registerArea({
-      initialState: () => {
+      name: HistoryAreaNames.DataMaskVisible,
+      getInitialState: () => {
         return {
-          visible: false,
+          visible: defaultVisible,
         };
       },
-      name: HistoryAreaNames.DataMaskVisible,
+      pull: () => {
+        return {
+          visible: getVisible(),
+        };
+      },
       /** state 为空的情况，表示 index 为 -1，组件需要恢复到最初状态 */
       recover: async ({
-        state: currentState,
+        state,
       }: RecoverParams<
         {
           visible: boolean;
@@ -48,17 +59,17 @@ const useDataMaskVisible = () => {
         undefined
       >) => {
         recoverUpdatingRef.current = true;
-        setVisible(currentState.visible);
+        setVisible(state.visible);
 
-        return true;
+        return { success: true };
       },
-      backRecover: () => {},
     });
   }, []);
 
   return {
     visible,
     setVisible,
+    getVisible,
   };
 };
 

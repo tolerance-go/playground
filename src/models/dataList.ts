@@ -1,4 +1,5 @@
 import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { RecoverParams } from '@/domains/HistoryManager';
 import {
   DataControllerCreate,
   DataControllerDestroy,
@@ -11,8 +12,7 @@ import { useMemoizedFn } from 'ahooks';
 import { message } from 'antd';
 import produce from 'immer';
 import qs from 'qs';
-import { useEffect, useState } from 'react';
-import { RecoverParams } from './../domains/HistoryManager';
+import { useState } from 'react';
 
 export type DataItem = Record<string, any> & {
   id: string;
@@ -105,14 +105,117 @@ const useDataList = () => {
     },
     {
       onSuccess: (data?: API.Data[]) => {
-        setDataList(
+        const dataList =
           data?.map((item) => {
             return {
               ...item,
               data: JSON.parse(item.data ?? '{}'),
             };
-          }) ?? [],
-        );
+          }) ?? [];
+
+        setDataList(dataList);
+
+        historyManager.registerArea({
+          name: HistoryAreaNames.DataList,
+          getInitialState: () => {
+            return dataList;
+          },
+          pull: () => {
+            return getDataList();
+          },
+          /** state 为空的情况，表示 index 为 -1，组件需要恢复到最初状态 */
+          recover: async ({
+            state,
+            commitInfo,
+            nextNode,
+            prevNode,
+            direction,
+          }: RecoverParams<
+            DataListItem[],
+            | {
+                type: 'deleteDataListItem';
+                data: DataListItem;
+              }
+            | {
+                type: 'addDataListItem';
+                data: DataListItem;
+              }
+          >) => {
+            if (direction === 'back') {
+              if (
+                nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  .commitInfo.type === 'deleteDataListItem'
+              ) {
+                const removedItem =
+                  nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                    .commitInfo.data;
+                const { success } = await DataControllerCreate({
+                  // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
+                  name: removedItem.name,
+                  desc: removedItem.desc,
+                  data: JSON.stringify(removedItem.data),
+                  app_id: removedItem.app_id,
+                });
+                if (success) {
+                  setDataList(state);
+                }
+                return { success };
+              }
+              if (
+                nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  .commitInfo.type === 'addDataListItem'
+              ) {
+                const addedItem =
+                  nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                    .commitInfo.data;
+                const { success } = await DataControllerDestroy({
+                  id: String(addedItem.id),
+                });
+                if (success) {
+                  setDataList(state);
+                }
+                return { success };
+              }
+            }
+
+            if (direction === 'forward') {
+              if (
+                prevNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  .commitInfo.type === 'deleteDataListItem'
+              ) {
+                const removedItem = commitInfo.data;
+                const { success } = await DataControllerDestroy({
+                  id: String(removedItem.id),
+                });
+                if (success) {
+                  setDataList(state);
+                }
+                return { success };
+              }
+
+              if (
+                prevNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  .commitInfo.type === 'addDataListItem'
+              ) {
+                const removedItem = commitInfo.data;
+                const { success } = await DataControllerCreate({
+                  // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
+                  name: removedItem.name,
+                  desc: removedItem.desc,
+                  data: JSON.stringify(removedItem.data),
+                  app_id: removedItem.app_id,
+                });
+                if (success) {
+                  setDataList(state);
+                }
+                return { success };
+              }
+            }
+
+            setDataList(state);
+            return { success: true };
+          },
+        });
       },
     },
   );
@@ -444,67 +547,6 @@ const useDataList = () => {
 
   //   recoverUpdatingRef.current = false;
   // }, [dataList]);
-
-  useEffect(() => {
-    historyManager.registerArea({
-      name: HistoryAreaNames.DataList,
-      /** state 为空的情况，表示 index 为 -1，组件需要恢复到最初状态 */
-      recover: async ({
-        index,
-        state: currentState,
-        commitInfo,
-        nextNode,
-        direction,
-      }: RecoverParams<
-        DataListItem[],
-        {
-          type: 'deleteDataListItem';
-          data: DataListItem;
-        }
-      >) => {
-        if (index === -1) {
-          setDataList([]);
-          return true;
-        }
-
-        if (
-          direction === 'back' &&
-          nextNode?.areasSnapshots[HistoryAreaNames.DataList].commitInfo
-            .type === 'deleteDataListItem'
-        ) {
-          const removedItem = commitInfo.data;
-          const { success } = await DataControllerCreate({
-            // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
-            name: removedItem.name,
-            desc: removedItem.desc,
-            data: JSON.stringify(removedItem.data),
-            app_id: removedItem.app_id,
-          });
-          if (success) {
-            setDataList(currentState);
-            return true;
-          }
-        }
-
-        if (
-          direction === 'forward' &&
-          commitInfo.type === 'deleteDataListItem'
-        ) {
-          const removedItem = commitInfo.data;
-          const { success } = await DataControllerDestroy({
-            id: String(removedItem.id),
-          });
-          if (success) {
-            setDataList(currentState);
-            return true;
-          }
-        }
-
-        return false;
-      },
-      backRecover: () => {},
-    });
-  }, []);
 
   return {
     dataList,

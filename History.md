@@ -52,9 +52,11 @@ area 根据 pull 返回的数据可以在将来进行 recover（恢复）
 
 所有 areas recover 成功，则代表该 revert 成功
 
-但是其中一个 recover 失败，那么该 revert 失败，并且已经成功的 recover 需要 back 回去
+但是其中一个 recover 失败，那么该 revert 失败，~~并且已经成功的 recover 需要 back 回去~~
 
-revert 是串行异步的，当一个 revert 失败后，剩下的队列中等待的项目**全部丢弃**
+~~revert 是串行异步的，当一个 revert 失败后，剩下的队列中等待的项目**全部丢弃**~~
+
+此时 revert 进入半成功状态，并提示用户，commit 不进行移动，下一次 revert 的进行时，从上次失败的 recover 开始进行
 
 ### commit 时，如果 index 不在顶部
 
