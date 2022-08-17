@@ -5,7 +5,6 @@ import { Badge, Button, Popconfirm, Space, Tag } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import styles from './HistoryList.less';
-import SaveToVersionBtn from './SaveToVersionBtn';
 
 export const RemoveBtn = ({ item }: { item: API.Version }) => {
   const { deleteVersion } = useModel('versionList', (model) => ({

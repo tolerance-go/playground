@@ -7,8 +7,8 @@ import { Popover, Space, Tooltip, Typography } from 'antd';
 import { TextProps } from 'antd/lib/typography/Text';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useEffect } from 'react';
-import styles from './AutoSaveTag.less';
-import HistoryList from './HistoryList';
+import { HistoryCommitLine } from './HistoryCommitLine';
+import styles from './index.less';
 
 const Text = (props: PropsWithChildren<TextProps>) => {
   return (
@@ -67,7 +67,7 @@ export const AutoSaveTag = () => {
 
   return (
     <Popover
-      content={<HistoryList />}
+      content={<HistoryCommitLine />}
       trigger={['click']}
       overlayClassName={styles.overlay}
     >

@@ -1,56 +1,8 @@
-import { VersionControllerShow } from '@/services/server/VersionController';
-import { ExportOutlined } from '@ant-design/icons';
-import { useModel, useRequest } from '@umijs/max';
-import { Divider, Space, Spin, Tag, Tooltip, Typography } from 'antd';
+import { Divider, Space, Typography } from 'antd';
 import { StageSizeManager } from './StageSizeManager';
+import { VersionTag } from './VersionTag';
 
 export default () => {
-  const { activeVersionId, setActiveVersionId } = useModel(
-    'versionList',
-    (model) => ({
-      activeVersionId: model?.activeVersionId,
-      setActiveVersionId: model?.setActiveVersionId,
-    }),
-  );
-
-  const { data, loading } = useRequest(
-    async () => {
-      if (!activeVersionId) {
-        return;
-      }
-      return VersionControllerShow({
-        id: String(activeVersionId),
-      });
-    },
-    {
-      refreshDeps: [activeVersionId],
-    },
-  );
-
-  const renderVersion = () => {
-    if (data) {
-      return (
-        <Tag>
-          <Space size={'small'}>
-            {data?.name}
-            <Tooltip title="退出当前版本状态">
-              <ExportOutlined
-                onClick={() => {
-                  setActiveVersionId(undefined);
-                }}
-                style={{
-                  cursor: 'pointer',
-                }}
-              />
-            </Tooltip>
-          </Space>
-        </Tag>
-      );
-    }
-
-    return <Tag>最新未发布</Tag>;
-  };
-
   return (
     <div
       style={{
@@ -92,9 +44,7 @@ export default () => {
         >
           test
         </Typography.Text>
-        <Spin spinning={loading} size="small">
-          {renderVersion()}
-        </Spin>
+        <VersionTag />
       </Space>
     </div>
   );

@@ -3,10 +3,15 @@ import { useRequest } from '@umijs/max';
 import delay from 'delay';
 import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { SnapshotsNode } from './../domains/HistoryManager';
 
 const useAppStateHistory = () => {
   const [historyManager] = useState(new HistoryManager());
   const [reverting, setReverting] = useState(false);
+  const [snapshotsStack, setSnapshotsStack] = useState<SnapshotsNode[]>([]);
+  const [virtualInitialNode, setVirtualInitialNode] = useState<SnapshotsNode>();
+
+  const [index, setIndex] = useState<number>(-1);
 
   window.__historyManager = historyManager;
 
@@ -31,6 +36,12 @@ const useAppStateHistory = () => {
       historyManager.move(0);
     });
 
+    const updatedHandlerId = historyManager.listen('updated', (event) => {
+      setSnapshotsStack(event.data.snapshotsStack);
+      setIndex(event.data.index);
+      setVirtualInitialNode(event.data.virtualInitialNode);
+    });
+
     const revertingHandlerId = historyManager.listen('reverting', () => {
       setReverting(true);
     });
@@ -45,6 +56,7 @@ const useAppStateHistory = () => {
       historyManager.unlisten('inited', initHandlerId);
       historyManager.unlisten('reverting', revertingHandlerId);
       historyManager.unlisten('reverted', revertedHandlerId);
+      historyManager.unlisten('updated', updatedHandlerId);
     };
   }, []);
 
@@ -58,6 +70,9 @@ const useAppStateHistory = () => {
   });
 
   return {
+    snapshotsStack,
+    virtualInitialNode,
+    index,
     historyManager,
     reverting,
   };

@@ -61,6 +61,7 @@ export type AreaSnapshot<S = any, C = any> = {
 
 export type SnapshotsNode<S = any, C = any> = {
   id: string;
+  createTime: number;
   changedAreasSnapshots: Record<string, AreaSnapshot<S, C>>;
   areasSnapshots: Record<string, AreaSnapshot<S, C>>;
   areasRecoverErrors?: {
@@ -75,6 +76,8 @@ export type SnapshotsNode<S = any, C = any> = {
 };
 
 export class HistoryManager {
+  static VirtualInitialNodeId = 'virtualInitialNode';
+
   /** 分区域管理自身的状态 */
   public areas: Record<string, HistoryArea> = {};
 
@@ -94,9 +97,10 @@ export class HistoryManager {
 
   /** 虚拟的初始化 commit node，下标对应为 -1 */
   private virtualInitialNode: SnapshotsNode = {
-    id: 'virtualInitialNode',
+    id: HistoryManager.VirtualInitialNodeId,
     changedAreasSnapshots: {},
     areasSnapshots: {},
+    createTime: new Date().getTime(),
   };
 
   /**
@@ -134,10 +138,8 @@ export class HistoryManager {
     this.snapshotsStack = shs;
     this.index = index;
     this.eventCenter.dispatch('inited', {
-      data: {
-        snapshotsStack: this.snapshotsStack,
-        index: this.index,
-      },
+      snapshotsStack: this.snapshotsStack,
+      index: this.index,
     });
   }
 
@@ -184,6 +186,7 @@ export class HistoryManager {
       },
       {
         id: commitId,
+        createTime: new Date().getTime(),
         changedAreasSnapshots: {},
         areasSnapshots: Object.keys(this.areas).reduce((acc, areaName) => {
           return {
@@ -199,9 +202,7 @@ export class HistoryManager {
     this.snapshotsStack.push(node);
     this.index = this.snapshotsStack.length - 1;
 
-    this.eventCenter.dispatch('updated', {
-      data: this.getUpdateEventData(),
-    });
+    this.eventCenter.dispatch('updated', this.getUpdateEventData());
   }
 
   /** 恢复到上一个 commit */
@@ -215,7 +216,7 @@ export class HistoryManager {
   }
 
   /** 监听事件 */
-  public listen(type: string, handler: () => void) {
+  public listen(type: string, handler: (data: any) => void) {
     return this.eventCenter.listen(type, handler);
   }
 
@@ -349,9 +350,7 @@ export class HistoryManager {
 
       this.stopReverting();
 
-      this.eventCenter.dispatch('reverted', {
-        data: false,
-      });
+      this.eventCenter.dispatch('reverted', false);
 
       this.dropAllRevertQueue();
 
@@ -366,14 +365,10 @@ export class HistoryManager {
       } else {
         this.stopReverting();
 
-        this.eventCenter.dispatch('reverted', {
-          data: true,
-        });
+        this.eventCenter.dispatch('reverted', true);
       }
 
-      this.eventCenter.dispatch('updated', {
-        data: this.getUpdateEventData(),
-      });
+      this.eventCenter.dispatch('updated', this.getUpdateEventData());
 
       return true;
     }
@@ -383,6 +378,7 @@ export class HistoryManager {
     return {
       index: this.index,
       snapshotsStack: this.snapshotsStack,
+      virtualInitialNode: this.virtualInitialNode,
     };
   };
 
