@@ -4,6 +4,7 @@ declare namespace API {
     title: string;
     desc?: string;
     app_data?: string;
+    history_data?: string;
     labels?: string[];
   };
 
@@ -24,6 +25,11 @@ declare namespace API {
   };
 
   type AppControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type AppControllerUpdateHistoryParams = {
     /** id  */
     id: string;
   };
@@ -108,6 +114,7 @@ declare namespace API {
     title: string;
     desc?: string;
     app_data?: string;
+    history_data?: string;
     labels?: string[];
   };
 
@@ -123,11 +130,8 @@ declare namespace API {
     desc?: string;
     data?: string;
     app_id: string;
-  };
-
-  type CreationHistory = {
-    app_id: string;
-    data?: string;
+    logic_created_at?: string;
+    logic_updated_at?: string;
   };
 
   type CreationPage = {
@@ -149,6 +153,8 @@ declare namespace API {
     desc?: string;
     data?: string;
     app_id: string;
+    logic_created_at?: string;
+    logic_updated_at?: string;
   };
 
   type DatabaseControllerDestroyParams = {
@@ -180,7 +186,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Database[];
+    data?: ShownDatabase[];
   };
 
   type DatabaseShowResponse = {
@@ -188,53 +194,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Database;
-  };
-
-  type History = {
-    id: number;
-    app_id: string;
-    data?: string;
-  };
-
-  type HistoryControllerDestroyParams = {
-    /** id  */
-    id: string;
-  };
-
-  type HistoryControllerIndexParams = {
-    /** appId  */
-    appId?: number;
-    /** limit  */
-    limit?: number;
-    /** offset  */
-    offset?: number;
-  };
-
-  type HistoryControllerShowParams = {
-    /** id  */
-    id: string;
-  };
-
-  type HistoryControllerUpdateParams = {
-    /** id  */
-    id: string;
-  };
-
-  type HistoryListResponse = {
-    success: boolean;
-    errorCode?: number;
-    errorMessage?: string;
-    showType?: number;
-    data?: History[];
-  };
-
-  type HistoryShowResponse = {
-    success: boolean;
-    errorCode?: number;
-    errorMessage?: string;
-    showType?: number;
-    data?: History;
+    data?: ShownDatabase;
   };
 
   type Page = {
@@ -285,6 +245,18 @@ declare namespace API {
     errorMessage?: string;
     showType?: number;
     data?: Page;
+  };
+
+  type ShownDatabase = {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    desc?: string;
+    data?: string;
+    app_id: string;
+    logic_created_at?: string;
+    logic_updated_at?: string;
   };
 
   type Version = {

@@ -3,6 +3,8 @@ import utl from 'lodash';
 import { nanoid } from 'nanoid';
 import { EventManager } from './EventManager';
 
+export type AreaName = string;
+
 export type RecoverParams<S = any, C = any> = {
   index: number;
   state: S;
@@ -18,6 +20,12 @@ export type RecoverParams<S = any, C = any> = {
 export type RecoverResult = {
   success: boolean;
   errorMessage?: string;
+};
+
+export type HistoryUpdateDataType = {
+  index: number;
+  snapshotsStack: SnapshotsNode[];
+  virtualInitialNode: SnapshotsNode;
 };
 
 export type HistoryAreaInitParams = {
@@ -106,6 +114,23 @@ export class HistoryManager {
     createTime: new Date().getTime(),
   };
 
+  private inited: boolean = false;
+
+  /**
+   * areas 停车位
+   * 只在初始化时，注册的 areas 停车位全部“停满”，才允许“发车”，发送 inted 事件
+   */
+  private areasParkingSpace: Record<AreaName, boolean> = {};
+
+  constructor(areasParkingSpace: AreaName[]) {
+    this.areasParkingSpace = areasParkingSpace.reduce((acc, areaName) => {
+      return {
+        ...acc,
+        [areaName]: false,
+      };
+    }, {});
+  }
+
   /**
    * revert 队列，等待上一个 revert 结束会自动
    * 检索该队列
@@ -136,6 +161,12 @@ export class HistoryManager {
         ...this.virtualInitialNode.areasSnapshots[area.name],
       };
     }
+
+    this.areasParkingSpace[params.name] = true;
+
+    if (this.inited && this.areasParkingSpaceIsReady()) {
+      this.eventCenter.dispatch('inited', this.getUpdateEventData());
+    }
   }
 
   /** 初始化快照数据 */
@@ -157,7 +188,19 @@ export class HistoryManager {
       this.virtualInitialNodeIsAsyncInited = true;
     }
 
-    this.eventCenter.dispatch('inited', this.getUpdateEventData());
+    this.inited = true;
+
+    if (this.areasParkingSpaceIsReady()) {
+      this.eventCenter.dispatch('inited', this.getUpdateEventData());
+    }
+  }
+
+  /** 清空历史记录 */
+  public clean() {
+    this.snapshotsStack = [];
+    this.index = -1;
+
+    this.eventCenter.dispatch('updated', this.getUpdateEventData());
   }
 
   /** 栈顶部增加一个快照节点 */
@@ -233,8 +276,8 @@ export class HistoryManager {
   }
 
   /** 监听事件 */
-  public listen(type: string, handler: (data: any) => void) {
-    return this.eventCenter.listen(type, handler);
+  public listen<D = any>(type: string, handler: (event: { data: D }) => void) {
+    return this.eventCenter.listen<D>(type, handler);
   }
 
   /** 解除监听 */
@@ -391,7 +434,7 @@ export class HistoryManager {
     }
   };
 
-  private getUpdateEventData = () => {
+  private getUpdateEventData = (): HistoryUpdateDataType => {
     return {
       index: this.index,
       snapshotsStack: this.snapshotsStack,
@@ -424,5 +467,11 @@ export class HistoryManager {
 
   private startReverting() {
     this.moving = true;
+  }
+
+  private areasParkingSpaceIsReady() {
+    return Object.keys(this.areasParkingSpace).every(
+      (areaName) => this.areasParkingSpace[areaName] === true,
+    );
   }
 }

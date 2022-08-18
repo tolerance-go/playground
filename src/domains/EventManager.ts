@@ -19,7 +19,10 @@ export class EventManager {
     Record<EventHandlerId, EventHandler>
   > = {};
 
-  public listen(eventType: string, callback: (data: any) => void) {
+  public listen<D = any>(
+    eventType: string,
+    callback: (event: { data: D }) => void,
+  ) {
     const eventHandlerId = nanoid();
 
     if (this.handlerCenter[eventType] === undefined) {

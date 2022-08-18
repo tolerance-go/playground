@@ -50,7 +50,7 @@ export type DataTableColumn = Omit<
   valueType: ProFieldValueType;
 };
 
-export type DataListItem = Omit<API.Data, 'data'> & {
+export type DataListItem = Omit<API.DatabaseWithTime, 'data'> & {
   data?: DataType;
 };
 
@@ -104,7 +104,7 @@ const useDataList = () => {
       });
     },
     {
-      onSuccess: (data?: API.Data[]) => {
+      onSuccess: (data?: API.ShownDatabase[]) => {
         const dataList =
           data?.map((item) => {
             return {
@@ -130,6 +130,7 @@ const useDataList = () => {
             nextNode,
             prevNode,
             direction,
+            currentNode,
           }: RecoverParams<
             DataListItem[],
             | {
@@ -149,13 +150,29 @@ const useDataList = () => {
                 const removedItem =
                   nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
                     .commitInfo.data;
-                const { success } = await DatabaseControllerCreate({
+                const { success, data } = await DatabaseControllerCreate({
                   // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
                   name: removedItem.name,
                   desc: removedItem.desc,
                   data: JSON.stringify(removedItem.data),
-                  app_id: removedItem.app_id,
+                  app_id: String(removedItem.app_id),
+                  logic_created_at: removedItem.createdAt,
+                  logic_updated_at: removedItem.updatedAt,
                 });
+
+                /**
+                 * 下一个如果是 delete，那么当前就要做反操作进行创建
+                 * 如果当前是 add，那么就要用新创建的资源来替换 add 旧的 payload
+                 */
+                if (
+                  currentNode.changedAreasSnapshots?.[HistoryAreaNames.DataList]
+                    ?.commitInfo.type === 'addDataListItem'
+                ) {
+                  currentNode.changedAreasSnapshots[
+                    HistoryAreaNames.DataList
+                  ].commitInfo.data = data;
+                }
+
                 if (success) {
                   setDataList(state);
                 }

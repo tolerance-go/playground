@@ -61,3 +61,9 @@ area 根据 pull 返回的数据可以在将来进行 recover（恢复）
 ### commit 时，如果 index 不在顶部
 
 commit 时，如果 index 不在顶部，将新增的 commit 作为 head，丢弃掉之前所有的 commit
+
+### 异步注册 area 的情况
+
+异步初始化，触发 inited 事件后，需要将历史记录所在记录状态，同步到最新 app 状态
+
+但是要等全部 area 注册完毕后（area 注册可能是异步进行的），因此 HistoryManager 创建的时候，需要给定 areas 可能的范围
