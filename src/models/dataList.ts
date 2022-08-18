@@ -50,7 +50,7 @@ export type DataTableColumn = Omit<
   valueType: ProFieldValueType;
 };
 
-export type DataListItem = Omit<API.DatabaseWithTime, 'data'> & {
+export type DataListItem = Omit<API.ShownDatabase, 'data'> & {
   data?: DataType;
 };
 
@@ -129,8 +129,10 @@ const useDataList = () => {
             commitInfo,
             nextNode,
             prevNode,
+            snapshotsStack,
             direction,
             currentNode,
+            index,
           }: RecoverParams<
             DataListItem[],
             | {
@@ -147,11 +149,14 @@ const useDataList = () => {
                 nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
                   .commitInfo.type === 'deleteDataListItem'
               ) {
+                // 回退操作
+                // 回退前 nextNode，操作为 删除一项目
+                // 我们需要新增一个项目
                 const removedItem =
                   nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
                     .commitInfo.data;
+
                 const { success, data } = await DatabaseControllerCreate({
-                  // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
                   name: removedItem.name,
                   desc: removedItem.desc,
                   data: JSON.stringify(removedItem.data),
@@ -160,22 +165,53 @@ const useDataList = () => {
                   logic_updated_at: removedItem.updatedAt,
                 });
 
-                /**
-                 * 下一个如果是 delete，那么当前就要做反操作进行创建
-                 * 如果当前是 add，那么就要用新创建的资源来替换 add 旧的 payload
-                 */
-                if (
-                  currentNode.changedAreasSnapshots?.[HistoryAreaNames.DataList]
-                    ?.commitInfo.type === 'addDataListItem'
-                ) {
-                  currentNode.changedAreasSnapshots[
+                // 新增成功后
+                if (success) {
+                  // 需要更新历史数据
+                  // 1. 回退前删除的 info 里面的项目，因为删除后 state 没有，我们不用管
+                  nextNode.changedAreasSnapshots[
                     HistoryAreaNames.DataList
-                  ].commitInfo.data = data;
+                  ].commitInfo.data = data!;
+                  // 2. 当前 node 往后，直到找到第一次添加 removedItem 的地方停止，替换 info 和 state 中的所有数据
+                  for (let floatIndex = index; floatIndex > -1; floatIndex--) {
+                    if (
+                      snapshotsStack[floatIndex].areasSnapshots[
+                        HistoryAreaNames.DataList
+                      ]
+                    ) {
+                      snapshotsStack[floatIndex].areasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].state = snapshotsStack[floatIndex].areasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].state.map((item) => {
+                        if (item.id === removedItem.id) {
+                          return data!;
+                        }
+                        return item;
+                      });
+                    }
+
+                    if (
+                      snapshotsStack[floatIndex].changedAreasSnapshots[
+                        HistoryAreaNames.DataList
+                      ]?.commitInfo.type === 'addDataListItem' &&
+                      snapshotsStack[floatIndex].changedAreasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].commitInfo.data.id === removedItem.id
+                    ) {
+                      snapshotsStack[floatIndex].changedAreasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].commitInfo.data = data!;
+
+                      break;
+                    }
+                  }
+
+                  setDataList(
+                    currentNode.areasSnapshots[HistoryAreaNames.DataList].state,
+                  );
                 }
 
-                if (success) {
-                  setDataList(state);
-                }
                 return { success };
               }
               if (
@@ -197,7 +233,7 @@ const useDataList = () => {
 
             if (direction === 'forward') {
               if (
-                prevNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
                   .commitInfo.type === 'deleteDataListItem'
               ) {
                 const removedItem = commitInfo.data;
@@ -211,20 +247,84 @@ const useDataList = () => {
               }
 
               if (
-                prevNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
                   .commitInfo.type === 'addDataListItem'
               ) {
-                const removedItem = commitInfo.data;
-                const { success } = await DatabaseControllerCreate({
+                // 前进操作
+                // 前进后为 currentNode，操作为 增加一个项目
+                // 我们需要重新增加一个项目
+
+                const addedItem =
+                  currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                    .commitInfo.data;
+                const { success, data } = await DatabaseControllerCreate({
                   // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
-                  name: removedItem.name,
-                  desc: removedItem.desc,
-                  data: JSON.stringify(removedItem.data),
-                  app_id: removedItem.app_id,
+                  name: addedItem.name,
+                  desc: addedItem.desc,
+                  data: JSON.stringify(addedItem.data),
+                  app_id: addedItem.app_id,
+                  logic_created_at: addedItem.createdAt,
+                  logic_updated_at: addedItem.updatedAt,
                 });
+
+                // 新增成功后
+
                 if (success) {
-                  setDataList(state);
+                  // 需要更新历史数据
+                  // 1. 当前节点之前新增的数据，替换成新的新增
+                  const oldAddedItem =
+                    currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                      .commitInfo.data;
+
+                  currentNode.changedAreasSnapshots[
+                    HistoryAreaNames.DataList
+                  ].commitInfo.data = addedItem;
+
+                  // 2. 当前 node 往前，直到首次出现删除 addedItem 的地方，替换 info 和 state 中的所有数据
+
+                  for (
+                    let floatIndex = index;
+                    floatIndex < snapshotsStack.length;
+                    floatIndex++
+                  ) {
+                    if (
+                      snapshotsStack[floatIndex].areasSnapshots[
+                        HistoryAreaNames.DataList
+                      ]
+                    ) {
+                      snapshotsStack[floatIndex].areasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].state = snapshotsStack[floatIndex].areasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].state.map((item) => {
+                        if (item.id === oldAddedItem.id) {
+                          return data!;
+                        }
+                        return item;
+                      });
+                    }
+
+                    if (
+                      snapshotsStack[floatIndex].changedAreasSnapshots[
+                        HistoryAreaNames.DataList
+                      ]?.commitInfo.type === 'deleteDataListItem' &&
+                      snapshotsStack[floatIndex].changedAreasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].commitInfo.data.id === oldAddedItem.id
+                    ) {
+                      snapshotsStack[floatIndex].changedAreasSnapshots[
+                        HistoryAreaNames.DataList
+                      ].commitInfo.data = data!;
+
+                      break;
+                    }
+                  }
+
+                  setDataList(
+                    currentNode.areasSnapshots[HistoryAreaNames.DataList].state,
+                  );
                 }
+
                 return { success };
               }
             }

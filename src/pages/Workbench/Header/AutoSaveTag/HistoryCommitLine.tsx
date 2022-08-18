@@ -59,7 +59,9 @@ export const HistoryCommitLine = () => {
                         : dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
                     </p>
                     <pre>
-                      {JSON.stringify(item.changedAreasSnapshots, null, 2)}
+                    {JSON.stringify(item.changedAreasSnapshots, null, 2)}
+                    ---
+                    {JSON.stringify(item.areasSnapshots, null, 2)}
                     </pre>
                   </Timeline.Item>
                 );

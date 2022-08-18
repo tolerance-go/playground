@@ -11,6 +11,7 @@ export type RecoverParams<S = any, C = any> = {
   commitInfo: C;
   areaName: string;
   currentNode: SnapshotsNode<S, C>;
+  snapshotsStack: SnapshotsNode<S, C>[];
   prevNode?: SnapshotsNode<S, C>;
   nextNode?: SnapshotsNode<S, C>;
   direction: 'back' | 'forward' | 'stand';
@@ -70,8 +71,18 @@ export type AreaSnapshot<S = any, C = any> = {
 export type SnapshotsNode<S = any, C = any> = {
   id: string;
   createTime: number;
-  changedAreasSnapshots: Record<string, AreaSnapshot<S, C>>;
-  areasSnapshots: Record<string, AreaSnapshot<S, C>>;
+  changedAreasSnapshots: Record<
+    string,
+    {
+      commitInfo: C;
+    }
+  >;
+  areasSnapshots: Record<
+    string,
+    {
+      state: S;
+    }
+  >;
   areasRecoverErrors?: {
     direction: RecoverParams['direction'];
     errors: Record<
@@ -152,13 +163,12 @@ export class HistoryManager {
     if (this.virtualInitialNodeIsAsyncInited === false) {
       this.virtualInitialNode.areasSnapshots[area.name] = {
         state: area.getInitialState(),
-        commitInfo: {
-          type: 'virtualInitialNodeCommitInfo',
-        },
       };
       /** 初始化的时候，所有都作为初始化 */
       this.virtualInitialNode.changedAreasSnapshots[area.name] = {
-        ...this.virtualInitialNode.areasSnapshots[area.name],
+        commitInfo: {
+          type: 'registerArea',
+        },
       };
     }
 
@@ -226,21 +236,20 @@ export class HistoryManager {
     const commitId = nanoid();
     const node = Object.keys(infos).reduce(
       (acc, areaName) => {
-        const areaSnapshot = {
-          state: infos[areaName].state,
-          commitInfo: infos[areaName].commitInfo,
-        };
-
         return {
           ...acc,
           changedAreasSnapshots: {
             ...acc.changedAreasSnapshots,
-            [areaName]: areaSnapshot,
+            [areaName]: {
+              commitInfo: infos[areaName].commitInfo,
+            },
           },
           /** 这里注意对全量快照进行覆盖，因为 pull 可能拉到的是老的数据 */
           areasSnapshots: {
             ...acc.areasSnapshots,
-            [areaName]: areaSnapshot,
+            [areaName]: {
+              state: infos[areaName].state,
+            },
           },
         };
       },
@@ -372,7 +381,7 @@ export class HistoryManager {
         return this.areas[areaName]
           .recover({
             state: meta.state,
-            commitInfo: meta?.commitInfo,
+            commitInfo: movedNode.changedAreasSnapshots[areaName]?.commitInfo,
             areaName,
             index: movedIndex,
             currentNode: movedNode,
@@ -380,6 +389,7 @@ export class HistoryManager {
             nextNode: movedNextNode,
             offset,
             direction,
+            snapshotsStack: this.snapshotsStack,
           })
           .then((result) => {
             return {
