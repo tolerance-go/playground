@@ -5,12 +5,14 @@
 import * as AppController from './AppController';
 import * as ComponentController from './ComponentController';
 import * as DatabaseController from './DatabaseController';
+import * as DiscussController from './DiscussController';
 import * as PageController from './PageController';
 import * as VersionController from './VersionController';
 export default {
   AppController,
   ComponentController,
   DatabaseController,
+  DiscussController,
   PageController,
   VersionController,
 };

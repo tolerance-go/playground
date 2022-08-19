@@ -141,6 +141,18 @@ declare namespace API {
     logic_updated_at?: string;
   };
 
+  type CreationDiscuss = {
+    title: string;
+    desc?: string;
+    belongsToComId: number;
+    belongsToComStatId: number;
+    left: number;
+    top: number;
+    containerWidth: number;
+    containerHeight: number;
+    page_id: number;
+  };
+
   type CreationPage = {
     path: string;
     app_id: string;
@@ -204,6 +216,59 @@ declare namespace API {
     data?: ShownDatabase;
   };
 
+  type Discuss = {
+    id: number;
+    title: string;
+    desc?: string;
+    belongsToComId: number;
+    belongsToComStatId: number;
+    left: number;
+    top: number;
+    containerWidth: number;
+    containerHeight: number;
+    page_id: number;
+  };
+
+  type DiscussControllerDestroyParams = {
+    /** id  */
+    id: string;
+  };
+
+  type DiscussControllerIndexParams = {
+    /** appId  */
+    appId?: number;
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+  };
+
+  type DiscussControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type DiscussControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type DiscussListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: ShownDiscuss[];
+  };
+
+  type DiscussShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: ShownDiscuss;
+  };
+
   type Page = {
     id: number;
     path: string;
@@ -264,6 +329,21 @@ declare namespace API {
     app_id: string;
     logic_created_at?: string;
     logic_updated_at?: string;
+  };
+
+  type ShownDiscuss = {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    title: string;
+    desc?: string;
+    belongsToComId: number;
+    belongsToComStatId: number;
+    left: number;
+    top: number;
+    containerWidth: number;
+    containerHeight: number;
+    page_id: number;
   };
 
   type Version = {
