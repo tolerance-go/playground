@@ -28,25 +28,16 @@ const useSelectedDataId = () => {
     historyManager.registerArea({
       name: HistoryAreaNames.SelectedDataListId,
       getInitialState: () => {
-        return {
-          selectedDataId: undefined,
-        };
+        return undefined;
       },
       pull: () => {
-        return {
-          selectedDataId: getSelectedDataId(),
-        };
+        return getSelectedDataId();
       },
       /** state 为空的情况，表示 index 为 -1，组件需要恢复到最初状态 */
       recover: async ({
         state,
-      }: RecoverParams<
-        {
-          selectedDataId: number | undefined;
-        },
-        undefined
-      >) => {
-        setSelectedDataId(state.selectedDataId);
+      }: RecoverParams<number | undefined, undefined>) => {
+        setSelectedDataId(state);
 
         return { success: true };
       },
