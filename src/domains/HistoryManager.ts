@@ -148,9 +148,7 @@ export class HistoryManager {
 
   /** 注册区域 */
   public registerArea(params: HistoryAreaInitParams) {
-    if (this.areas[params.name]) {
-      throw new Error('area name is repeated');
-    }
+    console.warn('area name is repeated');
 
     const area = new HistoryArea(params);
     this.areas[area.name] = area;
@@ -362,7 +360,6 @@ export class HistoryManager {
             .changedAreasSnapshots,
       ).map((areaName) => {
         const meta = movedNode.areasSnapshots[areaName];
-        debugger;
         return this.areas[areaName]
           .recover({
             state: meta.state,

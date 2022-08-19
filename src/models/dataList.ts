@@ -6,13 +6,14 @@ import {
   DatabaseControllerIndex,
 } from '@/services/server/DatabaseController';
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
+import { moveOffsetArrayItem } from '@/utils/moveOffsetArrayItem';
 import { ProColumns, ProFieldValueType } from '@ant-design/pro-components';
 import { useModel, useRequest } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { message } from 'antd';
 import produce from 'immer';
 import qs from 'qs';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export type DataItem = Record<string, any> & {
   id: string;
@@ -83,9 +84,28 @@ const useDataList = () => {
     historyManager: model.historyManager,
   }));
 
+  const tagWithTriggerUpdateByRecoverUpdateDataListItemRef = useRef<boolean>(false);
+
   const getDataList = useMemoizedFn(() => {
     return dataList;
   });
+
+  const updateData = useMemoizedFn(
+    (id: number, item: Partial<DataListItem>) => {
+      setDataList(
+        produce((draft) => {
+          const index = draft?.findIndex((item) => item.id === id);
+          if (index !== undefined && index > -1) {
+            draft[index] = {
+              ...draft[index],
+              ...item,
+              id,
+            };
+          }
+        }),
+      );
+    },
+  );
 
   const { loading } = useRequest(
     async () => {
@@ -140,6 +160,10 @@ const useDataList = () => {
               }
             | {
                 type: 'addDataListItem';
+                data: DataListItem;
+              }
+            | {
+                type: 'updateDataListItem';
                 data: DataListItem;
               }
           >) => {
@@ -227,6 +251,26 @@ const useDataList = () => {
                   setDataList(state);
                 }
                 return { success };
+              }
+
+              if (
+                nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  .commitInfo.type === 'updateDataListItem'
+              ) {
+                const updatedItem =
+                  nextNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                    .commitInfo.data;
+
+                tagWithTriggerUpdateByRecoverUpdateDataListItemRef.current = true;
+
+                updateData(
+                  updatedItem.id,
+                  state.find((item) => item.id === updatedItem.id)!,
+                );
+
+                return {
+                  success: true,
+                };
               }
             }
 
@@ -375,22 +419,6 @@ const useDataList = () => {
     });
   });
 
-  const updateData = useMemoizedFn(
-    (id: number, item: Partial<DataListItem>) => {
-      setDataList(
-        produce((draft) => {
-          const index = draft?.findIndex((item) => item.id === id);
-          if (index !== undefined && index > -1) {
-            draft[index] = {
-              ...draft[index],
-              ...item,
-            };
-          }
-        }),
-      );
-    },
-  );
-
   /** 返回 data 方便后端接口更新 data json  */
   const getColumnDataMetaAfterAddColumn = useMemoizedFn(
     (
@@ -423,6 +451,75 @@ const useDataList = () => {
                 })(),
               },
             },
+          },
+        };
+      }
+      return {
+        index: -1,
+      };
+    },
+  );
+
+  const getColumnDataMetaAfterDeleteColumn = useMemoizedFn(
+    (
+      dataId: number,
+      column: DataTableColumn,
+    ): {
+      index: number;
+      data?: DataType;
+    } => {
+      const index = dataList?.findIndex((item) => item.id === dataId);
+      if (index > -1) {
+        const nextColumns = [...(dataList[index].data?.columns ?? [])];
+        const columnIndex = nextColumns.findIndex(
+          (item) => item.key === column.key,
+        );
+
+        if (columnIndex > -1) {
+          const [removed] = nextColumns.splice(columnIndex, 1);
+
+          const nextColsSettings = {
+            ...dataList[index].data?.columnsSettings,
+          };
+
+          delete nextColsSettings[removed.key];
+
+          return {
+            index,
+            data: {
+              ...dataList[index].data,
+              columns: nextColumns,
+              columnsSettings: nextColsSettings,
+            },
+          };
+        }
+      }
+      return {
+        index: -1,
+      };
+    },
+  );
+
+  const getColumnDataMetaAfterMoveOffsetColumn = useMemoizedFn(
+    (
+      dataId: number,
+      column: DataTableColumn,
+      offset: 1 | -1,
+    ): {
+      index: number;
+      data?: DataType;
+    } => {
+      const index = dataList?.findIndex((item) => item.id === dataId);
+      if (index > -1) {
+        return {
+          index,
+          data: {
+            ...dataList[index].data,
+            columns: moveOffsetArrayItem(
+              dataList[index].data?.columns ?? [],
+              (item) => item.key === column.key,
+              offset,
+            ),
           },
         };
       }
@@ -572,19 +669,79 @@ const useDataList = () => {
     },
   );
 
-  const addColumn = useMemoizedFn((dataId: number, column: DataTableColumn) => {
-    setDataList(
-      produce((draft) => {
-        const { index, data } =
-          getColumnDataMetaAfterAddColumn(dataId, column) ?? {};
-        if (index > -1) {
-          draft[index].data = data;
-        }
-      }),
-    );
-  });
+  const addDataListItemColumn = useMemoizedFn(
+    (dataId: number, column: DataTableColumn) => {
+      setDataList(
+        produce((draft) => {
+          const { index, data } =
+            getColumnDataMetaAfterAddColumn(dataId, column) ?? {};
+          if (index > -1) {
+            draft[index].data = data;
+          }
+        }),
+      );
+    },
+  );
 
-  const updateColumn = useMemoizedFn(
+  const deleteDataListItemColumn = useMemoizedFn(
+    (dataId: number, column: DataTableColumn) => {
+      setDataList(
+        produce((draft) => {
+          const { index, data } =
+            getColumnDataMetaAfterDeleteColumn(dataId, column) ?? {};
+          if (index > -1) {
+            draft[index].data = data;
+          }
+        }),
+      );
+    },
+  );
+
+  const updateDataListItemData = useMemoizedFn(
+    (dataId: number, data: DataType) => {
+      setDataList(
+        produce((draft) => {
+          const index = draft?.findIndex((item) => item.id === dataId);
+          if (index > -1) {
+            draft[index].data = {
+              ...draft[index].data,
+              ...data,
+            };
+          }
+        }),
+      );
+    },
+  );
+
+  const moveLeftDataListItemColumn = useMemoizedFn(
+    (dataId: number, column: DataTableColumn) => {
+      setDataList(
+        produce((draft) => {
+          const { index, data } =
+            getColumnDataMetaAfterMoveOffsetColumn(dataId, column, -1) ?? {};
+          if (index > -1) {
+            draft[index].data = data;
+          }
+        }),
+      );
+    },
+  );
+
+  const moveRightDataListItemColumn = useMemoizedFn(
+    (dataId: number, column: DataTableColumn) => {
+      setDataList(
+        produce((draft) => {
+          const { index, data } =
+            getColumnDataMetaAfterMoveOffsetColumn(dataId, column, 1) ?? {};
+          if (index > -1) {
+            draft[index].data = data;
+          }
+        }),
+      );
+    },
+  );
+
+  const updateDataListItemColumn = useMemoizedFn(
     (
       dataId: number,
       columnId: string,
@@ -606,19 +763,21 @@ const useDataList = () => {
     },
   );
 
-  const pushDataSource = useMemoizedFn((dataId: number, record: DataItem) => {
-    setDataList(
-      produce((draft) => {
-        const { index, data } =
-          getColumnDataMetaAfterPushDataSource(dataId, record) ?? {};
-        if (index > -1) {
-          draft[index].data = data;
-        }
-      }),
-    );
-  });
+  const pushDataListItemDataSource = useMemoizedFn(
+    (dataId: number, record: DataItem) => {
+      setDataList(
+        produce((draft) => {
+          const { index, data } =
+            getColumnDataMetaAfterPushDataSource(dataId, record) ?? {};
+          if (index > -1) {
+            draft[index].data = data;
+          }
+        }),
+      );
+    },
+  );
 
-  const updateDataSource = useMemoizedFn(
+  const updateDataListItemDataSource = useMemoizedFn(
     (dataId: number, recordId: string, record: Partial<DataItem>) => {
       setDataList(
         produce((draft) => {
@@ -633,17 +792,19 @@ const useDataList = () => {
     },
   );
 
-  const removeDataSource = useMemoizedFn((dataId: number, recordId: string) => {
-    setDataList(
-      produce((draft) => {
-        const { index, data } =
-          getColumnDataMetaAfterRemoveDataSource(dataId, recordId) ?? {};
-        if (index > -1) {
-          draft[index].data = data;
-        }
-      }),
-    );
-  });
+  const removeDataListItemDataSource = useMemoizedFn(
+    (dataId: number, recordId: string) => {
+      setDataList(
+        produce((draft) => {
+          const { index, data } =
+            getColumnDataMetaAfterRemoveDataSource(dataId, recordId) ?? {};
+          if (index > -1) {
+            draft[index].data = data;
+          }
+        }),
+      );
+    },
+  );
 
   /** 获取数据集合的表格数据 */
   const getTableDataSourceByDataId = useMemoizedFn((dataId: number) => {
@@ -653,28 +814,23 @@ const useDataList = () => {
     }
   });
 
-  // useUpdateEffect(() => {
-  //   if (recoverUpdatingRef.current) {
-  //   } else {
-  //     historyManager.commit();
-  //   }
-
-  //   recoverUpdatingRef.current = false;
-  // }, [dataList]);
-
   return {
     dataList,
     loading,
     dataColumnSettingsConfigs,
-    removeDataSource,
-    updateDataSource,
-    pushDataSource,
-    updateColumn,
-    addColumn,
+    removeDataListItemDataSource,
+    updateDataListItemDataSource,
+    pushDataListItemDataSource,
+    updateDataListItemColumn,
+    addDataListItemColumn,
+    moveLeftDataListItemColumn,
+    moveRightDataListItemColumn,
+    deleteDataListItemColumn,
+    updateDataListItemData,
     updateData,
-    setDataList,
     pushData,
     deleteData,
+    setDataList,
     getDataList,
     getColumnDataMetaAfterUpdateColumnSettings,
     getColumnDataMetaAfterPushDataSource,
@@ -682,6 +838,7 @@ const useDataList = () => {
     getColumnDataMetaAfterRemoveDataSource,
     getTableDataSourceByDataId,
     getColumnDataMetaAfterAddColumn,
+    tagWithTriggerUpdateByRecoverUpdateDataListItemRef,
   };
 };
 

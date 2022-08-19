@@ -1,5 +1,4 @@
 import { useSelectedData } from '@/hooks/useSelectedData';
-import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   BetaSchemaForm,
@@ -8,7 +7,7 @@ import {
   ProFormInstance,
 } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import { nanoid } from 'nanoid';
 import { useMemo, useRef } from 'react';
 
@@ -23,15 +22,12 @@ export default () => {
     selectedDataId: model.selectedDataId,
   }));
 
-  const { getColumnDataMetaAfterPushDataSource, pushDataSource } = useModel(
-    'dataList',
-    (model) => ({
+  const { getColumnDataMetaAfterPushDataSource, pushDataListItemDataSource } =
+    useModel('dataList', (model) => ({
       getColumnDataMetaAfterPushDataSource:
         model.getColumnDataMetaAfterPushDataSource,
-
-      pushDataSource: model.pushDataSource,
-    }),
-  );
+      pushDataListItemDataSource: model.pushDataListItemDataSource,
+    }));
 
   const formColumns = useMemo((): ProFormColumnsType[] => {
     return (
@@ -74,20 +70,7 @@ export default () => {
           ...values,
         };
 
-        const { success } = await DatabaseControllerUpdate(
-          {
-            id: String(selectedDataId),
-          },
-          JSON.stringify(
-            getColumnDataMetaAfterPushDataSource(selectedDataId, record).data ??
-              {},
-          ),
-        );
-
-        if (success) {
-          message.success('新增成功');
-          pushDataSource(selectedDataId, record);
-        }
+        pushDataListItemDataSource(selectedDataId, record);
 
         // 不返回不会关闭弹框
         return true;

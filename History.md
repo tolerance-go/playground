@@ -67,3 +67,23 @@ commit 时，如果 index 不在顶部，将新增的 commit 作为 head，丢�
 异步初始化，触发 inited 事件后，需要将历史记录所在记录状态，同步到最新 app 状态
 
 但是要等全部 area 注册完毕后（area 注册可能是异步进行的），因此 HistoryManager 创建的时候，需要给定 areas 可能的范围
+
+### 记录
+
+1. commit 应该在和后端同步成功后进行
+
+拿 dataList 举例：
+
+项目中，create，delete，search 都是在同步修改视图 state 的地方进行 commit，因为有个默认前提是，这些操作之前已经先同步过了后台接口
+
+update 因为属于后置响应式的和后端同步的数据，commit 在其接口调用成功的后面执行
+
+2. commit 的时机可以是 effect 也可以是 fn
+
+我们为了区分是 recover 触发的状态更新还是交互触发的，所以在用 effect 的时候，需要配置 ref 标记
+
+所以一般除了不得不用 effect 的时候，比如 update，其他情况都是用 fn 更易读
+
+3. 最好不要直接暴露 setXXX 方法
+
+太底层，也不容易做拦截处理

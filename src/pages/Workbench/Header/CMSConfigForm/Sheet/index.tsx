@@ -1,20 +1,12 @@
 import { RequestButton } from '@/components/RequestButton';
 import { useSelectedData } from '@/hooks/useSelectedData';
 import { DataItem, DataTableColumn } from '@/models/dataList';
-import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import type { ActionType, ProTableProps } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
-import {
-  Button,
-  Dropdown,
-  Empty,
-  Menu,
-  message,
-  Space,
-  Typography,
-} from 'antd';
+import { Button, Dropdown, Empty, Menu, Row, Space, Typography } from 'antd';
 import { nanoid } from 'nanoid';
 import { useMemo, useRef } from 'react';
 import { ColumnsConfigModal } from './ColumnsConfigModal';
@@ -30,13 +22,18 @@ export default () => {
 
   // const modalRef = useRef<ColumnsConfigModalAPI>(null);
 
-  const { addColumn, getColumnDataMetaAfterAddColumn } = useModel(
-    'dataList',
-    (model) => ({
-      addColumn: model.addColumn,
-      getColumnDataMetaAfterAddColumn: model.getColumnDataMetaAfterAddColumn,
-    }),
-  );
+  const {
+    addDataListItemColumn,
+    moveLeftDataListItemColumn,
+    moveRightDataListItemColumn,
+    deleteDataListItemColumn,
+  } = useModel('dataList', (model) => ({
+    addDataListItemColumn: model.addDataListItemColumn,
+    deleteDataListItemColumn: model.deleteDataListItemColumn,
+    moveLeftDataListItemColumn: model.moveLeftDataListItemColumn,
+    moveRightDataListItemColumn: model.moveRightDataListItemColumn,
+    getColumnDataMetaAfterAddColumn: model.getColumnDataMetaAfterAddColumn,
+  }));
 
   const { openModal, setSelectedColumnFieldId } = useModel(
     'dataFieldsConfig',
@@ -50,34 +47,18 @@ export default () => {
     selectedDataId: model.selectedDataId,
   }));
 
-  const { getColumnDataMetaAfterRemoveDataSource, removeDataSource } = useModel(
-    'dataList',
-    (model) => ({
-      getColumnDataMetaAfterRemoveDataSource:
-        model.getColumnDataMetaAfterRemoveDataSource,
-      removeDataSource: model.removeDataSource,
-    }),
-  );
+  const { removeDataListItemDataSource } = useModel('dataList', (model) => ({
+    removeDataListItemDataSource: model.removeDataListItemDataSource,
+  }));
 
-  const addColumnAndSync = useMemoizedFn(async (newCol: DataTableColumn) => {
+  const addColumn = useMemoizedFn(async (newCol: DataTableColumn) => {
     if (!selectedDataId) return;
 
     const id = newCol.key;
 
-    const { success } = await DatabaseControllerUpdate(
-      {
-        id: String(selectedDataId),
-      },
-      JSON.stringify(
-        getColumnDataMetaAfterAddColumn(selectedDataId, newCol).data ?? {},
-      ),
-    );
-
-    if (success) {
-      addColumn(selectedDataId, newCol);
-      openModal();
-      setSelectedColumnFieldId(id);
-    }
+    addDataListItemColumn(selectedDataId, newCol);
+    openModal();
+    setSelectedColumnFieldId(id);
   });
 
   const mergedColumns = useMemo((): ProTableProps<
@@ -96,20 +77,73 @@ export default () => {
             ...col,
             title: (__, type) =>
               type === 'table' ? (
-                <Space>
+                <Dropdown
+                  overlay={
+                    <Menu
+                      items={[
+                        {
+                          key: 'copyId',
+                          label: (
+                            <Typography.Text
+                              type="secondary"
+                              copyable={{
+                                text: `${col.valueType}-${col.key}`,
+                              }}
+                              style={{
+                                width: 100,
+                              }}
+                              ellipsis
+                            >
+                              ID: {col.key}
+                            </Typography.Text>
+                          ),
+                        },
+                        {
+                          key: 'moveLeft',
+                          label: (
+                            <Row align="middle" justify="space-between">
+                              <span>右移</span>
+                              <ArrowRightOutlined
+                                style={{
+                                  fontSize: 12,
+                                }}
+                              />
+                            </Row>
+                          ),
+                          onClick: () => {
+                            moveRightDataListItemColumn(selectedDataId!, col);
+                          },
+                        },
+                        {
+                          key: 'moveRight',
+                          label: (
+                            <Row align="middle" justify="space-between">
+                              <span>左移</span>
+                              <ArrowLeftOutlined
+                                style={{
+                                  fontSize: 12,
+                                }}
+                              />
+                            </Row>
+                          ),
+                          onClick: () => {
+                            moveLeftDataListItemColumn(selectedDataId!, col);
+                          },
+                        },
+                        {
+                          key: 'delete',
+                          label: '删除',
+                          danger: true,
+                          onClick: () => {
+                            deleteDataListItemColumn(selectedDataId!, col);
+                          },
+                        },
+                      ]}
+                    />
+                  }
+                >
                   <span>{columnsSettings?.[col.key].title ?? col.title}</span>
-                  <Typography.Text
-                    type="secondary"
-                    copyable={{
-                      text: `${col.valueType}-${col.key}`,
-                    }}
-                    style={{
-                      fontSize: 10,
-                    }}
-                  >
-                    ID: {col.key.slice(0, 4)}
-                  </Typography.Text>
-                </Space>
+                </Dropdown>
               ) : (
                 columnsSettings?.[col.key].title ?? col.title
               ),
@@ -134,29 +168,9 @@ export default () => {
             popconfirm={{
               title: '确认删除吗？',
             }}
-            request={async () => {
-              if (!selectedDataId) return { success: false };
-
-              const { success } = await DatabaseControllerUpdate(
-                {
-                  id: String(selectedDataId),
-                },
-                JSON.stringify(
-                  getColumnDataMetaAfterRemoveDataSource(
-                    selectedDataId,
-                    entity.id,
-                  ).data ?? {},
-                ),
-              );
-
-              return {
-                success,
-              };
-            }}
-            onSuccess={() => {
+            onClick={() => {
               if (selectedDataId) {
-                message.success('删除成功');
-                removeDataSource(selectedDataId, entity.id);
+                removeDataListItemDataSource(selectedDataId, entity.id);
               }
             }}
           >
@@ -232,7 +246,7 @@ export default () => {
                     key: 'text',
                     onClick: async () => {
                       const id = nanoid();
-                      addColumnAndSync({
+                      addColumn({
                         title: '文本',
                         dataIndex: `text-${id}`,
                         key: id,
@@ -245,7 +259,7 @@ export default () => {
                     key: 'date',
                     onClick: () => {
                       const id = nanoid();
-                      addColumnAndSync({
+                      addColumn({
                         title: '日期',
                         dataIndex: `date-${id}`,
                         key: id,

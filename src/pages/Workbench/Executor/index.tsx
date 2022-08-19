@@ -1,5 +1,6 @@
 import { useActivePageIdEffect } from '@/hooks/globals/useActivePageIdEffect';
 import { useComActiveMaterialIdEffect } from '@/hooks/globals/useComActiveMaterialIdEffect';
+import { useDataListUpdate } from '@/hooks/globals/useDataListUpdate';
 import { useComponentStatusChange } from '@/hooks/useComponentStatusChange';
 import { useSelectedNode } from '@/hooks/useSelectedNode';
 import useStageSelectSlotGroupIdEffect from '@/hooks/useStageSelectSlotGroupIdEffect';
@@ -11,5 +12,6 @@ export default () => {
   useSelectedNode();
   useComActiveMaterialIdEffect();
   useActivePageIdEffect();
+  useDataListUpdate();
   return <></>;
 };

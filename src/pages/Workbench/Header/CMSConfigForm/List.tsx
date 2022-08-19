@@ -12,10 +12,10 @@ export default () => {
     deleteData: model.deleteData,
   }));
 
-  const { setSelectedDataId, selectedDataId } = useModel(
+  const { selectWithDataId, selectedDataId } = useModel(
     'selectedDataId',
     (model) => ({
-      setSelectedDataId: model.setSelectedDataId,
+      selectWithDataId: model.selectWithDataId,
       selectedDataId: model.selectedDataId,
     }),
   );
@@ -32,7 +32,7 @@ export default () => {
       onRow={(record) => {
         return {
           onClick: () => {
-            setSelectedDataId(record.id);
+            selectWithDataId(record.id);
           },
           className:
             selectedDataId === record.id ? 'selectedProListItem' : undefined,

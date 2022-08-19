@@ -1,10 +1,9 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { useFormReset } from '@/hooks/useFormReset';
 import { useSelectedData } from '@/hooks/useSelectedData';
-import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
-import { Empty, Form, message, Result } from 'antd';
+import { Empty, Form, Result } from 'antd';
 import utl from 'lodash';
 
 export const ColumSettingsForm = () => {
@@ -15,13 +14,13 @@ export const ColumSettingsForm = () => {
 
   const {
     dataColumnSettingsConfigs,
-    updateColumn,
+    updateDataListItemColumn,
     getColumnDataMetaAfterUpdateColumnSettings,
   } = useModel('dataList', (model) => ({
     dataColumnSettingsConfigs: model.dataColumnSettingsConfigs,
     getColumnDataMetaAfterUpdateColumnSettings:
       model.getColumnDataMetaAfterUpdateColumnSettings,
-    updateColumn: model.updateColumn,
+    updateDataListItemColumn: model.updateDataListItemColumn,
   }));
 
   const { selectedColumnFieldId } = useModel('dataFieldsConfig', (model) => ({
@@ -42,21 +41,11 @@ export const ColumSettingsForm = () => {
         values,
       );
 
-      const { success } = await DatabaseControllerUpdate(
-        {
-          id: String(selectedDataId),
-        },
-        JSON.stringify(data),
+      updateDataListItemColumn(
+        selectedDataId,
+        selectedColumnFieldId,
+        data?.columnsSettings?.[selectedColumnFieldId] ?? {},
       );
-
-      if (success) {
-        message.success('更新成功');
-        updateColumn(
-          selectedDataId,
-          selectedColumnFieldId,
-          data?.columnsSettings?.[selectedColumnFieldId] ?? {},
-        );
-      }
     }, 350),
   );
 

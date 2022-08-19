@@ -1,6 +1,5 @@
 import { useSelectedData } from '@/hooks/useSelectedData';
 import { DataItem } from '@/models/dataList';
-import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import {
   BetaSchemaForm,
   DrawerForm,
@@ -8,7 +7,7 @@ import {
   ProFormInstance,
 } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import { useMemo, useRef } from 'react';
 
 export default (props: { record: DataItem }) => {
@@ -22,14 +21,14 @@ export default (props: { record: DataItem }) => {
     selectedDataId: model.selectedDataId,
   }));
 
-  const { getColumnDataMetaAfterUpdateDataSource, updateDataSource } = useModel(
-    'dataList',
-    (model) => ({
-      getColumnDataMetaAfterUpdateDataSource:
-        model.getColumnDataMetaAfterUpdateDataSource,
-      updateDataSource: model.updateDataSource,
-    }),
-  );
+  const {
+    getColumnDataMetaAfterUpdateDataSource,
+    updateDataListItemDataSource,
+  } = useModel('dataList', (model) => ({
+    getColumnDataMetaAfterUpdateDataSource:
+      model.getColumnDataMetaAfterUpdateDataSource,
+    updateDataListItemDataSource: model.updateDataListItemDataSource,
+  }));
 
   const formColumns = useMemo((): ProFormColumnsType[] => {
     return (
@@ -78,23 +77,11 @@ export default (props: { record: DataItem }) => {
           ...values,
         };
 
-        const { success } = await DatabaseControllerUpdate(
-          {
-            id: String(selectedDataId),
-          },
-          JSON.stringify(
-            getColumnDataMetaAfterUpdateDataSource(
-              selectedDataId,
-              props.record.id,
-              patchRecord,
-            ).data ?? {},
-          ),
+        updateDataListItemDataSource(
+          selectedDataId,
+          props.record.id,
+          patchRecord,
         );
-
-        if (success) {
-          message.success('更新成功');
-          updateDataSource(selectedDataId, props.record.id, patchRecord);
-        }
 
         // 不返回不会关闭弹框
         return true;
