@@ -5,6 +5,7 @@ declare namespace API {
     desc?: string;
     app_data?: string;
     history_data?: string;
+    stage_size_data?: string;
     labels?: string[];
   };
 
@@ -35,6 +36,11 @@ declare namespace API {
   };
 
   type AppControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type AppControllerUpdateStageSizeParams = {
     /** id  */
     id: string;
   };
@@ -115,6 +121,7 @@ declare namespace API {
     desc?: string;
     app_data?: string;
     history_data?: string;
+    stage_size_data?: string;
     labels?: string[];
   };
 

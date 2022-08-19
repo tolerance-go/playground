@@ -27,10 +27,10 @@ export type HistoryUpdateDataType = {
   snapshotsStack: SnapshotsNode[];
 };
 
-export type HistoryAreaInitParams = {
+export type HistoryAreaInitParams<S = any, C = any> = {
   name: string;
   pull: () => any;
-  recover: (opts: RecoverParams) => Promise<RecoverResult>;
+  recover: (opts: RecoverParams<S, C>) => Promise<RecoverResult>;
   getInitialState: () => any;
 };
 
@@ -147,7 +147,7 @@ export class HistoryManager {
   }[] = [];
 
   /** 注册区域 */
-  public registerArea(params: HistoryAreaInitParams) {
+  public registerArea<S = any, C = any>(params: HistoryAreaInitParams<S, C>) {
     console.warn('area name is repeated');
 
     const area = new HistoryArea(params);

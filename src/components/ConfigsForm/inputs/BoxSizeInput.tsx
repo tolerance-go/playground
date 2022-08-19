@@ -3,6 +3,7 @@ import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { useMemoizedFn } from 'ahooks';
 import { Col, InputNumber, Row, Space } from 'antd';
 import BigNumber from 'bignumber.js';
+import { debounce } from 'lodash';
 import { UnitSelect } from '../../UnitSelect';
 
 export type BoxSizeInputValue = {
@@ -16,9 +17,10 @@ export default (props: {
   disabled?: boolean;
   value?: BoxSizeInputValue;
   onChange?: (value: BoxSizeInputValue) => void;
+  debounceTime?: number;
 }) => {
   const handleChange = useMemoizedFn(
-    (val: number, type: 'width' | 'height') => {
+    debounce((val: number, type: 'width' | 'height') => {
       const nextData = {
         ...props.value,
         [type]: {
@@ -60,7 +62,7 @@ export default (props: {
       }
 
       props.onChange?.(nextData);
-    },
+    }, props.debounceTime ?? 0),
   );
 
   const handleUnitChange = useMemoizedFn(

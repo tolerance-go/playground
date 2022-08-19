@@ -53,13 +53,13 @@ export const HistoryCommitLine = () => {
                       ? '初始化状态'
                       : dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
                   </p>
-                  <pre>
+                  {/* <pre>
                     {JSON.stringify(item.changedAreasSnapshots, null, 2)}
                   </pre>
                   --------------------------------
                   <pre>
                     {JSON.stringify(item.areasSnapshots, null, 2)}
-                  </pre>
+                  </pre> */}
                 </Timeline.Item>
               );
             })}

@@ -6,13 +6,19 @@ import { Popover, Space, Typography } from 'antd';
 export const StageSizeManager = () => {
   const { stageSize, setStageSize } = useModel('stageSize', (model) => ({
     stageSize: model.stageSize,
-    setStageSize: model.setStageSize,
+    setStageSize: model.changeStageSize,
   }));
 
   return (
     <Popover
       trigger={['click']}
-      content={<BoxSizeInput value={stageSize} onChange={setStageSize} />}
+      content={
+        <BoxSizeInput
+          debounceTime={350}
+          value={stageSize}
+          onChange={setStageSize}
+        />
+      }
     >
       <Typography.Text
         type="secondary"
