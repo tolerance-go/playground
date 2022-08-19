@@ -7,12 +7,10 @@ export const HistoryCommitLine = () => {
   const {
     snapshotsStack,
     index: current,
-    virtualInitialNode,
     cleanHistory,
   } = useModel('appStateHistory', (model) => ({
     snapshotsStack: model.snapshotsStack,
     index: model.index,
-    virtualInitialNode: model.virtualInitialNode,
     cleanHistory: model.cleanHistory,
   }));
 
@@ -40,32 +38,31 @@ export const HistoryCommitLine = () => {
           }}
         >
           <Timeline>
-            {[...snapshotsStack]
-              .reverse()
-              .concat(virtualInitialNode ?? [])
-              .map((item, index) => {
-                return (
-                  <Timeline.Item
-                    color={
-                      snapshotsStack.length - current - 1 === index
-                        ? 'blue'
-                        : 'gray'
-                    }
-                    key={item.id}
-                  >
-                    <p>
-                      {item.id === HistoryManager.VirtualInitialNodeId
-                        ? '初始化状态'
-                        : dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
-                    </p>
-                    <pre>
+            {[...snapshotsStack].reverse().map((item, index) => {
+              return (
+                <Timeline.Item
+                  color={
+                    snapshotsStack.length - current - 1 === index
+                      ? 'blue'
+                      : 'gray'
+                  }
+                  key={item.id}
+                >
+                  <p>
+                    {item.id === HistoryManager.VirtualInitialNodeId
+                      ? '初始化状态'
+                      : dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
+                  </p>
+                  <pre>
                     {JSON.stringify(item.changedAreasSnapshots, null, 2)}
-                    ---
+                  </pre>
+                  --------------------------------
+                  <pre>
                     {JSON.stringify(item.areasSnapshots, null, 2)}
-                    </pre>
-                  </Timeline.Item>
-                );
-              })}
+                  </pre>
+                </Timeline.Item>
+              );
+            })}
           </Timeline>
         </div>
       ) : (

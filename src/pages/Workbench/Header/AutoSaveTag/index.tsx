@@ -70,7 +70,6 @@ export const AutoSaveTag = () => {
       content={<HistoryCommitLine />}
       trigger={['click']}
       overlayClassName={styles.overlay}
-      visible
     >
       <Tooltip title="查看修改记录">
         <Text>

@@ -3,8 +3,8 @@ import { useModel } from '@umijs/max';
 import { Button } from 'antd';
 
 export const Trigger = () => {
-  const { setVisible } = useModel('dataMaskVisible', (model) => ({
-    setVisible: model.setVisible,
+  const { open } = useModel('dataMaskVisible', (model) => ({
+    open: model.open,
   }));
 
   return (
@@ -12,7 +12,7 @@ export const Trigger = () => {
       type="text"
       icon={<DatabaseOutlined />}
       onClick={() => {
-        setVisible(true);
+        open();
       }}
     >
       数据

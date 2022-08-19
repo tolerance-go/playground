@@ -21,7 +21,6 @@ const useAppStateHistory = () => {
   );
   const [reverting, setReverting] = useState(false);
   const [snapshotsStack, setSnapshotsStack] = useState<SnapshotsNode[]>([]);
-  const [virtualInitialNode, setVirtualInitialNode] = useState<SnapshotsNode>();
 
   const [index, setIndex] = useState<number>(-1);
 
@@ -56,9 +55,8 @@ const useAppStateHistory = () => {
      */
     const initHandlerId = historyManager.listen<HistoryUpdateDataType>(
       'inited',
-      (event) => {
+      () => {
         historyManager.move(0);
-        setVirtualInitialNode(event.data.virtualInitialNode);
       },
     );
 
@@ -114,7 +112,6 @@ const useAppStateHistory = () => {
 
   return {
     snapshotsStack,
-    virtualInitialNode,
     index,
     historyManager,
     reverting,

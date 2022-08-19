@@ -1,15 +1,13 @@
 import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
 import { RecoverParams } from '@/domains/HistoryManager';
 import { useModel } from '@umijs/max';
-import { useMemoizedFn, useUpdateEffect } from 'ahooks';
-import { useEffect, useRef, useState } from 'react';
+import { useMemoizedFn } from 'ahooks';
+import { useEffect, useState } from 'react';
 
 const defaultVisible = false;
 
 const useDataMaskVisible = () => {
   const [visible, setVisible] = useState(defaultVisible);
-
-  const recoverUpdatingRef = useRef(false);
 
   const { historyManager } = useModel('appStateHistory', (model) => ({
     historyManager: model.historyManager,
@@ -19,22 +17,29 @@ const useDataMaskVisible = () => {
     return visible;
   });
 
-  useUpdateEffect(() => {
-    if (recoverUpdatingRef.current) {
-    } else {
-      historyManager.commit([
-        HistoryAreaNames.DataMaskVisible,
-        {
-          state: {
-            visible,
-          },
-          commitInfo: undefined,
+  const open = useMemoizedFn(() => {
+    setVisible(true);
+    historyManager.commit({
+      [HistoryAreaNames.DataMaskVisible]: {
+        state: {
+          visible: true,
         },
-      ]);
-    }
+        commitInfo: 'open',
+      },
+    });
+  });
 
-    recoverUpdatingRef.current = false;
-  }, [visible]);
+  const close = useMemoizedFn(() => {
+    setVisible(false);
+    historyManager.commit({
+      [HistoryAreaNames.DataMaskVisible]: {
+        state: {
+          visible: false,
+        },
+        commitInfo: 'close',
+      },
+    });
+  });
 
   useEffect(() => {
     historyManager.registerArea({
@@ -58,7 +63,6 @@ const useDataMaskVisible = () => {
         },
         undefined
       >) => {
-        recoverUpdatingRef.current = true;
         setVisible(state.visible);
 
         return { success: true };
@@ -68,8 +72,9 @@ const useDataMaskVisible = () => {
 
   return {
     visible,
-    setVisible,
     getVisible,
+    open,
+    close,
   };
 };
 

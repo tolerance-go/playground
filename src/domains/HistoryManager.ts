@@ -1,5 +1,4 @@
 import { message } from 'antd';
-import utl from 'lodash';
 import { nanoid } from 'nanoid';
 import { EventManager } from './EventManager';
 
@@ -26,7 +25,6 @@ export type RecoverResult = {
 export type HistoryUpdateDataType = {
   index: number;
   snapshotsStack: SnapshotsNode[];
-  virtualInitialNode: SnapshotsNode;
 };
 
 export type HistoryAreaInitParams = {
@@ -114,16 +112,13 @@ export class HistoryManager {
   /** 内部标志，当前是否正在回撤 */
   private moving: boolean = false;
 
-  /** 标记虚拟初始化 node 是否已经异步初始化过了 */
-  private virtualInitialNodeIsAsyncInited: boolean = false;
-
-  /** 虚拟的初始化 commit node，下标对应为 -1 */
-  private virtualInitialNode: SnapshotsNode = {
-    id: HistoryManager.VirtualInitialNodeId,
-    changedAreasSnapshots: {},
-    areasSnapshots: {},
-    createTime: new Date().getTime(),
-  };
+  private initialNodeAreasInfos: Record<
+    string,
+    {
+      commitInfo: any;
+      state: any;
+    }
+  > = {};
 
   private inited: boolean = false;
 
@@ -160,22 +155,26 @@ export class HistoryManager {
     const area = new HistoryArea(params);
     this.areas[area.name] = area;
 
-    if (this.virtualInitialNodeIsAsyncInited === false) {
-      this.virtualInitialNode.areasSnapshots[area.name] = {
-        state: area.getInitialState(),
-      };
-      /** 初始化的时候，所有都作为初始化 */
-      this.virtualInitialNode.changedAreasSnapshots[area.name] = {
-        commitInfo: {
-          type: 'registerArea',
-        },
-      };
-    }
+    /** 初始化的时候，所有都作为初始化 */
+    this.initialNodeAreasInfos[area.name] = {
+      state: area.getInitialState(),
+      commitInfo: {
+        type: 'registerArea',
+      },
+    };
 
     this.areasParkingSpace[params.name] = true;
 
-    if (this.inited && this.areasParkingSpaceIsReady()) {
-      this.eventCenter.dispatch('inited', this.getUpdateEventData());
+    if (this.areasParkingSpaceIsReady()) {
+      if (this.inited) {
+        this.eventCenter.dispatch('inited', this.getUpdateEventData());
+      }
+      if (this.snapshotsStack.length === 0) {
+        this.commit(
+          this.initialNodeAreasInfos,
+          HistoryManager.VirtualInitialNodeId,
+        );
+      }
     }
   }
 
@@ -183,20 +182,12 @@ export class HistoryManager {
   public init({
     snapshotsStack,
     index,
-    virtualInitialNode,
   }: {
     snapshotsStack?: SnapshotsNode[];
     index?: number;
-    virtualInitialNode?: SnapshotsNode;
   }) {
     this.snapshotsStack = snapshotsStack ?? this.snapshotsStack;
     this.index = index ?? this.index;
-    this.virtualInitialNode = virtualInitialNode ?? this.virtualInitialNode;
-
-    if (virtualInitialNode) {
-      /** 防止后续注册 area 覆盖服务器缓存数据 */
-      this.virtualInitialNodeIsAsyncInited = true;
-    }
 
     this.inited = true;
 
@@ -215,13 +206,14 @@ export class HistoryManager {
 
   /** 栈顶部增加一个快照节点 */
   public commit(
-    ...infoArr: [
+    infos: Record<
       string,
       {
         commitInfo: any;
         state: any;
-      },
-    ][]
+      }
+    >,
+    customId?: string,
   ) {
     /**
      * 如果当前 index 在中间位置，新增 commit 前要丢弃后面的 commit
@@ -231,9 +223,7 @@ export class HistoryManager {
       this.snapshotsStack = this.snapshotsStack.slice(0, this.index + 1);
     }
 
-    const infos = utl.fromPairs(infoArr);
-
-    const commitId = nanoid();
+    const commitId = customId ?? nanoid();
     const node = Object.keys(infos).reduce(
       (acc, areaName) => {
         return {
@@ -297,7 +287,7 @@ export class HistoryManager {
   /** 移动到某个 commit */
   public move(offset: -1 | 1 | 0) {
     const nextIndex = this.getNextIndex(offset);
-    if (nextIndex < -1 || nextIndex > this.snapshotsStack.length - 1) {
+    if (nextIndex < 0 || nextIndex > this.snapshotsStack.length - 1) {
       return;
     }
 
@@ -325,20 +315,14 @@ export class HistoryManager {
     }
 
     /** 未移动，当前的 node */
-    const currentNode =
-      this.index === -1
-        ? this.virtualInitialNode
-        : this.snapshotsStack[this.index];
+    const currentNode = this.snapshotsStack[this.index];
 
     /**
      * 如果快照数量为 1，并且 offset 为 -1
      * 那么退回的状态为空状态
      */
     const movedIndex = this.getNextIndex(offset);
-    const movedNode =
-      movedIndex === -1
-        ? this.virtualInitialNode
-        : this.snapshotsStack[movedIndex];
+    const movedNode = this.snapshotsStack[movedIndex];
     const movedPrevNode = this.snapshotsStack[movedIndex - 1] as
       | SnapshotsNode
       | undefined;
@@ -378,6 +362,7 @@ export class HistoryManager {
             .changedAreasSnapshots,
       ).map((areaName) => {
         const meta = movedNode.areasSnapshots[areaName];
+        debugger;
         return this.areas[areaName]
           .recover({
             state: meta.state,
@@ -448,7 +433,6 @@ export class HistoryManager {
     return {
       index: this.index,
       snapshotsStack: this.snapshotsStack,
-      virtualInitialNode: this.virtualInitialNode,
     };
   };
 

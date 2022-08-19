@@ -5,9 +5,9 @@ import Sheet from './Sheet';
 import { Trigger } from './Trigger';
 
 export default () => {
-  const { visible, setVisible } = useModel('dataMaskVisible', (model) => ({
+  const { visible, close } = useModel('dataMaskVisible', (model) => ({
     visible: model.visible,
-    setVisible: model.setVisible,
+    close: model.close,
   }));
   return (
     <>
@@ -16,7 +16,7 @@ export default () => {
         push={false}
         visible={visible}
         title="数据管理"
-        onClose={() => setVisible(false)}
+        onClose={() => close()}
         {...{
           placement: 'top',
           height: '90%',

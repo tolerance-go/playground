@@ -128,7 +128,6 @@ const useDataList = () => {
             state,
             commitInfo,
             nextNode,
-            prevNode,
             snapshotsStack,
             direction,
             currentNode,
@@ -340,16 +339,15 @@ const useDataList = () => {
   /** 尾部插入 */
   const pushData = useMemoizedFn((item: DataListItem) => {
     setDataList((prev) => {
-      historyManager.commit([
-        HistoryAreaNames.DataList,
-        {
+      historyManager.commit({
+        [HistoryAreaNames.DataList]: {
           commitInfo: {
             type: 'addDataListItem',
             data: item,
           },
           state: prev?.concat(item),
         },
-      ]);
+      });
       return prev?.concat(item);
     });
   });
@@ -361,16 +359,15 @@ const useDataList = () => {
       if (index !== undefined && index > -1) {
         const draft = [...prev];
         const removed = draft.splice(index, 1);
-        historyManager.commit([
-          HistoryAreaNames.DataList,
-          {
+        historyManager.commit({
+          [HistoryAreaNames.DataList]: {
             commitInfo: {
               type: 'deleteDataListItem',
               data: removed[0],
             },
             state: draft,
           },
-        ]);
+        });
         return draft;
       }
 
