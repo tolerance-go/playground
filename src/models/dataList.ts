@@ -1,4 +1,4 @@
-import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { HISTORY_AREA_NAMES } from '@/constants/HistoryAreaNames';
 import { RecoverParams } from '@/domains/HistoryManager';
 import {
   DatabaseControllerCreate,
@@ -136,7 +136,7 @@ const useDataList = () => {
         setDataList(dataList);
 
         historyManager.registerArea({
-          name: HistoryAreaNames.DataList,
+          name: HISTORY_AREA_NAMES.DATA_LIST,
           getInitialState: () => {
             return dataList;
           },
@@ -169,14 +169,14 @@ const useDataList = () => {
           >) => {
             if (direction === 'back') {
               if (
-                nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                nextNode?.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                   .commitInfo.type === 'deleteDataListItem'
               ) {
                 // 回退操作
                 // 回退前 nextNode，操作为 删除一项目
                 // 我们需要新增一个项目
                 const removedItem =
-                  nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  nextNode?.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                     .commitInfo.data;
 
                 const { success, data } = await DatabaseControllerCreate({
@@ -193,19 +193,19 @@ const useDataList = () => {
                   // 需要更新历史数据
                   // 1. 回退前删除的 info 里面的项目，因为删除后 state 没有，我们不用管
                   nextNode.changedAreasSnapshots[
-                    HistoryAreaNames.DataList
+                    HISTORY_AREA_NAMES.DATA_LIST
                   ].commitInfo.data = data!;
                   // 2. 当前 node 往后，直到找到第一次添加 removedItem 的地方停止，替换 info 和 state 中的所有数据
                   for (let floatIndex = index; floatIndex > -1; floatIndex--) {
                     if (
                       snapshotsStack[floatIndex].areasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ]
                     ) {
                       snapshotsStack[floatIndex].areasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].state = snapshotsStack[floatIndex].areasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].state.map((item) => {
                         if (item.id === removedItem.id) {
                           return data!;
@@ -216,14 +216,14 @@ const useDataList = () => {
 
                     if (
                       snapshotsStack[floatIndex].changedAreasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ]?.commitInfo.type === 'addDataListItem' &&
                       snapshotsStack[floatIndex].changedAreasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].commitInfo.data.id === removedItem.id
                     ) {
                       snapshotsStack[floatIndex].changedAreasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].commitInfo.data = data!;
 
                       break;
@@ -231,18 +231,18 @@ const useDataList = () => {
                   }
 
                   setDataList(
-                    currentNode.areasSnapshots[HistoryAreaNames.DataList].state,
+                    currentNode.areasSnapshots[HISTORY_AREA_NAMES.DATA_LIST].state,
                   );
                 }
 
                 return { success };
               }
               if (
-                nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                nextNode?.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                   .commitInfo.type === 'addDataListItem'
               ) {
                 const addedItem =
-                  nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  nextNode?.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                     .commitInfo.data;
                 const { success } = await DatabaseControllerDestroy({
                   id: String(addedItem.id),
@@ -254,11 +254,11 @@ const useDataList = () => {
               }
 
               if (
-                nextNode?.changedAreasSnapshots[HistoryAreaNames.DataList]
+                nextNode?.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                   .commitInfo.type === 'updateDataListItem'
               ) {
                 const updatedItem =
-                  nextNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  nextNode.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                     .commitInfo.data;
 
                 tagWithTriggerUpdateByRecoverUpdateDataListItemRef.current = true;
@@ -276,7 +276,7 @@ const useDataList = () => {
 
             if (direction === 'forward') {
               if (
-                currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                currentNode.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                   .commitInfo.type === 'deleteDataListItem'
               ) {
                 const removedItem = commitInfo.data;
@@ -290,7 +290,7 @@ const useDataList = () => {
               }
 
               if (
-                currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                currentNode.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                   .commitInfo.type === 'addDataListItem'
               ) {
                 // 前进操作
@@ -298,7 +298,7 @@ const useDataList = () => {
                 // 我们需要重新增加一个项目
 
                 const addedItem =
-                  currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                  currentNode.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                     .commitInfo.data;
                 const { success, data } = await DatabaseControllerCreate({
                   // 这里要加一个 xxxx 来指定创建后的顺序，比如逻辑的 createTime 和 updateTime
@@ -316,11 +316,11 @@ const useDataList = () => {
                   // 需要更新历史数据
                   // 1. 当前节点之前新增的数据，替换成新的新增
                   const oldAddedItem =
-                    currentNode.changedAreasSnapshots[HistoryAreaNames.DataList]
+                    currentNode.changedAreasSnapshots[HISTORY_AREA_NAMES.DATA_LIST]
                       .commitInfo.data;
 
                   currentNode.changedAreasSnapshots[
-                    HistoryAreaNames.DataList
+                    HISTORY_AREA_NAMES.DATA_LIST
                   ].commitInfo.data = addedItem;
 
                   // 2. 当前 node 往前，直到首次出现删除 addedItem 的地方，替换 info 和 state 中的所有数据
@@ -332,13 +332,13 @@ const useDataList = () => {
                   ) {
                     if (
                       snapshotsStack[floatIndex].areasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ]
                     ) {
                       snapshotsStack[floatIndex].areasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].state = snapshotsStack[floatIndex].areasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].state.map((item) => {
                         if (item.id === oldAddedItem.id) {
                           return data!;
@@ -349,14 +349,14 @@ const useDataList = () => {
 
                     if (
                       snapshotsStack[floatIndex].changedAreasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ]?.commitInfo.type === 'deleteDataListItem' &&
                       snapshotsStack[floatIndex].changedAreasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].commitInfo.data.id === oldAddedItem.id
                     ) {
                       snapshotsStack[floatIndex].changedAreasSnapshots[
-                        HistoryAreaNames.DataList
+                        HISTORY_AREA_NAMES.DATA_LIST
                       ].commitInfo.data = data!;
 
                       break;
@@ -364,7 +364,7 @@ const useDataList = () => {
                   }
 
                   setDataList(
-                    currentNode.areasSnapshots[HistoryAreaNames.DataList].state,
+                    currentNode.areasSnapshots[HISTORY_AREA_NAMES.DATA_LIST].state,
                   );
                 }
 
@@ -384,7 +384,7 @@ const useDataList = () => {
   const pushData = useMemoizedFn((item: DataListItem) => {
     setDataList((prev) => {
       historyManager.commit({
-        [HistoryAreaNames.DataList]: {
+        [HISTORY_AREA_NAMES.DATA_LIST]: {
           commitInfo: {
             type: 'addDataListItem',
             data: item,
@@ -404,7 +404,7 @@ const useDataList = () => {
         const draft = [...prev];
         const removed = draft.splice(index, 1);
         historyManager.commit({
-          [HistoryAreaNames.DataList]: {
+          [HISTORY_AREA_NAMES.DATA_LIST]: {
             commitInfo: {
               type: 'deleteDataListItem',
               data: removed[0],

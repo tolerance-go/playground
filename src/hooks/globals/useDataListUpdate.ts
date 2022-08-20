@@ -1,4 +1,4 @@
-import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { HISTORY_AREA_NAMES } from '@/constants/HistoryAreaNames';
 import { DataListItem } from '@/models/dataList';
 import { DatabaseControllerUpdate } from '@/services/server/DatabaseController';
 import { useModel } from '@umijs/max';
@@ -40,7 +40,7 @@ export const useDataListUpdate = () => {
         tagWithTriggerUpdateByRecoverUpdateDataListItemRef.current = false;
       } else {
         historyManager.commit({
-          [HistoryAreaNames.DataList]: {
+          [HISTORY_AREA_NAMES.DATA_LIST]: {
             commitInfo: {
               type: 'updateDataListItem',
               data: pick(selectedDataListItem, ['id']),

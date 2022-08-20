@@ -61,3 +61,13 @@ src/models/comsEventsConfigs.ts
 ## 7. 添加插槽类型
 
 src/models/componentsSlots.ts
+
+## 最佳实践
+
+1. 一般视图层 事件回调的地方，最好只 set 很少的状态，考虑用 effect 进行关联，如果一个事件处理函数中，出现了很多 set 就需要额外注意是不是设计上存在缺陷，如果 set 应只保留当前操作最相关的部分
+
+```
+ onClose={() => {
+        setDetailVisible(false);
+      }}
+```

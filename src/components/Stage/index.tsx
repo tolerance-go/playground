@@ -6,7 +6,7 @@ import { ElementCenter } from '@/typings/ElementCenter';
 import { joinUnitNumber } from '@/utils/joinUnitNumber';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AtomLine } from '../atomComs/AtomLine';
 import { AtomTable } from '../atomComs/AtomTable';
 
@@ -17,7 +17,9 @@ const Elements: ElementCenter = {
   table: AtomTable,
 };
 
-export default function Stage() {
+export default function Stage(props: {
+  renderInner?: (inner: React.ReactNode) => React.ReactNode;
+}) {
   const { rootIds, stageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => {
@@ -44,6 +46,14 @@ export default function Stage() {
 
   consola.info('渲染跟节点组件', rootIds, stageComponentsModel);
 
+  const inner = (
+    <ElementsCxt.Provider value={Elements}>
+      {rootNodeModels.map((model) => (
+        <Atom key={model?.id} {...model} />
+      ))}
+    </ElementsCxt.Provider>
+  );
+
   return (
     <div
       id="stage"
@@ -53,11 +63,7 @@ export default function Stage() {
         background: '#fff',
       }}
     >
-      <ElementsCxt.Provider value={Elements}>
-        {rootNodeModels.map((model) => (
-          <Atom key={model?.id} {...model} />
-        ))}
-      </ElementsCxt.Provider>
+      {props.renderInner ? props.renderInner(inner) : inner}
     </div>
   );
 }

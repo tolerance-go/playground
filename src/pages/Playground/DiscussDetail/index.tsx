@@ -1,40 +1,72 @@
-import { Drawer, Typography } from 'antd';
+import { SwapLeftOutlined } from '@ant-design/icons';
+import { useModel } from '@umijs/max';
+import { Button, Col, Drawer, Row, Space } from 'antd';
 import CommentList from './CommentList';
+import { ParagraphItem } from './ParagraphItem';
+import { TitleItem } from './TitleItem';
 
 export const DiscussDetail = () => {
+  const { detailVisible, setDetailVisible } = useModel(
+    'playground',
+    (model) => ({
+      detailVisible: model.detailVisible,
+      setDetailVisible: model.setDetailVisible,
+    }),
+  );
+
   return (
     <Drawer
       placement="right"
-      visible
-      title={
-        <Typography.Title
-          level={5}
-          editable
-          ellipsis
-          style={{
-            width: 'calc(100% - 15px)',
-            marginBottom: 0,
-          }}
-        >
-          可以色彩在显眼一点吗
-        </Typography.Title>
+      onClose={() => {
+        setDetailVisible(false);
+      }}
+      destroyOnClose
+      visible={detailVisible}
+      bodyStyle={{
+        padding: 0,
+      }}
+      extra={
+        <Space>
+          <Button icon={<SwapLeftOutlined />} shape="round">
+            返回列表
+          </Button>
+          <Button type="primary" shape="round">
+            解决
+          </Button>
+        </Space>
       }
     >
-      <div>
-        <Typography.Paragraph
-          editable
-          ellipsis={{
-            rows: 3,
-            expandable: true,
-            symbol: '更多',
+      <Row
+        style={{
+          flexDirection: 'column',
+          height: '100%',
+          alignItems: 'stretch',
+        }}
+        wrap={false}
+      >
+        <Col
+          flex={'300px'}
+          style={{
+            overflow: 'auto',
+            paddingTop: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
           }}
         >
-          要连接到数据库,必须创建一个 Sequelize 实例.
-          这可以通过将连接参数分别传递到 Sequelize数分别传递到 Seq数分别传递到
-          Seq 构造函数或通过传递一个连接 URI 来完成：
-        </Typography.Paragraph>
-      </div>
-      <CommentList />
+          <TitleItem />
+          <ParagraphItem />
+        </Col>
+        <Col
+          flex={'auto'}
+          style={{
+            overflow: 'auto',
+            paddingRight: 24,
+            paddingLeft: 24,
+          }}
+        >
+          <CommentList />
+        </Col>
+      </Row>
     </Drawer>
   );
 };

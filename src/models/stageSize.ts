@@ -1,4 +1,4 @@
-import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { HISTORY_AREA_NAMES } from '@/constants/HistoryAreaNames';
 import { getURLQuery } from '@/helps/getURLQuery';
 import {
   AppControllerShow,
@@ -42,7 +42,7 @@ const useStageSize = () => {
           updateCauseRecoverRef.current = false;
         } else {
           historyManager.commit({
-            [HistoryAreaNames.StageSize]: {
+            [HISTORY_AREA_NAMES.STAGE_SIZE]: {
               state: data,
               commitInfo: undefined,
             },
@@ -74,7 +74,7 @@ const useStageSize = () => {
           : undefined;
 
         historyManager.registerArea<BoxSize | undefined, undefined>({
-          name: HistoryAreaNames.StageSize,
+          name: HISTORY_AREA_NAMES.STAGE_SIZE,
           getInitialState: () => {
             return stageData;
           },

@@ -1,4 +1,5 @@
 import { ElementsCxt } from '@/components/ElementsCtx';
+import { PLAYGROUND_ATOM_WRAPPER_CLASS_NAME } from '@/constants/atoms';
 import { useComActiveStatSetting } from '@/hooks/useComActiveStatSetting';
 import { useComActiveStatStyle } from '@/hooks/useComActiveStatStyle';
 import { useComDefaultStatId } from '@/hooks/useComDefaultStatId';
@@ -38,6 +39,8 @@ export const Atom = (props: StageComponentsModelItem) => {
 
   consola.info('渲染 atom 组件', props.id);
 
+  const statId = (usedStatId ?? defaultStatId) as string;
+
   /**
    * 选中状态 settings 优先级最高
    * 其他 used 大于 defaults
@@ -48,7 +51,7 @@ export const Atom = (props: StageComponentsModelItem) => {
       {...{
         id: props.id,
         /** 每个组件都一定存在一个默认状态 */
-        statId: (usedStatId ?? defaultStatId) as string,
+        statId,
         settings:
           stageSelectNodeId === props.id
             ? activeStatSettings ?? usedSettings ?? defaultSettings
@@ -64,7 +67,18 @@ export const Atom = (props: StageComponentsModelItem) => {
   );
 
   if (location.pathname === '/playground') {
-    return el;
+    return (
+      <div
+        data-statId={statId}
+        data-comId={props.id}
+        className={PLAYGROUND_ATOM_WRAPPER_CLASS_NAME}
+        style={{
+          display: props.display,
+        }}
+      >
+        {el}
+      </div>
+    );
   }
 
   return (

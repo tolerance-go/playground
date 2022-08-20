@@ -54,7 +54,7 @@ export async function DiscussControllerUpdate(
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponse>(`/api/discusses/${param0}`, {
+  return request<API.DiscussShowResponse>(`/api/discusses/${param0}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

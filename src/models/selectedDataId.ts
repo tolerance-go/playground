@@ -1,4 +1,4 @@
-import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { HISTORY_AREA_NAMES } from '@/constants/HistoryAreaNames';
 import { RecoverParams } from '@/domains/HistoryManager';
 import { useModel } from '@umijs/max';
 import { useGetState, useMemoizedFn } from 'ahooks';
@@ -17,7 +17,7 @@ const useSelectedDataId = () => {
   const selectWithDataId = useMemoizedFn((dataId?: number) => {
     setSelectedDataId(dataId);
     historyManager.commit({
-      [HistoryAreaNames.SelectedDataListId]: {
+      [HISTORY_AREA_NAMES.SELECTED_DATA_LIST_ID]: {
         state: dataId,
         commitInfo: undefined,
       },
@@ -26,7 +26,7 @@ const useSelectedDataId = () => {
 
   useEffect(() => {
     historyManager.registerArea({
-      name: HistoryAreaNames.SelectedDataListId,
+      name: HISTORY_AREA_NAMES.SELECTED_DATA_LIST_ID,
       getInitialState: () => {
         return undefined;
       },

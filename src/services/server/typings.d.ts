@@ -142,15 +142,17 @@ declare namespace API {
   };
 
   type CreationDiscuss = {
-    title: string;
+    title?: string;
     desc?: string;
-    belongsToComId: number;
-    belongsToComStatId: number;
+    belongsToComStatId: string;
+    belongsToComId: string;
     left: number;
     top: number;
     containerWidth: number;
     containerHeight: number;
-    page_id: number;
+    containerLeft: number;
+    containerTop: number;
+    pageId: number;
   };
 
   type CreationPage = {
@@ -218,15 +220,17 @@ declare namespace API {
 
   type Discuss = {
     id: number;
-    title: string;
+    title?: string;
     desc?: string;
-    belongsToComId: number;
-    belongsToComStatId: number;
+    belongsToComStatId: string;
+    belongsToComId: string;
     left: number;
     top: number;
     containerWidth: number;
     containerHeight: number;
-    page_id: number;
+    containerLeft: number;
+    containerTop: number;
+    pageId: number;
   };
 
   type DiscussControllerDestroyParams = {
@@ -235,8 +239,8 @@ declare namespace API {
   };
 
   type DiscussControllerIndexParams = {
-    /** appId  */
-    appId?: number;
+    /** pageId  */
+    pageId?: number;
     /** limit  */
     limit?: number;
     /** offset  */
@@ -250,7 +254,7 @@ declare namespace API {
 
   type DiscussControllerUpdateParams = {
     /** id  */
-    id: string;
+    id: number;
   };
 
   type DiscussListResponse = {
@@ -335,15 +339,17 @@ declare namespace API {
     id: number;
     createdAt: string;
     updatedAt: string;
-    title: string;
+    title?: string;
     desc?: string;
-    belongsToComId: number;
-    belongsToComStatId: number;
+    belongsToComStatId: string;
+    belongsToComId: string;
     left: number;
     top: number;
     containerWidth: number;
     containerHeight: number;
-    page_id: number;
+    containerLeft: number;
+    containerTop: number;
+    pageId: number;
   };
 
   type Version = {

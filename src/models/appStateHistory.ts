@@ -1,4 +1,4 @@
-import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { HISTORY_AREA_NAMES } from '@/constants/HistoryAreaNames';
 import {
   HistoryManager,
   HistoryUpdateDataType,
@@ -17,7 +17,7 @@ import { SnapshotsNode } from './../domains/HistoryManager';
 
 const useAppStateHistory = () => {
   const [historyManager] = useState(
-    new HistoryManager(utl.values(HistoryAreaNames)),
+    () => new HistoryManager(utl.values(HISTORY_AREA_NAMES)),
   );
   const [reverting, setReverting] = useState(false);
   const [snapshotsStack, setSnapshotsStack] = useState<SnapshotsNode[]>([]);

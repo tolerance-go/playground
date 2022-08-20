@@ -1,4 +1,4 @@
-import { HistoryAreaNames } from '@/constants/HistoryAreaNames';
+import { HISTORY_AREA_NAMES } from '@/constants/HistoryAreaNames';
 import { RecoverParams } from '@/domains/HistoryManager';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
@@ -20,7 +20,7 @@ const useDataMaskVisible = () => {
   const open = useMemoizedFn(() => {
     setVisible(true);
     historyManager.commit({
-      [HistoryAreaNames.DataMaskVisible]: {
+      [HISTORY_AREA_NAMES.DATA_MASK_VISIBLE]: {
         state: {
           visible: true,
         },
@@ -32,7 +32,7 @@ const useDataMaskVisible = () => {
   const close = useMemoizedFn(() => {
     setVisible(false);
     historyManager.commit({
-      [HistoryAreaNames.DataMaskVisible]: {
+      [HISTORY_AREA_NAMES.DATA_MASK_VISIBLE]: {
         state: {
           visible: false,
         },
@@ -43,7 +43,7 @@ const useDataMaskVisible = () => {
 
   useEffect(() => {
     historyManager.registerArea({
-      name: HistoryAreaNames.DataMaskVisible,
+      name: HISTORY_AREA_NAMES.DATA_MASK_VISIBLE,
       getInitialState: () => {
         return {
           visible: defaultVisible,
