@@ -7,15 +7,14 @@ import DiscussItem from '../DiscussItem';
 import { TempDiscussItem } from '../TempDiscussItem';
 
 export const StageInnerWrapper = (props: PropsWithChildren<unknown>) => {
-  const { discusses, mode, tempDiscuss, setTempDiscuss } = useModel(
-    'playground',
-    (model) => ({
-      discusses: model.discusses,
+  const { mode, tempDiscuss, filterDiscusses, setTempDiscuss, setDetailMode } =
+    useModel('playground', (model) => ({
       mode: model.mode,
       tempDiscuss: model.tempDiscuss,
+      filterDiscusses: model.filterDiscusses,
       setTempDiscuss: model.setTempDiscuss,
-    }),
-  );
+      setDetailMode: model.setDetailMode,
+    }));
 
   return (
     <div
@@ -49,13 +48,15 @@ export const StageInnerWrapper = (props: PropsWithChildren<unknown>) => {
             belongsToComStatId: statId!,
             pageId: Number(query.pageId),
           });
+
+          setDetailMode('detail');
         }
       }}
     >
       {props.children}
       {mode === 'discuss' && !tempDiscuss
-        ? discusses.map((discuss) => {
-            return <DiscussItem key={discuss.id} {...discuss} />;
+        ? filterDiscusses.map((discuss, index) => {
+            return <DiscussItem key={discuss.id} {...discuss} index={index} />;
           })
         : null}
       <TempDiscussItem />

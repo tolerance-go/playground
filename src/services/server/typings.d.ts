@@ -153,6 +153,7 @@ declare namespace API {
     containerLeft: number;
     containerTop: number;
     pageId: number;
+    resolved?: boolean;
   };
 
   type CreationPage = {
@@ -231,11 +232,12 @@ declare namespace API {
     containerLeft: number;
     containerTop: number;
     pageId: number;
+    resolved?: boolean;
   };
 
   type DiscussControllerDestroyParams = {
     /** id  */
-    id: string;
+    id: number;
   };
 
   type DiscussControllerIndexParams = {
@@ -350,6 +352,22 @@ declare namespace API {
     containerLeft: number;
     containerTop: number;
     pageId: number;
+    resolved?: boolean;
+  };
+
+  type UpdationDiscuss = {
+    title?: string;
+    desc?: string;
+    belongsToComStatId?: string;
+    belongsToComId?: string;
+    left?: number;
+    top?: number;
+    containerWidth?: number;
+    containerHeight?: number;
+    containerLeft?: number;
+    containerTop?: number;
+    pageId?: number;
+    resolved?: boolean;
   };
 
   type Version = {

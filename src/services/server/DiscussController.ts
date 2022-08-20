@@ -50,7 +50,7 @@ export async function DiscussControllerShow(
 export async function DiscussControllerUpdate(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.DiscussControllerUpdateParams,
-  body: API.CreationDiscuss,
+  body: API.UpdationDiscuss,
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;

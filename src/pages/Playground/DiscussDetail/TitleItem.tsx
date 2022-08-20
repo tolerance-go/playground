@@ -1,5 +1,5 @@
 import { useModel } from '@umijs/max';
-import { useClickAway, useMemoizedFn } from 'ahooks';
+import { useMemoizedFn } from 'ahooks';
 import { Typography } from 'antd';
 import { useRef, useState } from 'react';
 
@@ -31,10 +31,15 @@ export const TitleItem = () => {
 
   const handlerEnd = useMemoizedFn(() => {
     if (tempDiscuss) {
-      requestCreateDiscuss({
-        ...tempDiscuss,
-        title: valueRef.current,
-      });
+      /** 如果没有输入，就点击外部，则清空 temp，放弃本次创建 */
+      if (!valueRef.current) {
+        setTempDiscuss(undefined);
+      } else {
+        requestCreateDiscuss({
+          ...tempDiscuss,
+          title: valueRef.current,
+        });
+      }
     } else {
       updateSelectedDiscussContent({
         /** 防止拿到旧数据，原因未知 */
@@ -44,14 +49,13 @@ export const TitleItem = () => {
     }
   });
 
-  useClickAway(() => {
-    if (tempTitleEditing) {
-      handlerEnd();
-    }
-  }, ref);
-
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      onBlur={() => {
+        handlerEnd();
+      }}
+    >
       <Typography.Title
         level={4}
         editable={{
@@ -67,6 +71,9 @@ export const TitleItem = () => {
             /** 临时状态，什么都没输入 esc，则默认退出临时状态 */
             if (tempDiscuss) {
               setTempDiscuss(undefined);
+            } else {
+              setValue(selectedDiscuss?.title);
+              setTempTitleEditing(false);
             }
           },
           onStart() {
