@@ -4,6 +4,7 @@ import { useDebounce } from 'ahooks';
 import {
   Button,
   Col,
+  Divider,
   Drawer,
   Popconfirm,
   Row,
@@ -49,6 +50,10 @@ export const DiscussDetail = () => {
     filterDiscusses: model.filterDiscusses,
     setSelectedDiscussId: model.setSelectedDiscussId,
     selectedNextItem: model.selectedNextItem,
+  }));
+
+  const { discussComments } = useModel('discussComments', (model) => ({
+    discussComments: model.discussComments,
   }));
 
   const dtempDiscuss = useDebounce(tempDiscuss, {
@@ -175,6 +180,21 @@ export const DiscussDetail = () => {
             <ParagraphItem />
           </Col>
           <Col
+            flex={'none'}
+            style={{
+              paddingRight: 24,
+              paddingLeft: 24,
+            }}
+          >
+            <Typography.Text>{`${discussComments.length} 条评论 & 回复`}</Typography.Text>
+            <Divider
+              style={{
+                marginTop: 12,
+                marginBottom: 0,
+              }}
+            />
+          </Col>
+          <Col
             flex={'auto'}
             style={{
               overflow: 'auto',
@@ -182,7 +202,9 @@ export const DiscussDetail = () => {
               paddingLeft: 24,
             }}
           >
-            <CommentList />
+            {selectedDiscuss ? (
+              <CommentList discussId={selectedDiscuss.id} />
+            ) : null}
           </Col>
         </Row>
       ) : (

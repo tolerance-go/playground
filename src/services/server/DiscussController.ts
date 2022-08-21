@@ -32,6 +32,21 @@ export async function DiscussControllerCreate(
   });
 }
 
+/** 获取列表  描述  GET /api/discusses-count-comments */
+export async function DiscussControllerCountComments(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.DiscussControllerCountCommentsParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.CounterResponse>('/api/discusses-count-comments', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 查看  描述  GET /api/discusses/${param0} */
 export async function DiscussControllerShow(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

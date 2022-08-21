@@ -68,6 +68,55 @@ declare namespace API {
     showType?: number;
   };
 
+  type Comment = {
+    id: number;
+    content?: string;
+    replyTo?: number;
+    likeNum?: number;
+    dislikeNum?: number;
+    discussId: number;
+  };
+
+  type CommentControllerDestroyParams = {
+    /** id  */
+    id: number;
+  };
+
+  type CommentControllerIndexParams = {
+    /** discussId  */
+    discussId?: number;
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+  };
+
+  type CommentControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type CommentControllerUpdateParams = {
+    /** id  */
+    id: number;
+  };
+
+  type CommentListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: ShownComment[];
+  };
+
+  type CommentShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: ShownComment;
+  };
+
   type Component = {
     id: number;
     name: string;
@@ -116,6 +165,27 @@ declare namespace API {
     data?: Component;
   };
 
+  type Counter = {
+    id: number;
+    count: number;
+  };
+
+  type CounterResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: Counter[];
+  };
+
+  type CountResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: number;
+  };
+
   type CreationApp = {
     title: string;
     desc?: string;
@@ -123,6 +193,14 @@ declare namespace API {
     history_data?: string;
     stage_size_data?: string;
     labels?: string[];
+  };
+
+  type CreationComment = {
+    content?: string;
+    replyTo?: number;
+    likeNum?: number;
+    dislikeNum?: number;
+    discussId: number;
   };
 
   type CreationComponent = {
@@ -235,6 +313,11 @@ declare namespace API {
     resolved?: boolean;
   };
 
+  type DiscussControllerCountCommentsParams = {
+    /** pageId  */
+    pageId?: number;
+  };
+
   type DiscussControllerDestroyParams = {
     /** id  */
     id: number;
@@ -273,6 +356,14 @@ declare namespace API {
     errorMessage?: string;
     showType?: number;
     data?: ShownDiscuss;
+  };
+
+  type Identities = {
+    id: number[];
+  };
+
+  type Identity = {
+    id: number;
   };
 
   type Page = {
@@ -325,6 +416,17 @@ declare namespace API {
     data?: Page;
   };
 
+  type ShownComment = {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    content?: string;
+    replyTo?: number;
+    likeNum?: number;
+    dislikeNum?: number;
+    discussId: number;
+  };
+
   type ShownDatabase = {
     id: number;
     createdAt: string;
@@ -353,6 +455,14 @@ declare namespace API {
     containerTop: number;
     pageId: number;
     resolved?: boolean;
+  };
+
+  type UpdationComment = {
+    content?: string;
+    replyTo?: number;
+    likeNum?: number;
+    dislikeNum?: number;
+    discussId?: number;
   };
 
   type UpdationDiscuss = {

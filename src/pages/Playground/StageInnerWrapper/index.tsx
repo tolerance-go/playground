@@ -30,7 +30,7 @@ export const StageInnerWrapper = (props: PropsWithChildren<unknown>) => {
         );
 
         if (parentAtomWrapper) {
-          const rect = event.currentTarget.getBoundingClientRect();
+          const rect = parentAtomWrapper.getBoundingClientRect();
 
           const { comid: comId, statid: statId } =
             parentAtomWrapper.dataset ?? {};

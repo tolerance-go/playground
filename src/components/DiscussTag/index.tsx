@@ -14,7 +14,7 @@ export const DiscussTag = (props: {
       className={props.className}
       type={props.type}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: props.top,
         left: props.left,
         transform: 'translate(-50%, -50%)',

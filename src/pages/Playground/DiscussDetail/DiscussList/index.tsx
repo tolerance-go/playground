@@ -1,6 +1,6 @@
 import { ProList } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Avatar, Space, Tag, Typography } from 'antd';
+import { Avatar, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 
 export default () => {
@@ -10,6 +10,13 @@ export default () => {
       filterDiscusses: model.filterDiscusses,
       setSelectedDiscussId: model.setSelectedDiscussId,
       setDetailMode: model.setDetailMode,
+    }),
+  );
+
+  const { allDiscussCommentsCount } = useModel(
+    'allDiscussCommentsCount',
+    (model) => ({
+      allDiscussCommentsCount: model.allDiscussCommentsCount,
     }),
   );
 
@@ -46,9 +53,27 @@ export default () => {
                       fontSize: 10,
                     }}
                   >
+                    admin
+                  </Typography.Text>
+                  {allDiscussCommentsCount[item.id] ? (
+                    <Typography.Text
+                      type="secondary"
+                      style={{
+                        fontSize: 10,
+                      }}
+                    >
+                      {allDiscussCommentsCount[item.id]} 条评论
+                    </Typography.Text>
+                  ) : null}
+                  <Typography.Text
+                    type="secondary"
+                    style={{
+                      color: '#ccc',
+                      fontSize: 10,
+                    }}
+                  >
                     {dayjs(item.createdAt).fromNow()}
                   </Typography.Text>
-                  <Tag>30 条评论</Tag>
                 </Space>
               </div>
             );
