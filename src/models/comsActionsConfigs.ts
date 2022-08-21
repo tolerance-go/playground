@@ -25,18 +25,25 @@ const switchStatusAction: ComActionsConfig = {
       visible: [
         ({ settings }) => !!settings?.targetComId,
         {
-          name: ['targetComId'],
+          dependencies: ['targetComId'],
         },
       ],
-      options: ({ getSelectedComStatus }) => {
-        const comStatus = getSelectedComStatus();
-        return Object.keys(comStatus ?? {}).map((statId) => {
-          return {
-            label: comStatus?.[statId].name,
-            value: statId,
-          };
-        });
-      },
+      options: [
+        ({ settings }, { getComponentsStatus }) => {
+          const comStatus = getComponentsStatus();
+          return Object.keys(comStatus[settings?.targetComId] ?? {}).map(
+            (statId) => {
+              return {
+                label: comStatus[settings?.targetComId]?.[statId].name,
+                value: statId,
+              };
+            },
+          );
+        },
+        {
+          dependencies: ['targetComId'],
+        },
+      ],
     },
   ],
 };

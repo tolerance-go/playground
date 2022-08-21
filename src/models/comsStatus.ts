@@ -1,11 +1,10 @@
 import { useModel } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
+import { useGetState, useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import { DEFAULT_COM_STATUS_NAME } from './../constants/index';
 
 import { ComId, StatId } from '@/typings/keys';
 import utl from 'lodash';
-import { useState } from 'react';
 
 /** 组件状态 */
 export type ComponentStat = {
@@ -20,9 +19,8 @@ export type ComponentStatus = Record<StatId, ComponentStat>;
 export type ComponentsStatus = Record<ComId, ComponentStatus>;
 
 const useStatusSettings = () => {
-  const [componentsStatus, setComponentsStatus] = useState<ComponentsStatus>(
-    {},
-  );
+  const [componentsStatus, setComponentsStatus, getComponentsStatus] =
+    useGetState<ComponentsStatus>({});
 
   const { getSelectedComponentStatusId } = useModel(
     'selectedComponentStatusId',
@@ -102,10 +100,6 @@ const useStatusSettings = () => {
         }),
       );
     }
-  });
-
-  const getComponentsStatus = useMemoizedFn(() => {
-    return componentsStatus;
   });
 
   /** 获取指定组件的所有状态 */

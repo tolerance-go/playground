@@ -1,9 +1,25 @@
 import { SegmentedSwitch } from '@/components/SegmentedSwitch';
 import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
+import { RecordType } from '@/typings';
+import { WithDependencies } from '@/typings/SettingFormConfig';
+import { ProFormDependency } from '@ant-design/pro-components';
+import { useModel } from '@umijs/max';
 import { Input, Select } from 'antd';
 import BoxPositionInput from './inputs/BoxPositionInput';
 import BoxSizeInput from './inputs/BoxSizeInput';
 import { ConfigInputProps } from './typings/ConfigInputProps';
+
+const isWithDependenciesLike = <T extends (...args: any[]) => any, O>(
+  item: WithDependencies<T> | O,
+): item is WithDependencies<T> => {
+  return (
+    Array.isArray(item) &&
+    item.length === 2 &&
+    typeof item[0] === 'function' &&
+    typeof item[1] === 'object' &&
+    Array.isArray(item[1].dependencies)
+  );
+};
 
 export const ConfigInput = ({
   config,
@@ -12,8 +28,15 @@ export const ConfigInput = ({
   disabled,
   bordered,
   theme,
+  formItemNamePrefix,
 }: ConfigInputProps) => {
   const { getSelectedComStatus } = useSelectedComponentStatus();
+
+  const { getComponentsStatus } = useModel('comsStatus', (model) => {
+    return {
+      getComponentsStatus: model.getComponentsStatus,
+    };
+  });
 
   if (config.type === 'string') {
     return (
@@ -35,30 +58,73 @@ export const ConfigInput = ({
   }
 
   if (config.type === 'select') {
-    return (
-      <Select
-        style={
-          theme === 'dark-area'
-            ? {
-                background: '#f3f3f3',
-                borderRadius: '4px',
-              }
-            : undefined
-        }
-        disabled={disabled}
-        mode={config.multiple ? 'multiple' : undefined}
-        value={value}
-        onChange={onChange}
-        options={
-          typeof config.options === 'function'
-            ? config.options({
+    const dependencies = (() => {
+      const arr = [];
+
+      if (isWithDependenciesLike(config.options)) {
+        arr.push(...config.options[1].dependencies);
+      }
+
+      return arr;
+    })();
+
+    const hasDependency = !!dependencies.length;
+
+    const renderInput = (depends?: RecordType) => {
+      return (
+        <Select
+          style={
+            theme === 'dark-area'
+              ? {
+                  background: '#f3f3f3',
+                  borderRadius: '4px',
+                }
+              : undefined
+          }
+          disabled={disabled}
+          mode={config.multiple ? 'multiple' : undefined}
+          value={value}
+          onChange={onChange}
+          options={(() => {
+            if (typeof config.options === 'function') {
+              return config.options({
                 getSelectedComStatus,
-              })
-            : config.options
-        }
-        bordered={bordered}
-      />
-    );
+                getComponentsStatus,
+              });
+            }
+
+            if (isWithDependenciesLike(config.options)) {
+              return config.options[0](depends!, {
+                getSelectedComStatus,
+                getComponentsStatus,
+              });
+            }
+
+            return config.options;
+          })()}
+          bordered={bordered}
+        />
+      );
+    };
+
+    if (hasDependency) {
+      return (
+        <ProFormDependency
+          name={
+            formItemNamePrefix
+              ? [formItemNamePrefix, ...dependencies]
+              : dependencies
+          }
+        >
+          {(depends) => {
+            debugger;
+            return renderInput(depends);
+          }}
+        </ProFormDependency>
+      );
+    }
+
+    return renderInput();
   }
 
   if (config.type === 'boolean') {

@@ -104,7 +104,12 @@ export const ConfigFormItem = ({
           : []),
       ]}
     >
-      <ConfigInput {...extraInputProps} config={item} theme={theme} />
+      <ConfigInput
+        {...extraInputProps}
+        config={item}
+        theme={theme}
+        formItemNamePrefix={formItemNamePrefix}
+      />
     </Form.Item>
   );
 };

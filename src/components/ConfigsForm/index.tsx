@@ -30,8 +30,8 @@ export const ConfigsForm = ({
           <ProFormDependency
             name={
               formItemNamePrefix
-                ? [formItemNamePrefix, ...item.visible[1].name]
-                : item.visible[1].name
+                ? [formItemNamePrefix, ...item.visible[1].dependencies]
+                : item.visible[1].dependencies
             }
           >
             {(depends) => {

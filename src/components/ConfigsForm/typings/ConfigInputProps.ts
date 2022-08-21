@@ -7,4 +7,5 @@ export type ConfigInputProps = {
   onChange?: (next: any) => void;
   bordered?: boolean;
   theme?: 'dark-area';
+  formItemNamePrefix?: string;
 };
