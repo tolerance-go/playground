@@ -20,7 +20,7 @@ export const TitleItem = () => {
 
   return (
     <Typography.Title
-      level={4}
+      level={location.pathname === '/workbench' ? 5 : 4}
       editable={{
         autoSize: {
           maxRows: 3,

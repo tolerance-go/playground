@@ -19,6 +19,7 @@ export const TempDiscussItem = () => {
 
   const createDiscuss = useMemoizedFn(() => {
     if (!tempDiscuss) return;
+    if (!value) return;
 
     requestCreateDiscuss(
       {
