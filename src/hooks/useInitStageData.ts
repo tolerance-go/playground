@@ -3,7 +3,7 @@ import { useMemoizedFn } from 'ahooks';
 
 export const useInitSatgeData = () => {
   const { initData: initComsTreeData } = useModel(
-    'stageComponentsModel',
+    'comsStructures',
     (model) => ({
       initData: model.initData,
     }),

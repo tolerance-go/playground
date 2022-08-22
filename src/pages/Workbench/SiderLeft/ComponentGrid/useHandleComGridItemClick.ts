@@ -10,7 +10,7 @@ export const useHandleComGridItemClick = () => {
   }));
 
   const { addComponentToStage, addComToStageSlot } = useModel(
-    'stageComponentsModel',
+    'comsStructures',
     (model) => ({
       addComponentToStage: model?.addComponentToStage,
       addComToStageSlot: model?.addComToStageSlot,

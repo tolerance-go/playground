@@ -2,7 +2,7 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 
 export const useDeleteComsFromStage = () => {
-  const { deleteComModelByIds } = useModel('stageComponentsModel', (model) => {
+  const { deleteComModelByIds } = useModel('comsStructures', (model) => {
     return {
       deleteComModelByIds: model.deleteComModelByIds,
     };

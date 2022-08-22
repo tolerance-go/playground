@@ -25,7 +25,7 @@ const useComsLayout = () => {
   const [showAllSlots, setShowAllSlots] = useState<boolean>(false);
 
   const { getLatestStageComponentsModel } = useModel(
-    'stageComponentsModel',
+    'comsStructures',
     (model) => {
       return {
         getLatestStageComponentsModel: model?.getLatestStageComponentsModel,

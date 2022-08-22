@@ -7,8 +7,6 @@ export type AtomComponentProps<
 > = {
   /** 插槽存在多种，不单单是 children */
   slots?: Record<string, string[]>;
-  /** 从小到大排序 0,1,2 */
-  slotsOrder?: Record<string, number[]>;
   settings?: Settings;
   id: string;
   statId: string;

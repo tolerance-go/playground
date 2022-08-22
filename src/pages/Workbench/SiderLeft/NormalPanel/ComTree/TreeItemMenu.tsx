@@ -15,7 +15,7 @@ export default ({
   type: 'slots' | 'component';
 }>) => {
   const { removeComFromTree, removeSlotFromTree } = useModel(
-    'stageComponentsModel',
+    'comsStructures',
     (model) => ({
       removeComFromTree: model?.removeComFromTree,
       removeSlotFromTree: model?.removeSlotFromTree,

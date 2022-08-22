@@ -1,12 +1,12 @@
-import { ComId } from '@/typings/keys';
 import { SlotPosition } from '@/models/slotsInsert';
+import { ComId, SlotName } from '@/typings/keys';
 // import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
 import { useState } from 'react';
 
 /** 物料的组件都是引用该这里 */
-export type StageComponentsModelItem = {
+export type ComponentStructure = {
   /** 所在的插槽名称 */
   slotName: string;
   /** 父组件的 id */
@@ -17,18 +17,15 @@ export type StageComponentsModelItem = {
    * key 为插槽名称，插槽存在多种，不单单是 children
    * value 为组件的 id
    */
-  slots: Record<string, string[]>;
-  /** 从小到大排序 0,1,2 */
-  slotsOrder: Record<string, number[]>;
+  slots: Record<SlotName, string[]>;
   display: 'block' | 'inline';
 };
 
-export type StageComponentsModel = Record<ComId, StageComponentsModelItem>;
+export type ComponentsStructure = Record<ComId, ComponentStructure>;
 
 const useStageComponentsModel = () => {
   const [rootIds, setRootIds] = useState<string[]>([]);
-  const [stageComponentsModel, setStageComponentsModel] =
-    useState<StageComponentsModel>();
+  const [comsStructures, setComsStructures] = useState<ComponentsStructure>();
 
   // const { removeComSettings } = useModel('comsActiveSettings', (model) => ({
   //   removeComSettings: model?.removeComSettings,
@@ -42,14 +39,14 @@ const useStageComponentsModel = () => {
         parentId: string;
         slotName: string;
         id: string;
-        display: StageComponentsModelItem['display'];
+        display: ComponentStructure['display'];
       },
     ) => {
       const newId = params.id;
 
       setRootIds((prev) => prev.concat(newId));
 
-      setStageComponentsModel((prev) => ({
+      setComsStructures((prev) => ({
         ...prev,
         [newId]: {
           slotName: params.slotName,
@@ -57,7 +54,6 @@ const useStageComponentsModel = () => {
           id: newId,
           type,
           slots: {},
-          slotsOrder: {},
           display: params.display,
         },
       }));
@@ -73,13 +69,13 @@ const useStageComponentsModel = () => {
       newId: string;
       slotName: string;
       type: string;
-      display: StageComponentsModelItem['display'];
+      display: ComponentStructure['display'];
       postion: SlotPosition;
     }) => {
-      setStageComponentsModel((prev) => ({
+      setComsStructures((prev) => ({
         ...prev,
         [params.parentId]: {
-          ...(prev?.[params.parentId] as StageComponentsModelItem),
+          ...(prev?.[params.parentId] as ComponentStructure),
           slots: {
             ...prev?.[params.parentId].slots,
             [params.slotName]:
@@ -93,7 +89,6 @@ const useStageComponentsModel = () => {
                     params.newId,
                   ],
           },
-          slotsOrder: {},
         },
         [params.newId]: {
           slotName: params.slotName,
@@ -101,7 +96,6 @@ const useStageComponentsModel = () => {
           id: params.newId,
           type: params.type,
           slots: {},
-          slotsOrder: {},
           display: params.display,
         },
       }));
@@ -121,7 +115,7 @@ const useStageComponentsModel = () => {
       }),
     );
 
-    setStageComponentsModel(
+    setComsStructures(
       produce((draft) => {
         comIds.forEach((comId) => {
           const comModel = draft?.[comId];
@@ -139,7 +133,7 @@ const useStageComponentsModel = () => {
             /** 删除所有子组件 */
             let allSlots: string[] = [];
             const collectAllSlotComIds = (id: string) => {
-              const target = stageComponentsModel?.[id];
+              const target = comsStructures?.[id];
               if (!target) return;
               Object.keys(target.slots).forEach((slotName) => {
                 const slotComIds = target.slots[slotName];
@@ -176,7 +170,7 @@ const useStageComponentsModel = () => {
         });
       }
 
-      setStageComponentsModel(
+      setComsStructures(
         produce((prev) => {
           /** 删除自己在父组件中的插槽 */
           const parent = prev?.[parentId];
@@ -189,7 +183,7 @@ const useStageComponentsModel = () => {
           /** 删除所有子组件 */
           let allSlots: string[] = [];
           const collectAllSlotComIds = (id: string) => {
-            const target = stageComponentsModel?.[id];
+            const target = comsStructures?.[id];
             if (!target) return;
             Object.keys(target.slots).forEach((slotName) => {
               const slotComIds = target.slots[slotName];
@@ -219,7 +213,7 @@ const useStageComponentsModel = () => {
       const { comId, slotName } = options;
 
       /** 删除插槽下面的所有组件 */
-      const slotComIds = stageComponentsModel?.[comId].slots[slotName];
+      const slotComIds = comsStructures?.[comId].slots[slotName];
       slotComIds?.forEach((slotComId) => {
         removeComFromTree({
           comId: slotComId,
@@ -228,7 +222,7 @@ const useStageComponentsModel = () => {
         });
       });
 
-      setStageComponentsModel(
+      setComsStructures(
         produce((prev) => {
           /** 删除插槽自身 */
           delete prev?.[comId].slots[slotName];
@@ -284,7 +278,7 @@ const useStageComponentsModel = () => {
         );
         /** 移动的是插槽组件，放置目标也是插槽 */
       } else if (parentId !== 'root' && targetSlotName !== 'root') {
-        setStageComponentsModel(
+        setComsStructures(
           produce((prev) => {
             // 找到要移动的元素
             const node = prev?.[comId];
@@ -335,7 +329,7 @@ const useStageComponentsModel = () => {
           }),
         );
 
-        setStageComponentsModel(
+        setComsStructures(
           produce((prev) => {
             // 在新的组件指定插槽下的指定顺序放置
             const targetParentNode = prev?.[targetComId];
@@ -352,7 +346,7 @@ const useStageComponentsModel = () => {
 
         /** 移动是插槽组件，放置的是跟组件 */
       } else if (slotName !== 'root' && targetParentId === 'root') {
-        setStageComponentsModel(
+        setComsStructures(
           produce((prev) => {
             // 找到要移动的元素
             const node = prev?.[comId];
@@ -386,7 +380,7 @@ const useStageComponentsModel = () => {
   const getData = useMemoizedFn(() => {
     return {
       rootIds,
-      stageComponentsModel,
+      stageComponentsModel: comsStructures,
     };
   });
 
@@ -394,17 +388,17 @@ const useStageComponentsModel = () => {
     /** 递归获取所有组件 */
     const getSliceStageComponentsModel = (
       ids?: string[],
-    ): StageComponentsModel | undefined => {
+    ): ComponentsStructure | undefined => {
       return ids?.reduce((acc, nextId) => {
         return {
           ...acc,
-          [nextId]: stageComponentsModel?.[nextId],
-          ...Object.keys(stageComponentsModel?.[nextId].slots ?? {}).reduce(
+          [nextId]: comsStructures?.[nextId],
+          ...Object.keys(comsStructures?.[nextId].slots ?? {}).reduce(
             (slotAcc, slotName) => {
               return {
                 ...slotAcc,
                 ...getSliceStageComponentsModel(
-                  stageComponentsModel?.[nextId].slots[slotName],
+                  comsStructures?.[nextId].slots[slotName],
                 ),
               };
             },
@@ -424,15 +418,15 @@ const useStageComponentsModel = () => {
   const initData = useMemoizedFn(
     (from?: {
       rootIds: string[];
-      stageComponentsModel: StageComponentsModel;
+      stageComponentsModel: ComponentsStructure;
     }) => {
       setRootIds(from?.rootIds ?? []);
-      setStageComponentsModel(from?.stageComponentsModel);
+      setComsStructures(from?.stageComponentsModel);
     },
   );
 
   const getLatestStageComponentsModel = useMemoizedFn(() => {
-    return stageComponentsModel;
+    return comsStructures;
   });
 
   /**
@@ -467,7 +461,7 @@ const useStageComponentsModel = () => {
       }
 
       if (notInRootIds.length) {
-        setStageComponentsModel(
+        setComsStructures(
           produce((draft) => {
             notInRootIds.forEach((comId) => {
               if (draft?.[comId].parentId) {
@@ -487,12 +481,12 @@ const useStageComponentsModel = () => {
     },
   );
 
-  window.__consola.info('model:', 'stageComponentsModel', stageComponentsModel);
+  window.__consola.info('model:', 'comsStructures', comsStructures);
   window.__consola.info('model:', 'rootIds', rootIds);
 
   return {
     rootIds,
-    stageComponentsModel,
+    stageComponentsModel: comsStructures,
     deleteComModelByIds,
     getSliceData,
     removeTargetComsAndSaveTheirSettings,

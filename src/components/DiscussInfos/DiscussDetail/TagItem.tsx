@@ -7,7 +7,7 @@ export const TagItem = () => {
   }));
 
   const { stageComponentsModel } = useModel(
-    'stageComponentsModel',
+    'comsStructures',
     (model) => ({
       stageComponentsModel: model.stageComponentsModel,
     }),

@@ -24,7 +24,7 @@ export const Atom = (props: StageComponentsModelItem) => {
   const elements = useContext(ElementsCxt);
 
   const Element = elements[props.type];
-  const { slots, slotsOrder } = props;
+  const { slots } = props;
 
   const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
     stageSelectNodeId: model.stageSelectNodeId,
@@ -65,7 +65,6 @@ export const Atom = (props: StageComponentsModelItem) => {
             ? activeStatStyles ?? usedStyles ?? defaultStyles
             : usedStyles ?? defaultStyles,
         slots,
-        slotsOrder,
       }}
     />
   );

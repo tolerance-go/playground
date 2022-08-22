@@ -14,7 +14,7 @@ const useComsMaterialList = () => {
   const { appId } = query;
 
   // const { removeTargetComsAndSaveTheirSettings } = useModel(
-  //   'stageComponentsModel',
+  //   'comsStructures',
   //   (model) => {
   //     return {
   //       removeTargetComsAndSaveTheirSettings:

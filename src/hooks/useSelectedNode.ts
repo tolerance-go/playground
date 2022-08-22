@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 export const useSelectedNode = () => {
   const { stageComponentsModel } = useModel(
-    'stageComponentsModel',
+    'comsStructures',
     (model) => ({
       stageComponentsModel: model.stageComponentsModel,
     }),

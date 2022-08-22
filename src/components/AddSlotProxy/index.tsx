@@ -42,7 +42,7 @@ export const AddSlotBtn = ({
     focusSlotName: model?.focusSlotName,
   }));
 
-  const { stageComponentsModel } = useModel('stageComponentsModel', (model) => {
+  const { stageComponentsModel } = useModel('comsStructures', (model) => {
     return {
       stageComponentsModel: model?.stageComponentsModel,
     };
