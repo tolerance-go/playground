@@ -6,9 +6,12 @@ export const Trigger = () => {
   const { open } = useModel('dataMaskVisible', (model) => ({
     open: model.open,
   }));
-
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
+  }));
   return (
     <Button
+      disabled={stageMode === 'playground'}
       type="text"
       icon={<DatabaseOutlined />}
       onClick={() => {

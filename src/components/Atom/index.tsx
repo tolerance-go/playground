@@ -83,7 +83,10 @@ export const Atom = (props: StageComponentsModelItem) => {
   }
 
   return (
-    <AtomWorkbenchWrapper {...props} usedStat={usedStatId !== undefined}>
+    <AtomWorkbenchWrapper
+      {...props}
+      usedStat={usedStatId !== undefined && usedStatId !== defaultStatId}
+    >
       {el}
     </AtomWorkbenchWrapper>
   );

@@ -3,10 +3,13 @@ import { useModel } from '@umijs/max';
 import { Button } from 'antd';
 
 export const DisscusTrigger = () => {
-  const { setMode } = useModel('stageMode', (model) => ({
+  const { setMode, stageMode } = useModel('stageMode', (model) => ({
     setMode: model.setMode,
+    stageMode: model.mode,
   }));
-
+  const { setPlaygroundMode } = useModel('playground', (model) => ({
+    setPlaygroundMode: model.setMode,
+  }));
   return (
     <Button
       type="text"
@@ -18,9 +21,10 @@ export const DisscusTrigger = () => {
           }
           return 'playground';
         });
+        setPlaygroundMode('discuss');
       }}
     >
-      讨论
+      {stageMode === 'playground' ? '关闭讨论' : '讨论'}
     </Button>
   );
 };

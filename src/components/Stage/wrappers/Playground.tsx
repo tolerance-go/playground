@@ -5,8 +5,6 @@ import { getURLQuery } from '@/helps/getURLQuery';
 import { findClosestParentHTMLElement } from '@/utils/findClosestParentHTMLElement';
 import { useModel } from '@umijs/max';
 import { PropsWithChildren } from 'react';
-import { DiscussInfos } from '@/components/DiscussInfos';
-import { PlaygroundHandlerBar } from '@/components/PlaygroundHandlerBar';
 
 export const StagePlaygroundWrapper = (
   props: PropsWithChildren<{
@@ -22,6 +20,14 @@ export const StagePlaygroundWrapper = (
       setDetailMode: model.setDetailMode,
     }));
 
+  const { siderLeftWidth, headerHeight } = useModel(
+    'workbenchIDESettings',
+    (model) => ({
+      siderLeftWidth: model.siderLeftWidth,
+      headerHeight: model.headerHeight,
+    }),
+  );
+
   return (
     <div
       id={props.id}
@@ -32,6 +38,7 @@ export const StagePlaygroundWrapper = (
       onClick={(event) => {
         if (mode !== 'discuss') return;
 
+        /** 允许交互 */
         if (event.altKey) return;
 
         const parentAtomWrapper = findClosestParentHTMLElement(
@@ -42,18 +49,38 @@ export const StagePlaygroundWrapper = (
         if (parentAtomWrapper) {
           const rect = parentAtomWrapper.getBoundingClientRect();
 
+          const containerRectLeft =
+            location.pathname === '/workbench'
+              ? rect.left - siderLeftWidth
+              : rect.left;
+
+          const containerRectTop =
+            location.pathname === '/workbench'
+              ? rect.top - headerHeight
+              : rect.top;
+
+          const pageLeft =
+            location.pathname === '/workbench'
+              ? event.pageX - siderLeftWidth
+              : event.pageX;
+
+          const pageTop =
+            location.pathname === '/workbench'
+              ? event.pageY - headerHeight
+              : event.pageY;
+
           const { comid: comId, statid: statId } =
             parentAtomWrapper.dataset ?? {};
 
           const query = getURLQuery();
 
           setTempDiscuss({
-            left: event.pageX,
-            top: event.pageY,
+            left: pageLeft,
+            top: pageTop,
             containerWidth: rect.width,
             containerHeight: rect.height,
-            containerLeft: rect.left,
-            containerTop: rect.top,
+            containerLeft: containerRectLeft,
+            containerTop: containerRectTop,
             belongsToComId: comId!,
             belongsToComStatId: statId!,
             pageId: Number(query.pageId),

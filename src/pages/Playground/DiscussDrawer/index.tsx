@@ -1,18 +1,23 @@
-import { DiscussActions } from '@/components/DiscussInfos/DiscussActions';
+import { DiscussCountInfo } from '@/components/DiscussInfos/DiscussCountInfo';
+import { DiscussDetialActions } from '@/components/DiscussInfos/DiscussDetialActions';
+import { DiscussListActions } from '@/components/DiscussInfos/DiscussListActions';
 import { CloseOutlined, SettingOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Drawer, Typography } from 'antd';
+import { Drawer } from 'antd';
 import { PropsWithChildren } from 'react';
 import styles from './index.less';
 
 export const DiscussDrawer = (props: PropsWithChildren<{}>) => {
-  const { detailVisible, setDetailVisible, detailMode, filterDiscusses } =
-    useModel('playground', (model) => ({
+  const { detailVisible, setDetailVisible, detailMode } = useModel(
+    'playground',
+    (model) => ({
       detailVisible: model.detailVisible,
       setDetailVisible: model.setDetailVisible,
       detailMode: model.detailMode,
-      filterDiscusses: model.filterDiscusses,
-    }));
+    }),
+  );
+
+  const width = 420;
 
   return (
     <>
@@ -33,7 +38,7 @@ export const DiscussDrawer = (props: PropsWithChildren<{}>) => {
       </div>
       <Drawer
         mask={false}
-        width={500}
+        width={420}
         placement="right"
         onClose={() => {
           setDetailVisible(false);
@@ -44,20 +49,24 @@ export const DiscussDrawer = (props: PropsWithChildren<{}>) => {
         }}
         title={(() => {
           if (detailMode === 'list') {
-            return (
-              <Typography.Text>{filterDiscusses.length} 条讨论</Typography.Text>
-            );
+            return <DiscussCountInfo />;
           }
           return undefined;
         })()}
-        extra={<DiscussActions />}
+        extra={
+          detailMode === 'list' ? (
+            <DiscussListActions />
+          ) : (
+            <DiscussDetialActions />
+          )
+        }
       >
         {props.children}
         <div
           className={styles.drawerHandle}
           onClick={() => setDetailVisible(!detailVisible)}
           style={{
-            right: 500,
+            right: width,
           }}
         >
           {detailVisible ? (

@@ -1,3 +1,4 @@
+import { useModel } from '@umijs/max';
 import BigNumber from 'bignumber.js';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -22,6 +23,14 @@ export const usePositionResize = (
   /** 避免初始化后，满屏幕的 tag 一起动画归位 */
   const [initResized, setInitResized] = useState(false);
 
+  const { siderLeftWidth, headerHeight } = useModel(
+    'workbenchIDESettings',
+    (model) => ({
+      siderLeftWidth: model.siderLeftWidth,
+      headerHeight: model.headerHeight,
+    }),
+  );
+
   useEffect(() => {
     const handlerResize = () => {
       const container = document.querySelector(
@@ -30,42 +39,53 @@ export const usePositionResize = (
 
       if (container) {
         const containerRect = container.getBoundingClientRect();
+        /** 如果在工作台，rect 会包括 header 和 sider 的尺寸，需要减掉 */
+
+        const containerRectLeft =
+          location.pathname === '/workbench'
+            ? containerRect.left - siderLeftWidth
+            : containerRect.left;
+
+        const containerRectTop =
+          location.pathname === '/workbench'
+            ? containerRect.top - headerHeight
+            : containerRect.top;
 
         // left
-        // props.containerLeft - containerRect.left = props.left - ?
+        // props.containerLeft - containerRectLeft = props.left - ?
         let nextLeft = new BigNumber(props.originLeft)
-          .minus(new BigNumber(props.containerLeft).minus(containerRect.left))
+          .minus(new BigNumber(props.containerLeft).minus(containerRectLeft))
           .toNumber();
 
         // top
-        // props.containerTop - containerRect.top = props.top - ?
+        // props.containerTop - containerRectTop = props.top - ?
 
         let nextTop = new BigNumber(props.originTop)
-          .minus(new BigNumber(props.containerTop).minus(containerRect.top))
+          .minus(new BigNumber(props.containerTop).minus(containerRectTop))
           .toNumber();
 
         // left
-        // props.containerWidth / containerRect.width = (props.left - containerRect.left) / ?
+        // props.containerWidth / containerRect.width = (props.left - containerRectLeft) / ?
 
         nextLeft = new BigNumber(
-          new BigNumber(nextLeft).minus(containerRect.left),
+          new BigNumber(nextLeft).minus(containerRectLeft),
         )
           .dividedBy(
             new BigNumber(props.containerWidth).dividedBy(containerRect.width),
           )
-          .plus(containerRect.left)
+          .plus(containerRectLeft)
           .toNumber();
 
         // top
-        // props.containerHeight / containerRect.height = (props.top - containerRect.top) / ?
+        // props.containerHeight / containerRect.height = (props.top - containerRectTop) / ?
 
-        nextTop = new BigNumber(new BigNumber(nextTop).minus(containerRect.top))
+        nextTop = new BigNumber(new BigNumber(nextTop).minus(containerRectTop))
           .dividedBy(
             new BigNumber(props.containerHeight).dividedBy(
               containerRect.height,
             ),
           )
-          .plus(containerRect.top)
+          .plus(containerRectTop)
           .toNumber();
 
         setLeft(nextLeft);

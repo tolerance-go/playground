@@ -11,6 +11,10 @@ export default function App() {
   const { mode } = useModel('siderLeftMode');
   const siderRef = useRef<HTMLDivElement>(null);
 
+  const { siderLeftWidth } = useModel('workbenchIDESettings', (model) => ({
+    siderLeftWidth: model.siderLeftWidth,
+  }));
+
   consola.info('siderLeftMode mode 变化', mode);
 
   const renderContent = () => {
@@ -29,7 +33,7 @@ export default function App() {
     <Sider
       ref={siderRef}
       theme="light"
-      width={300}
+      width={siderLeftWidth}
       style={{
         borderRight: '1px solid rgb(242, 242, 242)',
       }}

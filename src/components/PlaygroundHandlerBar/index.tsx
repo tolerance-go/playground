@@ -5,15 +5,11 @@ import { Segmented, Space } from 'antd';
 import styles from './index.less';
 
 export const PlaygroundHandlerBar = () => {
-  const { mode, setMode, setDetailMode, setDetailVisible } = useModel(
-    'playground',
-    (model) => ({
-      mode: model.mode,
-      setMode: model.setMode,
-      setDetailMode: model.setDetailMode,
-      setDetailVisible: model.setDetailVisible,
-    }),
-  );
+  const { mode, setMode, setDetailMode } = useModel('playground', (model) => ({
+    mode: model.mode,
+    setMode: model.setMode,
+    setDetailMode: model.setDetailMode,
+  }));
   return (
     <div
       className={styles.wrap}

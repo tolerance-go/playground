@@ -1,52 +1,31 @@
 import { ArrowRightOutlined, SwapLeftOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Button, Popconfirm, Select, Space } from 'antd';
+import { Button, ButtonProps, Popconfirm, Space } from 'antd';
 
-export const DiscussActions = () => {
+export const DiscussDetialActions = (props: { size?: ButtonProps['size'] }) => {
   const {
     requestResolvedDiscussLoading,
     selectedDiscuss,
-    setDetailVisible,
     requestDeleteDiscuss,
     detailMode,
     requestResolvedDiscuss,
     detailListFilterMode,
-    setDetailMode,
     setDetailListFilterMode,
     setSelectedDiscussId,
     selectedNextItem,
+    setDetailMode,
   } = useModel('playground', (model) => ({
-    setDetailVisible: model.setDetailVisible,
     requestDeleteDiscuss: model.requestDeleteDiscuss,
     requestResolvedDiscuss: model.requestResolvedDiscuss,
     requestResolvedDiscussLoading: model.requestResolvedDiscussLoading,
     selectedDiscuss: model.selectedDiscuss,
     detailMode: model.detailMode,
-    setDetailMode: model.setDetailMode,
     detailListFilterMode: model.detailListFilterMode,
     setDetailListFilterMode: model.setDetailListFilterMode,
     setSelectedDiscussId: model.setSelectedDiscussId,
     selectedNextItem: model.selectedNextItem,
+    setDetailMode: model.setDetailMode,
   }));
-
-  if (detailMode === 'list') {
-    return (
-      <Select
-        onChange={(val) => setDetailListFilterMode(val)}
-        value={detailListFilterMode}
-        options={[
-          {
-            label: '已解决',
-            value: 'resolved',
-          },
-          {
-            label: '未解决',
-            value: 'open',
-          },
-        ]}
-      ></Select>
-    );
-  }
 
   if (!selectedDiscuss) {
     return null;
@@ -55,6 +34,7 @@ export const DiscussActions = () => {
   return (
     <Space>
       <Button
+        size={props.size}
         icon={<SwapLeftOutlined />}
         shape="round"
         onClick={() => {
@@ -65,6 +45,7 @@ export const DiscussActions = () => {
         返回列表
       </Button>
       <Button
+        size={props.size}
         loading={requestResolvedDiscussLoading}
         type={selectedDiscuss.resolved ? 'default' : 'primary'}
         shape="round"
@@ -85,11 +66,12 @@ export const DiscussActions = () => {
           requestDeleteDiscuss(selectedDiscuss.id);
         }}
       >
-        <Button danger type="primary" shape="round">
+        <Button size={props.size} danger type="primary" shape="round">
           删除
         </Button>
       </Popconfirm>
       <Button
+        size={props.size}
         disabled={!selectedNextItem}
         shape="round"
         icon={<ArrowRightOutlined />}
@@ -99,7 +81,6 @@ export const DiscussActions = () => {
           }
         }}
       >
-        下一个
       </Button>
     </Space>
   );

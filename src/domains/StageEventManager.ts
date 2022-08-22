@@ -185,4 +185,12 @@ export class EventManager {
       });
     }
   }
+
+  public disable() {
+    this.disabled = true;
+  }
+
+  public enable() {
+    this.disabled = false;
+  }
 }

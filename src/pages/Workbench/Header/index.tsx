@@ -1,4 +1,4 @@
-import { AppstoreAddOutlined, CommentOutlined } from '@ant-design/icons';
+import { AppstoreAddOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Avatar, Button, Col, Divider, Row, Space } from 'antd';
 import Logo from '../Logo';
@@ -25,14 +25,22 @@ import SettingsBtn from './SettingsBtn';
 const App = () => {
   // const navigate = useNavigate();
   const { setMode } = useModel('siderLeftMode', (model) => ({
-    setMode: model?.setMode,
+    setMode: model.setMode,
+  }));
+
+  const { headerHeight } = useModel('workbenchIDESettings', (model) => ({
+    headerHeight: model.headerHeight,
+  }));
+
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
   }));
 
   return (
     <div
       style={{
         position: 'relative',
-        height: 64,
+        height: headerHeight,
       }}
     >
       <Row
@@ -47,6 +55,7 @@ const App = () => {
           <Divider type="vertical" />
           <Space>
             <Button
+              disabled={stageMode === 'playground'}
               type="text"
               icon={<AppstoreAddOutlined />}
               onClick={() => {
