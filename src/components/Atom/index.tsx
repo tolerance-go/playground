@@ -1,5 +1,4 @@
 import { ElementsCxt } from '@/components/ElementsCtx';
-import { PLAYGROUND_ATOM_WRAPPER_CLASS_NAME } from '@/constants/atoms';
 import { useComActiveStatSetting } from '@/hooks/useComActiveStatSetting';
 import { useComActiveStatStyle } from '@/hooks/useComActiveStatStyle';
 import { useComDefaultStatId } from '@/hooks/useComDefaultStatId';
@@ -10,13 +9,18 @@ import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
 import { useContext } from 'react';
-import { AtomWrapper } from './Wrapper';
+import { AtomPlaygroundWrapper } from './wrappers/Playground';
+import { AtomWorkbenchWrapper } from './wrappers/Workbench';
 
 /**
  * 通过 model 生成组件
  * 舞台上的组件
  */
 export const Atom = (props: StageComponentsModelItem) => {
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
+  }));
+
   const elements = useContext(ElementsCxt);
 
   const Element = elements[props.type];
@@ -66,24 +70,21 @@ export const Atom = (props: StageComponentsModelItem) => {
     />
   );
 
-  if (location.pathname === '/playground') {
+  if (stageMode === 'playground') {
     return (
-      <div
-        data-statId={statId}
-        data-comId={props.id}
-        className={PLAYGROUND_ATOM_WRAPPER_CLASS_NAME}
-        style={{
-          display: props.display,
-        }}
+      <AtomPlaygroundWrapper
+        statId={statId}
+        comId={props.id}
+        display={props.display}
       >
         {el}
-      </div>
+      </AtomPlaygroundWrapper>
     );
   }
 
   return (
-    <AtomWrapper {...props} usedStat={usedStatId !== undefined}>
+    <AtomWorkbenchWrapper {...props} usedStat={usedStatId !== undefined}>
       {el}
-    </AtomWrapper>
+    </AtomWorkbenchWrapper>
   );
 };

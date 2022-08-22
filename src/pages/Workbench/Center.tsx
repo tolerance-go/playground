@@ -1,3 +1,4 @@
+import { PlaygroundHandlerBar } from '@/components/PlaygroundHandlerBar';
 import Stage from '@/components/Stage';
 import { useModel } from '@umijs/max';
 import { Layout } from 'antd';
@@ -6,11 +7,16 @@ const { Content } = Layout;
 
 export default () => {
   const { setMode } = useModel('siderLeftMode', (model) => ({
-    setMode: model?.setMode,
+    setMode: model.setMode,
+  }));
+
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
   }));
 
   return (
     <Content
+      id="workbenchWindow"
       style={{
         overflow: 'auto',
         background: '#f0f2f5',
@@ -21,6 +27,7 @@ export default () => {
       }}
     >
       <Stage />
+      {stageMode === 'playground' && <PlaygroundHandlerBar />}
     </Content>
   );
 };

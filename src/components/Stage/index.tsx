@@ -3,12 +3,13 @@ import { AtomButton } from '@/components/atomComs/AtomButton';
 import { ElementsCxt } from '@/components/ElementsCtx';
 import { StageComponentsModelItem } from '@/models/stageComponentsModel';
 import { ElementCenter } from '@/typings/ElementCenter';
-import { joinUnitNumber } from '@/utils/joinUnitNumber';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { AtomLine } from '../atomComs/AtomLine';
 import { AtomTable } from '../atomComs/AtomTable';
+import { StagePlaygroundWrapper } from './wrappers/Playground';
+import { StageWorkbenchWrapper } from './wrappers/Workbench';
 
 /** 根据 type 静态注册组件对象 */
 const Elements: ElementCenter = {
@@ -17,9 +18,7 @@ const Elements: ElementCenter = {
   table: AtomTable,
 };
 
-export default function Stage(props: {
-  renderInner?: (inner: React.ReactNode) => React.ReactNode;
-}) {
+export default function Stage(props: {}) {
   const { rootIds, stageComponentsModel } = useModel(
     'stageComponentsModel',
     (model) => {
@@ -36,17 +35,17 @@ export default function Stage(props: {
       .filter((item): item is StageComponentsModelItem => item !== undefined);
   }, [rootIds, stageComponentsModel]);
 
-  const { stageSize } = useModel('stageSize', (model) => ({
-    stageSize: model.stageSize,
-  }));
-
   if (!rootNodeModels) {
     return null;
   }
 
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
+  }));
+
   consola.info('渲染跟节点组件', rootIds, stageComponentsModel);
 
-  const inner = (
+  const el = (
     <ElementsCxt.Provider value={Elements}>
       {rootNodeModels.map((model) => (
         <Atom key={model?.id} {...model} />
@@ -54,16 +53,9 @@ export default function Stage(props: {
     </ElementsCxt.Provider>
   );
 
-  return (
-    <div
-      id="stage"
-      style={{
-        width: joinUnitNumber(stageSize?.width),
-        height: joinUnitNumber(stageSize?.height),
-        background: '#fff',
-      }}
-    >
-      {props.renderInner ? props.renderInner(inner) : inner}
-    </div>
-  );
+  if (stageMode === 'playground') {
+    return <StagePlaygroundWrapper id="stage">{el}</StagePlaygroundWrapper>;
+  }
+
+  return <StageWorkbenchWrapper id="stage">{el}</StageWorkbenchWrapper>;
 }

@@ -2,9 +2,9 @@ import { QuestionTooltip } from '@/components/QuestionTooltip';
 import { PlaygroundMode } from '@/models/playground';
 import { useModel } from '@umijs/max';
 import { Segmented, Space } from 'antd';
-import styles from './HandlerBar.less';
+import styles from './index.less';
 
-export const HandlerBar = () => {
+export const PlaygroundHandlerBar = () => {
   const { mode, setMode, setDetailMode, setDetailVisible } = useModel(
     'playground',
     (model) => ({

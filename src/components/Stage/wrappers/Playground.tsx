@@ -1,12 +1,18 @@
+import DiscussItem from '@/components/DiscussItem';
+import { TempDiscussItem } from '@/components/TempDiscussItem';
 import { PLAYGROUND_ATOM_WRAPPER_CLASS_NAME } from '@/constants/atoms';
 import { getURLQuery } from '@/helps/getURLQuery';
 import { findClosestParentHTMLElement } from '@/utils/findClosestParentHTMLElement';
 import { useModel } from '@umijs/max';
 import { PropsWithChildren } from 'react';
-import DiscussItem from '../DiscussItem';
-import { TempDiscussItem } from '../TempDiscussItem';
+import { DiscussInfos } from '@/components/DiscussInfos';
+import { PlaygroundHandlerBar } from '@/components/PlaygroundHandlerBar';
 
-export const StageInnerWrapper = (props: PropsWithChildren<unknown>) => {
+export const StagePlaygroundWrapper = (
+  props: PropsWithChildren<{
+    id: string;
+  }>,
+) => {
   const { mode, tempDiscuss, filterDiscusses, setTempDiscuss, setDetailMode } =
     useModel('playground', (model) => ({
       mode: model.mode,
@@ -18,6 +24,7 @@ export const StageInnerWrapper = (props: PropsWithChildren<unknown>) => {
 
   return (
     <div
+      id={props.id}
       style={{
         position: 'relative',
         cursor: mode === 'discuss' ? 'help' : 'default',

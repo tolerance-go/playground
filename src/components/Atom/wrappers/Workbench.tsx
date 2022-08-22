@@ -3,14 +3,14 @@ import { useModel } from '@umijs/max';
 import clsx from 'clsx';
 import consola from 'consola';
 import React from 'react';
-import styles from './Wrapper.less';
+import styles from './Workbench.less';
 
 /**
  * 舞台节点的包装组件
  * 所有舞台组件都会包裹一层该组件
  * 他会响应用户设计阶段的选择事件进行操作，选中并且进行设置
  */
-export const AtomWrapper = (
+export const AtomWorkbenchWrapper = (
   props: React.PropsWithChildren<
     StageComponentsModelItem & {
       /** 事件交互中，处于状态改变时 */

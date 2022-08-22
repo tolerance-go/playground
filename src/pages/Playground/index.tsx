@@ -1,23 +1,25 @@
+import { DiscussInfos } from '@/components/DiscussInfos';
+import { PlaygroundHandlerBar } from '@/components/PlaygroundHandlerBar';
 import Stage from '@/components/Stage';
-import { DiscussDetail } from './DiscussDetail';
+import { DiscussDrawer } from './DiscussDrawer';
 import Executor from './Executor';
-import { HandlerBar } from './HandlerBar';
-import { StageInnerWrapper } from './StageInnerWrapper';
 
 export default function App() {
   return (
     <div
+      id="playgroundWindow"
       style={{
-        background: '#f1f2f5',
+        background: '#f0f2f5',
         minHeight: '100vh',
+        overflow: 'auto',
       }}
     >
-      <DiscussDetail />
+      <DiscussDrawer>
+        <DiscussInfos />
+      </DiscussDrawer>
       <Executor />
-      <Stage
-        renderInner={(inner) => <StageInnerWrapper>{inner}</StageInnerWrapper>}
-      />
-      <HandlerBar />
+      <Stage />
+      <PlaygroundHandlerBar />
     </div>
   );
 }

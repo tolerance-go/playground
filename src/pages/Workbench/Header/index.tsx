@@ -5,6 +5,7 @@ import Logo from '../Logo';
 import { AutoSaveTag } from './AutoSaveTag';
 import CenterArea from './CenterArea';
 import CMSConfigForm from './CMSConfigForm';
+import { DisscusTrigger } from './DisscusTrigger';
 // import EventInteraction from './EventInteraction';
 import { PlayAction } from './PlayAction';
 import SaveToVersionBtn from './SaveToVersionBtn';
@@ -64,9 +65,7 @@ const App = () => {
               文本
             </Button> */}
             <CMSConfigForm />
-            <Button type="text" icon={<CommentOutlined />}>
-              讨论
-            </Button>
+            <DisscusTrigger />
             {/* <APIConfigForm /> */}
           </Space>
         </Col>

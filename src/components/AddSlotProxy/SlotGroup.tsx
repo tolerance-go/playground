@@ -16,6 +16,10 @@ export default ({
     setHoverNodeId: model?.setHoverNodeId,
   }));
 
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
+  }));
+
   const { stageSelectSlotGroupId, setStageSelectSlotGroupId } = useModel(
     'stageSelectSlotGroupId',
     (model) => ({
@@ -28,7 +32,7 @@ export default ({
     setSelectedKeys: model?.setSelectedKeys,
   }));
 
-  if (!hasSlotsDom || location.pathname === '/playground') {
+  if (!hasSlotsDom || stageMode === 'playground') {
     return <>{children}</>;
   }
 

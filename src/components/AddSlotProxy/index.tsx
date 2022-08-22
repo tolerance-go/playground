@@ -22,6 +22,10 @@ export const AddSlotBtn = ({
     setMode: model?.setMode,
   }));
 
+  const { stageMode } = useModel('stageMode', (model) => ({
+    stageMode: model.mode,
+  }));
+
   const {
     setFocusComId,
     setFocusSlotName,
@@ -55,7 +59,7 @@ export const AddSlotBtn = ({
   }, [slots, slotName, stageComponentsModel]);
 
   const renderBtn = (slotPos: SlotPosition) => {
-    return location.pathname === '/playground' ? null : (
+    return stageMode === 'playground' ? null : (
       <Button
         shape="circle"
         size="small"

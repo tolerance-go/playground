@@ -3,6 +3,7 @@ import { useUpdateEffect } from 'ahooks';
 import { useEffect } from 'react';
 import { useInitSatgeDataWithPage } from '../useInitSatgeDataWithPage';
 
+/** 初始化 pageId，同步 pageId 到 url 状态 */
 export const useActivePageIdEffect = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { initSatgeDataWithPage } = useInitSatgeDataWithPage();

@@ -1,3 +1,4 @@
+import { ComId } from '@/typings/keys';
 import { SlotPosition } from '@/models/slotsInsert';
 // import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
@@ -22,7 +23,7 @@ export type StageComponentsModelItem = {
   display: 'block' | 'inline';
 };
 
-export type StageComponentsModel = Record<string, StageComponentsModelItem>;
+export type StageComponentsModel = Record<ComId, StageComponentsModelItem>;
 
 const useStageComponentsModel = () => {
   const [rootIds, setRootIds] = useState<string[]>([]);
