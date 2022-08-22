@@ -8,14 +8,14 @@ export default () => {
   return (
     <>
       <Drawer
-        title="状态继承"
+        title="状态关联"
         width={400}
         visible={visible}
         onClose={() => setVisible(false)}
       >
         <ComStatusTreeMap />
       </Drawer>
-      <div onClick={() => setVisible(true)}>状态继承</div>
+      <div onClick={() => setVisible(true)}>状态关联</div>
     </>
   );
 };
