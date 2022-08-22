@@ -26,6 +26,7 @@ export type Comment = {
   content: string;
 };
 
+/** 当前 page 下的评论 */
 const usePlayground = () => {
   const [mode, setMode] = useState<PlaygroundMode>('cursor');
   const [discusses, setDiscusses] = useState<Discuss[]>([]);
@@ -35,9 +36,6 @@ const usePlayground = () => {
   /** 临时创建的讨论 */
   const [tempDiscuss, setTempDiscuss, getTempDiscuss] =
     useGetState<TempDiscuss>();
-
-  const [tempTitleEditing, setTempTitleEditing, getTempTitleEditing] =
-    useGetState(false);
 
   const [detailVisible, setDetailVisible, getDetailVisible] =
     useGetState(false);
@@ -49,8 +47,6 @@ const usePlayground = () => {
 
   /** 选中 item 所在 filterItems 的下标 */
   const [selectedItemIndex, setSelectedItemIndex] = useState<number>();
-
-  const detailModeRef = useLatest(detailMode);
 
   const selectedDiscuss = useMemo(() => {
     return discusses.find((item) => item.id === selectedDiscussId);
@@ -102,13 +98,12 @@ const usePlayground = () => {
   );
 
   const updateSelectedDiscussContent = useMemoizedFn(
-    (data: Pick<Discuss, 'desc' | 'title'>) => {
+    (data: Partial<Discuss>) => {
       setDiscusses(
         produce((draft) => {
           const target = draft.find((item) => item.id === selectedDiscussId);
           if (target) {
-            target.desc = data.desc;
-            target.title = data.title;
+            Object.assign(target, data);
           }
         }),
       );
@@ -125,15 +120,21 @@ const usePlayground = () => {
 
   const { run: requestCreateDiscuss, loading: requestCreateDiscussLoading } =
     useRequest(
-      async (params: API.CreationDiscuss) => {
+      async (
+        params: API.CreationDiscuss,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        opts?: {
+          onSuccess?: (data: API.ShownDiscuss | undefined) => void;
+        },
+      ) => {
         return DiscussControllerCreate(params);
       },
       {
         manual: true,
-        onSuccess: (data) => {
+        onSuccess: (data, params) => {
+          params[1]?.onSuccess?.(data);
           /** 创建成功后，替换 temp */
           if (data) {
-            setTempTitleEditing(false);
             setTempDiscuss(undefined);
             setSelectedDiscussId(data.id);
             addDiscuss(data);
@@ -161,9 +162,10 @@ const usePlayground = () => {
         manual: true,
         onSuccess: (data, params) => {
           params[2]?.(data);
-          if (data) {
-            updateDiscuss(data.id, data);
-          }
+          // 注意 update effect 和 update request 不要相互冲突
+          // if (data) {
+          //   updateDiscuss(data.id, data);
+          // }
         },
       },
     );
@@ -215,6 +217,7 @@ const usePlayground = () => {
           params[1]?.(data);
           deleteDiscuss(params[0]);
           setSelectedDiscussId(undefined);
+          setDetailMode('list');
         },
       },
     );
@@ -235,80 +238,17 @@ const usePlayground = () => {
     },
   );
 
-  /** 创建 temp 的时候，需要同时打开讨论详情 */
   useUpdateEffect(() => {
-    if (detailModeRef.current === 'detail') {
-      if (tempDiscuss && getDetailVisible() === false) {
-        setDetailVisible(true);
-      }
-    }
-  }, [tempDiscuss]);
-
-  /**
-   * tempDiscuss 为空时候，关闭 detail
-   * 注意：temp 创建成功后，应该关闭窗口，但是后面有个 selectedId 打开的逻辑，相互抵消了
-   */
-  useUpdateEffect(() => {
-    if (detailModeRef.current === 'detail') {
-      if (!tempDiscuss && getDetailVisible() === true) {
-        setDetailVisible(false);
-      }
-    }
-  }, [tempDiscuss]);
-
-  useUpdateEffect(() => {
-    if (detailModeRef.current === 'detail') {
-      if (detailVisible) {
-        if (getTempDiscuss()) {
-          /** 目标是让打开后，标题自动聚焦，这里依赖 antd 组件内部实现 */
-          setTimeout(() => {
-            setTempTitleEditing(true);
-          });
-        }
-      }
-    }
-  }, [detailVisible]);
-
-  /** 关闭讨论详情的时候，如果当前存在 temp，需要清空 */
-  useUpdateEffect(() => {
-    if (detailModeRef.current === 'detail') {
-      if (detailVisible === false) {
-        if (getTempTitleEditing()) {
-          /** 目标是关闭抽屉动画结束后，再执行切换动画 */
-          setTimeout(() => {
-            setTempTitleEditing(false);
-          }, 200);
-        }
-        if (getTempDiscuss()) {
-          setTempDiscuss(undefined);
-        }
-      }
-    }
-  }, [detailVisible]);
-
-  /** 关闭抽屉的时候，如果存在 selectedDiscussId 需要清空 */
-  useUpdateEffect(() => {
-    if (detailModeRef.current === 'detail') {
-      if (detailVisible === false) {
-        if (getSelectedDiscussId()) {
-          setSelectedDiscussId(undefined);
-        }
-      }
-    }
-  }, [detailVisible]);
-
-  /** 选中后，联动打开详情 */
-  useUpdateEffect(() => {
-    if (detailModeRef.current === 'detail') {
-      if (selectedDiscussId) {
-        setDetailVisible(true);
-      } else {
-        if (getDetailVisible()) {
-          setDetailMode('list');
-        }
-      }
+    if (selectedDiscussId) {
+      setDetailVisible(true);
     }
   }, [selectedDiscussId]);
+
+  useUpdateEffect(() => {
+    if (tempDiscuss) {
+      setDetailVisible(false);
+    }
+  }, [tempDiscuss]);
 
   /** 当选中数据变化，同步后端接口 */
   useUpdateEffect(() => {
@@ -338,7 +278,6 @@ const usePlayground = () => {
     selectedDiscussId,
     tempDiscuss,
     selectedDiscuss,
-    tempTitleEditing,
     requestUpdateDiscussLoading,
     requestResolvedDiscuss,
     requestResolvedDiscussLoading,
@@ -355,9 +294,7 @@ const usePlayground = () => {
     updateDiscuss,
     requestDeleteDiscuss,
     deleteDiscuss,
-    getTempTitleEditing,
     getSelectedDiscussId,
-    setTempTitleEditing,
     setMode,
     addDiscuss,
     requestCreateDiscuss,

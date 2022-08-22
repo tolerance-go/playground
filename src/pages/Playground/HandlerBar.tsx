@@ -1,6 +1,7 @@
+import { QuestionTooltip } from '@/components/QuestionTooltip';
 import { PlaygroundMode } from '@/models/playground';
 import { useModel } from '@umijs/max';
-import { Segmented } from 'antd';
+import { Segmented, Space } from 'antd';
 import styles from './HandlerBar.less';
 
 export const HandlerBar = () => {
@@ -26,7 +27,6 @@ export const HandlerBar = () => {
       }}
     >
       <Segmented
-        block
         value={mode}
         options={[
           {
@@ -34,7 +34,12 @@ export const HandlerBar = () => {
             value: 'cursor',
           },
           {
-            label: '讨论',
+            label: (
+              <Space size={5}>
+                <span>讨论</span>
+                <QuestionTooltip title="同时按住 alt 可以进行页面交互" />
+              </Space>
+            ),
             value: 'discuss',
           },
         ]}
@@ -42,7 +47,6 @@ export const HandlerBar = () => {
           setMode(val as PlaygroundMode);
           if (val === 'discuss') {
             setDetailMode('list');
-            setDetailVisible(true);
           }
         }}
       />

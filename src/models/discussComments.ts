@@ -13,6 +13,9 @@ export type NestDiscussComment = API.ShownComment & {
   replyComments?: NestDiscussComment[];
 };
 
+/**
+ * 当前讨论下的评论，不是所有的评论
+ */
 const useDiscussComments = () => {
   const [discussComments, setDiscussComments] = useState<API.ShownComment[]>(
     [],

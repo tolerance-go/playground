@@ -1,21 +1,15 @@
-import { ArrowRightOutlined, SwapLeftOutlined } from '@ant-design/icons';
+import {
+  ArrowRightOutlined,
+  CloseOutlined,
+  SettingOutlined,
+  SwapLeftOutlined,
+} from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { useDebounce } from 'ahooks';
-import {
-  Button,
-  Col,
-  Divider,
-  Drawer,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  Typography,
-} from 'antd';
-import CommentList from './CommentList';
+import { Button, Drawer, Popconfirm, Select, Space, Typography } from 'antd';
+import { DiscussContent } from './DiscussContent';
 import DiscussList from './DiscussList';
-import { ParagraphItem } from './ParagraphItem';
-import { TitleItem } from './TitleItem';
+import styles from './index.less';
 
 export const DiscussDetail = () => {
   const {
@@ -24,7 +18,6 @@ export const DiscussDetail = () => {
     requestResolvedDiscussLoading,
     selectedDiscuss,
     setDetailVisible,
-    getTempTitleEditing,
     requestDeleteDiscuss,
     detailMode,
     requestResolvedDiscuss,
@@ -38,7 +31,6 @@ export const DiscussDetail = () => {
     detailVisible: model.detailVisible,
     setDetailVisible: model.setDetailVisible,
     tempDiscuss: model.tempDiscuss,
-    getTempTitleEditing: model.getTempTitleEditing,
     requestDeleteDiscuss: model.requestDeleteDiscuss,
     requestResolvedDiscuss: model.requestResolvedDiscuss,
     requestResolvedDiscussLoading: model.requestResolvedDiscussLoading,
@@ -61,155 +53,143 @@ export const DiscussDetail = () => {
   });
 
   return (
-    <Drawer
-      width={500}
-      placement="right"
-      onClose={() => {
-        if (getTempTitleEditing()) return;
-        setDetailVisible(false);
-      }}
-      destroyOnClose
-      visible={detailVisible}
-      bodyStyle={{
-        padding: 0,
-      }}
-      title={(() => {
-        if (detailMode === 'list') {
-          return (
-            <Typography.Text>{filterDiscusses.length} 条讨论</Typography.Text>
-          );
-        }
-        return undefined;
-      })()}
-      extra={(() => {
-        if (detailMode === 'list') {
-          return (
-            <Select
-              onChange={(val) => setDetailListFilterMode(val)}
-              value={detailListFilterMode}
-              options={[
-                {
-                  label: '已解决',
-                  value: 'resolved',
-                },
-                {
-                  label: '未解决',
-                  value: 'open',
-                },
-              ]}
-            ></Select>
-          );
-        }
-
-        return (detailVisible ? tempDiscuss : dtempDiscuss) ? undefined : (
-          <Space>
-            <Button
-              icon={<SwapLeftOutlined />}
-              shape="round"
-              onClick={() => {
-                setDetailMode('list');
-                setSelectedDiscussId(undefined);
-              }}
-            >
-              返回列表
-            </Button>
-            {selectedDiscuss ? (
-              <>
-                <Button
-                  loading={requestResolvedDiscussLoading}
-                  type={selectedDiscuss.resolved ? 'default' : 'primary'}
-                  shape="round"
-                  onClick={() => {
-                    requestResolvedDiscuss(selectedDiscuss.id, {
-                      resolved: !selectedDiscuss.resolved,
-                    });
-                  }}
-                >
-                  {selectedDiscuss.resolved ? '待解决' : '解决'}
-                </Button>
-                <Popconfirm
-                  title="确认删除吗？"
-                  okText="确认"
-                  cancelText="取消"
-                  placement="bottomRight"
-                  onConfirm={() => {
-                    requestDeleteDiscuss(selectedDiscuss.id);
-                  }}
-                >
-                  <Button danger type="primary" shape="round">
-                    删除
-                  </Button>
-                </Popconfirm>
-                <Button
-                  disabled={!selectedNextItem}
-                  shape="round"
-                  icon={<ArrowRightOutlined />}
-                  onClick={() => {
-                    if (selectedNextItem) {
-                      setSelectedDiscussId(selectedNextItem.id);
-                    }
-                  }}
-                >
-                  下一个
-                </Button>
-              </>
-            ) : null}
-          </Space>
-        );
-      })()}
-    >
-      {detailMode === 'detail' ? (
-        <Row
+    <>
+      <div
+        className={styles.drawerHandle}
+        onClick={() => setDetailVisible(!detailVisible)}
+        style={{
+          zIndex: 999,
+          position: 'fixed',
+        }}
+      >
+        <SettingOutlined
           style={{
-            flexDirection: 'column',
-            height: '100%',
-            alignItems: 'stretch',
+            color: '#fff',
+            fontSize: 20,
           }}
-          wrap={false}
+        />
+      </div>
+      <Drawer
+        mask={false}
+        width={500}
+        placement="right"
+        onClose={() => {
+          setDetailVisible(false);
+        }}
+        visible={detailVisible}
+        bodyStyle={{
+          padding: 0,
+        }}
+        title={(() => {
+          if (detailMode === 'list') {
+            return (
+              <Typography.Text>{filterDiscusses.length} 条讨论</Typography.Text>
+            );
+          }
+          return undefined;
+        })()}
+        extra={(() => {
+          if (detailMode === 'list') {
+            return (
+              <Select
+                onChange={(val) => setDetailListFilterMode(val)}
+                value={detailListFilterMode}
+                options={[
+                  {
+                    label: '已解决',
+                    value: 'resolved',
+                  },
+                  {
+                    label: '未解决',
+                    value: 'open',
+                  },
+                ]}
+              ></Select>
+            );
+          }
+
+          if (!selectedDiscuss) {
+            return null;
+          }
+
+          return (
+            <Space>
+              <Button
+                icon={<SwapLeftOutlined />}
+                shape="round"
+                onClick={() => {
+                  setDetailMode('list');
+                  setSelectedDiscussId(undefined);
+                }}
+              >
+                返回列表
+              </Button>
+              <Button
+                loading={requestResolvedDiscussLoading}
+                type={selectedDiscuss.resolved ? 'default' : 'primary'}
+                shape="round"
+                onClick={() => {
+                  requestResolvedDiscuss(selectedDiscuss.id, {
+                    resolved: !selectedDiscuss.resolved,
+                  });
+                }}
+              >
+                {selectedDiscuss.resolved ? '待解决' : '解决'}
+              </Button>
+              <Popconfirm
+                title="确认删除吗？"
+                okText="确认"
+                cancelText="取消"
+                placement="bottomRight"
+                onConfirm={() => {
+                  requestDeleteDiscuss(selectedDiscuss.id);
+                }}
+              >
+                <Button danger type="primary" shape="round">
+                  删除
+                </Button>
+              </Popconfirm>
+              <Button
+                disabled={!selectedNextItem}
+                shape="round"
+                icon={<ArrowRightOutlined />}
+                onClick={() => {
+                  if (selectedNextItem) {
+                    setSelectedDiscussId(selectedNextItem.id);
+                  }
+                }}
+              >
+                下一个
+              </Button>
+            </Space>
+          );
+        })()}
+      >
+        {detailMode === 'detail' ? <DiscussContent /> : <DiscussList />}
+        <div
+          className={styles.drawerHandle}
+          onClick={() => setDetailVisible(!detailVisible)}
+          style={{
+            right: 500,
+          }}
         >
-          <Col
-            flex={'300px'}
-            style={{
-              overflow: 'auto',
-              paddingTop: 24,
-              paddingLeft: 24,
-              paddingRight: 24,
-            }}
-          >
-            <TitleItem />
-            <ParagraphItem />
-          </Col>
-          <Col
-            flex={'none'}
-            style={{
-              paddingRight: 24,
-              paddingLeft: 24,
-            }}
-          >
-            <Typography.Text>{`${discussComments.length} 条评论 & 回复`}</Typography.Text>
-            <Divider
+          {detailVisible ? (
+            <CloseOutlined
               style={{
-                marginTop: 12,
-                marginBottom: 0,
+                color: '#fff',
+                fontSize: 20,
               }}
             />
-          </Col>
-          <Col
-            flex={'auto'}
-            style={{
-              overflow: 'auto',
-              paddingRight: 24,
-              paddingLeft: 24,
-            }}
-          >
-            {selectedDiscuss ? (
-              <CommentList discussId={selectedDiscuss.id} />
-            ) : null}
-          </Col>
-        </Row>
-      ) : (
-        <DiscussList />
-      )}
-    </Drawer>
+          ) : (
+            <SettingOutlined
+              style={{
+                color: '#fff',
+                fontSize: 20,
+              }}
+            />
+          )}
+        </div>
+      </Drawer>
+    </>
   );
 };

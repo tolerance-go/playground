@@ -1,97 +1,48 @@
 import { useModel } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
 import { Typography } from 'antd';
 import { useRef, useState } from 'react';
 
 /** 注意该组件处理 tempDiscuss 存在与否的两种逻辑 */
 export const TitleItem = () => {
-  const {
-    tempDiscuss,
-    tempTitleEditing,
-    setTempDiscuss,
-    selectedDiscuss,
-    requestCreateDiscuss,
-    updateSelectedDiscussContent,
-    setTempTitleEditing,
-  } = useModel('playground', (model) => ({
-    tempDiscuss: model.tempDiscuss,
-    selectedDiscuss: model.selectedDiscuss,
-    tempTitleEditing: model.tempTitleEditing,
-    setTempDiscuss: model.setTempDiscuss,
-    requestCreateDiscuss: model.requestCreateDiscuss,
-    updateSelectedDiscussContent: model.updateSelectedDiscussContent,
-    setTempTitleEditing: model.setTempTitleEditing,
-  }));
-  const text = tempDiscuss ? tempDiscuss.title : selectedDiscuss?.title;
+  const { selectedDiscuss, updateSelectedDiscussContent } = useModel(
+    'playground',
+    (model) => ({
+      selectedDiscuss: model.selectedDiscuss,
+      updateSelectedDiscussContent: model.updateSelectedDiscussContent,
+    }),
+  );
 
-  const [value, setValue] = useState<string | undefined>();
-  const valueRef = useRef<string | undefined>();
+  const text = selectedDiscuss?.title;
 
-  const ref = useRef<HTMLDivElement>(null);
+  const valueRef = useRef<string | undefined>(text);
 
-  const handlerEnd = useMemoizedFn(() => {
-    if (tempDiscuss) {
-      /** 如果没有输入，就点击外部，则清空 temp，放弃本次创建 */
-      if (!valueRef.current) {
-        setTempDiscuss(undefined);
-      } else {
-        requestCreateDiscuss({
-          ...tempDiscuss,
-          title: valueRef.current,
-        });
-      }
-    } else {
-      updateSelectedDiscussContent({
-        /** 防止拿到旧数据，原因未知 */
-        title: valueRef.current,
-      });
-      setTempTitleEditing(false);
-    }
-  });
+  const [value, setValue] = useState(text);
 
   return (
-    <div
-      ref={ref}
-      onBlur={() => {
-        handlerEnd();
+    <Typography.Title
+      level={4}
+      editable={{
+        autoSize: {
+          maxRows: 3,
+        },
+        maxLength: 50,
+        onEnd: () => {
+          updateSelectedDiscussContent({
+            title: valueRef.current,
+          });
+        },
+        onChange(value) {
+          valueRef.current = value;
+          /** setValue 在 onEnd 的时候，拿不到最新 */
+          setValue(value);
+        },
       }}
     >
-      <Typography.Title
-        level={4}
-        editable={{
-          autoSize: {
-            maxRows: 3,
-          },
-          maxLength: 50,
-          editing: tempTitleEditing,
-          onEnd: () => {
-            handlerEnd();
-          },
-          onCancel() {
-            /** 临时状态，什么都没输入 esc，则默认退出临时状态 */
-            if (tempDiscuss) {
-              setTempDiscuss(undefined);
-            } else {
-              setValue(selectedDiscuss?.title);
-              setTempTitleEditing(false);
-            }
-          },
-          onStart() {
-            setTempTitleEditing(true);
-          },
-          onChange(value) {
-            valueRef.current = value;
-            setValue(value);
-          },
-        }}
-      >
-        {/* 编辑状态退出，会触发一次 onChange，如果 value 变化的话，推测，没有验证该结论 */}
-        {!(value ?? text) ? (
-          <Typography.Text type="secondary">标题信息</Typography.Text>
-        ) : (
-          value ?? text
-        )}
-      </Typography.Title>
-    </div>
+      {!text ? (
+        <Typography.Text type="secondary">标题信息</Typography.Text>
+      ) : (
+        value || text
+      )}
+    </Typography.Title>
   );
 };

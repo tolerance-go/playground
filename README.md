@@ -92,7 +92,24 @@ src/models/componentsSlots.ts
 
 这样是挺好的，但是不是都适用，它主要适用在“编辑器”领域，编辑是没有确认环节操作的；如果**有明确的更新确认操作**，先发送请求可能更加稳定好用
 
+4. update request 方法分 2 个类型
+
+A：一个是成功后，联动更新视图状态 B：另一个版本是不联动
+
+update 后置同步后端场景用 B，否则用 A
 
 # 注意事项
 
 1. useModel 的 selector 只有当 model diff 的时候才会触发，继而根据 selector 返回值判断所在组件是否执行 update
+
+2. 注意 update effect 和 update request 不要相互冲突
+
+# 资料链接
+
+1. react-hotkeys-hook
+
+keys
+
+https://github.com/jaywcjlove/hotkeys/#defining-shortcuts
+
+可以通过 useHotkeys('\*', (event) => { 打印 key });

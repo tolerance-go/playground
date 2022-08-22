@@ -20,9 +20,12 @@ export const StageInnerWrapper = (props: PropsWithChildren<unknown>) => {
     <div
       style={{
         position: 'relative',
+        cursor: mode === 'discuss' ? 'help' : 'default',
       }}
       onClick={(event) => {
         if (mode !== 'discuss') return;
+
+        if (event.altKey) return;
 
         const parentAtomWrapper = findClosestParentHTMLElement(
           event.target as HTMLElement,
