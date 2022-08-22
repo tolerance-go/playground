@@ -1,6 +1,6 @@
 18
-1. [ ] 去除 drawer mask
-1.3 [ ] 创建使用 popover
+1. [x] 去除 drawer mask
+1.3 [x] 创建使用 popover
 1.1 [ ] 在 workbench 中集成 
 2. [x] 增加评论功能
 

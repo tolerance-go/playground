@@ -5,7 +5,6 @@ import {
   SwapLeftOutlined,
 } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { useDebounce } from 'ahooks';
 import { Button, Drawer, Popconfirm, Select, Space, Typography } from 'antd';
 import { DiscussContent } from './DiscussContent';
 import DiscussList from './DiscussList';
@@ -43,14 +42,6 @@ export const DiscussDetail = () => {
     setSelectedDiscussId: model.setSelectedDiscussId,
     selectedNextItem: model.selectedNextItem,
   }));
-
-  const { discussComments } = useModel('discussComments', (model) => ({
-    discussComments: model.discussComments,
-  }));
-
-  const dtempDiscuss = useDebounce(tempDiscuss, {
-    wait: 350,
-  });
 
   return (
     <>

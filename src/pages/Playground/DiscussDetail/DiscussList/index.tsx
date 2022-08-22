@@ -39,7 +39,9 @@ export default () => {
         },
         avatar: {
           render: () => {
-            return <Avatar />;
+            return (
+              <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+            );
           },
         },
         description: {

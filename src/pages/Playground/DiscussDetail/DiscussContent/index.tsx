@@ -1,8 +1,9 @@
 import { useModel } from '@umijs/max';
 import { Col, Divider, Row, Typography } from 'antd';
 import CommentList from '../CommentList';
-import { ParagraphItem } from '../ParagraphItem';
-import { TitleItem } from '../TitleItem';
+import { ParagraphItem } from './ParagraphItem';
+import { TagItem } from './TagItem';
+import { TitleItem } from './TitleItem';
 
 export const DiscussContent = () => {
   const { discussComments } = useModel('discussComments', (model) => ({
@@ -28,7 +29,7 @@ export const DiscussContent = () => {
       wrap={false}
     >
       <Col
-        flex={'300px'}
+        flex={'350px'}
         style={{
           overflow: 'auto',
           paddingTop: 24,
@@ -37,6 +38,7 @@ export const DiscussContent = () => {
         }}
       >
         <TitleItem />
+        <TagItem />
         <ParagraphItem />
       </Col>
       <Col
