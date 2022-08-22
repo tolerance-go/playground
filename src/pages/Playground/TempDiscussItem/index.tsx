@@ -54,9 +54,12 @@ export const TempDiscussItem = () => {
             autoFocus
             onChange={(e) => setValue(e.target.value)}
             value={value}
-            placeholder="请输入评论标题"
+            placeholder="请输入讨论标题"
             bordered={false}
             size="large"
+            style={{
+              width: 200,
+            }}
             onPressEnter={() => {
               createDiscuss();
             }}
@@ -67,6 +70,7 @@ export const TempDiscussItem = () => {
             }}
           ></Input>
           <Button
+            // size="small"
             shape="circle"
             icon={<CloseOutlined />}
             onClick={() => {
@@ -74,6 +78,7 @@ export const TempDiscussItem = () => {
             }}
           ></Button>
           <Button
+            // size="small"
             type="primary"
             disabled={!value}
             shape="circle"
