@@ -1,8 +1,8 @@
 import { DiscussTag } from '@/components/DiscussTag';
 import { useModel } from '@umijs/max';
-import BigNumber from 'bignumber.js';
-import { debounce } from 'lodash';
-import { memo, useEffect, useState } from 'react';
+import { pick } from 'lodash';
+import { memo } from 'react';
+import { usePositionResize } from './usePositionResize';
 
 const DiscussItem = (
   props: API.Discuss & {
@@ -18,75 +18,30 @@ const DiscussItem = (
     }),
   );
 
-  const [left, setLeft] = useState(props.left);
-  const [top, setTop] = useState(props.top);
-  /** 避免初始化后，满屏幕的 tag 一起动画归位 */
-  const [initResized, setInitResized] = useState(false);
+  const { left, top, initResized } = usePositionResize({
+    originLeft: props.left,
+    originTop: props.top,
+    ...pick(props, [
+      'belongsToComId',
+      'containerLeft',
+      'containerTop',
+      'containerWidth',
+      'containerHeight',
+    ]),
+  });
 
-  useEffect(() => {
-    const handlerResize = () => {
-      const container = document.querySelector(
-        `[data-comid="${props.belongsToComId}"]`,
-      );
+  /** 监听组件状态，判断显示 */
+  const { usedStatId } = useModel('statusSettingsUsed', (model) => ({
+    usedStatId: model.statusSettingsUsed[props.belongsToComId],
+  }));
 
-      if (container) {
-        // https://www.yuque.com/bzone/ald3bp/qnve33
-        const containerRect = container.getBoundingClientRect();
+  const { defaultStatId } = useModel('statusSettingsDefaults', (model) => ({
+    defaultStatId: model.statusSettingsDefaults[props.belongsToComId],
+  }));
 
-        // left
-        // props.containerLeft - containerRect.left = props.left - ?
-        let nextLeft = new BigNumber(props.left)
-          .minus(new BigNumber(props.containerLeft).minus(containerRect.left))
-          .toNumber();
-
-        // top
-        // props.containerTop - containerRect.top = props.top - ?
-
-        let nextTop = new BigNumber(props.top)
-          .minus(new BigNumber(props.containerTop).minus(containerRect.top))
-          .toNumber();
-
-        // left
-        // props.containerWidth / containerRect.width = (props.left - containerRect.left) / ?
-
-        nextLeft = new BigNumber(
-          new BigNumber(nextLeft).minus(containerRect.left),
-        )
-          .dividedBy(
-            new BigNumber(props.containerWidth).dividedBy(containerRect.width),
-          )
-          .plus(containerRect.left)
-          .toNumber();
-
-        // top
-        // props.containerHeight / containerRect.height = (props.top - containerRect.top) / ?
-
-        nextTop = new BigNumber(new BigNumber(nextTop).minus(containerRect.top))
-          .dividedBy(
-            new BigNumber(props.containerHeight).dividedBy(
-              containerRect.height,
-            ),
-          )
-          .plus(containerRect.top)
-          .toNumber();
-
-        setLeft(nextLeft);
-        setTop(nextTop);
-        setInitResized(true);
-      }
-    };
-
-    const debounceHandlerResize = debounce(handlerResize, 50);
-
-    /** 初始化执行一次 */
-    handlerResize();
-
-    window.addEventListener('resize', debounceHandlerResize);
-
-    return () => {
-      window.removeEventListener('resize', debounceHandlerResize);
-    };
-  }, []);
+  if ((usedStatId || defaultStatId) !== props.belongsToComStatId) {
+    return null;
+  }
 
   return initResized ? (
     <DiscussTag
