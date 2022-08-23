@@ -5,7 +5,8 @@ import {
   CommentControllerUpdate,
 } from '@/services/server/CommentController';
 import { findTreeNode } from '@/utils/treeUtils/findTreeNode';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
 import { produce } from 'immer';
 import { useMemo, useState } from 'react';
 

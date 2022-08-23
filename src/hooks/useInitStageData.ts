@@ -21,7 +21,7 @@ export const useInitSatgeData = () => {
   );
 
   const { initData: initStatusRelations } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => {
       return {
         initData: model.initData,

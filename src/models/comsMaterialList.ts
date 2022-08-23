@@ -1,9 +1,14 @@
-import { ComponentControllerIndex } from '@/services/server/ComponentController';
-import { useRequest } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
+import {
+  ComponentControllerCreate,
+  ComponentControllerDestroy,
+  ComponentControllerIndex,
+} from '@/services/server/ComponentController';
+import { convertListToMap } from '@/utils/listUtils/convertListToMap';
+import { useModel } from '@umijs/max';
+import { useMemoizedFn, useRequest } from 'ahooks';
 import { produce } from 'immer';
 import qs from 'qs';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const useComsMaterialList = () => {
   const [comsMaterialList, setComsMaterialList] = useState<API.Component[]>();
@@ -23,7 +28,19 @@ const useComsMaterialList = () => {
   //   },
   // );
 
-  const createComMaterial = useMemoizedFn((newComMaterial: API.Component) => {
+  const { requestCreateMaterialInheritRelation } = useModel(
+    'materialInheritRelation',
+    (model) => ({
+      requestCreateMaterialInheritRelation:
+        model.requestCreateMaterialInheritRelation,
+    }),
+  );
+
+  const comsMaterialMap = useMemo(() => {
+    return convertListToMap(comsMaterialList ?? []);
+  }, [comsMaterialList]);
+
+  const addComMaterial = useMemoizedFn((newComMaterial: API.Component) => {
     setComsMaterialList(
       produce((draft) => {
         draft?.push(newComMaterial);
@@ -51,7 +68,7 @@ const useComsMaterialList = () => {
 
   const { loading } = useRequest(
     async () => {
-      return await ComponentControllerIndex({
+      return ComponentControllerIndex({
         appId: Number(appId),
       });
     },
@@ -62,13 +79,91 @@ const useComsMaterialList = () => {
     },
   );
 
+  const { loading: requestRemoveLoading, run: requestRemove } = useRequest(
+    async (id: API.Component['id']) => {
+      return ComponentControllerDestroy({
+        id: String(id),
+      });
+    },
+    {
+      manual: true,
+      onSuccess: (data) => {
+        if (data?.id) {
+          removeComMaterial(data?.id);
+        }
+      },
+    },
+  );
+
+  const { loading: requestCreateLoading, run: requestCreate } = useRequest(
+    async (params: Omit<API.CreationComponent, 'app_id'>) => {
+      return ComponentControllerCreate({
+        name: params.name,
+        desc: params.desc,
+        app_id: appId as string,
+        stage_data: JSON.stringify(params.stage_data),
+      });
+    },
+    {
+      manual: true,
+      onSuccess: (data) => {
+        if (data) {
+          addComMaterial(data);
+        }
+      },
+    },
+  );
+
+  /**
+   * 创建一个新的物料
+   * 从旧的物料复制，并创建相应的关联
+   */
+  const {
+    loading: requestCreateAndInheritInFromCurrentLoading,
+    run: requestCreateAndInheritInFromCurrent,
+  } = useRequest(
+    async (mtlId: number) => {
+      const current = comsMaterialMap[mtlId];
+      return ComponentControllerCreate({
+        name: current.name,
+        desc: current.desc,
+        app_id: appId as string,
+        stage_data: current.stage_data,
+      });
+    },
+    {
+      manual: true,
+      onSuccess: (data, params) => {
+        if (data) {
+          addComMaterial(data);
+          requestCreateMaterialInheritRelation({
+            toId: data!.id,
+            fromId: params[0],
+          });
+        }
+      },
+    },
+  );
+
+  /** 从当前物料创建，创建后继承该物料 */
+  // const requestCreateAndInheritInFromCurrent = useMemoizedFn(
+  //   async (mtlId: number) => {
+
+  //   },
+  // );
+
   return {
     comsMaterialListLoading: loading,
     comsMaterialList,
+    comsMaterialMap,
     removeComMaterial,
     getComMaterial,
     setComsMaterialList,
-    createComMaterial,
+    createComMaterial: addComMaterial,
+    requestRemoveLoading,
+    requestRemove,
+    requestCreate,
+    requestCreateLoading,
   };
 };
 

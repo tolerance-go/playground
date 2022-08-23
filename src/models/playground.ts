@@ -4,7 +4,8 @@ import {
   DiscussControllerIndex,
   DiscussControllerUpdate,
 } from '@/services/server/DiscussController';
-import { useRequest } from '@umijs/max';
+import { useRequest } from 'ahooks';
+
 import { useGetState, useLatest, useMemoizedFn, useUpdateEffect } from 'ahooks';
 import { produce } from 'immer';
 import { useMemo, useState } from 'react';

@@ -24,7 +24,7 @@ export const useComStatusExtendProps = <P extends object>(options: {
   );
 
   const { getComExtendStatusFromStat } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => ({
       getComExtendStatusFromStat: model.getComExtendRelationsFromStat,
     }),
@@ -45,11 +45,11 @@ export const useComStatusExtendProps = <P extends object>(options: {
         );
         options.updateComStatProps(
           comId,
-          relation.toStatId,
+          relation.toId,
           // 锁住的字段，不进行继承同步，在这里过滤掉
           filtedSettings,
         );
-        setComExtendsProps(comId, relation.toStatId, filtedSettings);
+        setComExtendsProps(comId, relation.toId, filtedSettings);
       });
     },
   );

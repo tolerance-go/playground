@@ -30,7 +30,7 @@ export const useGetSliceStageData = () => {
   );
 
   const { getSliceData: getStatusRelations } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => {
       return {
         getSliceData: model.getSliceData,

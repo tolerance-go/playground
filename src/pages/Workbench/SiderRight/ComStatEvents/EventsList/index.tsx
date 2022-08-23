@@ -45,7 +45,7 @@ export default () => {
   const { extendRelation } = useSelectedComActiveStatExtendRelation();
 
   const { lockComExtendEventField, unlockComExtendEventField } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => ({
       lockComExtendEventField: model.lockComExtendEventField,
       unlockComExtendEventField: model.unlockComExtendEventField,
@@ -111,7 +111,7 @@ export default () => {
           render: (dom, item) => {
             return [
               isExtendReactionView(
-                extendRelation?.toStatId,
+                extendRelation?.toId,
                 extendRelation?.eventUnsyncFields,
                 selectedComponentStatusId,
                 item.name,

@@ -14,7 +14,7 @@ export const useSelectedComActiveStatExtendRelation = () => {
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 
-  const { comsStatusRelations } = useModel('statusRelations', (model) => ({
+  const { comsStatusRelations } = useModel('statusConnectRelations', (model) => ({
     comsStatusRelations: model.comsStatusRelations,
   }));
 
@@ -25,7 +25,7 @@ export const useSelectedComActiveStatExtendRelation = () => {
       ).map((relationId) => comsStatusRelations[stageSelectNodeId][relationId]);
 
       const extendRelation = relations.find(
-        (relation) => relation.toStatId === selectedComponentStatusId,
+        (relation) => relation.toId === selectedComponentStatusId,
       );
 
       return extendRelation;

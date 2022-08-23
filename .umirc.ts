@@ -20,7 +20,6 @@ export default defineConfig({
   access: {},
   model: {},
   initialState: {},
-  request: {},
   npmClient: 'pnpm',
   routes: [
     {

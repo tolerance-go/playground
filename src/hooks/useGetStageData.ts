@@ -27,7 +27,7 @@ export const useGetStageData = () => {
   );
 
   const { getData: getStatusRelations } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => {
       return {
         getData: model.getData,

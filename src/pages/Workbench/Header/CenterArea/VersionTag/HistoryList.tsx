@@ -1,6 +1,7 @@
 import { VersionControllerDestroy } from '@/services/server/VersionController';
 import { ProList } from '@ant-design/pro-components';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
 import { Badge, Button, Popconfirm, Space, Tag } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';

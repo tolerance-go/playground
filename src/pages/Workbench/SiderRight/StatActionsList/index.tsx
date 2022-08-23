@@ -45,7 +45,7 @@ export default () => {
   const { stageSelectNode } = useSelectedNode();
 
   const { lockComExtendActionField, unlockComExtendActionField } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => ({
       lockComExtendActionField: model.lockComExtendActionField,
       unlockComExtendActionField: model.unlockComExtendActionField,
@@ -111,7 +111,7 @@ export default () => {
           render: (dom, item) => {
             return [
               isExtendReactionView(
-                extendRelation?.toStatId,
+                extendRelation?.toId,
                 extendRelation?.actionUnsyncFields,
                 selectedComponentStatusId,
                 item.name,

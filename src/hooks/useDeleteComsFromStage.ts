@@ -2,6 +2,10 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 
 export const useDeleteComsFromStage = () => {
+  const { setStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+    setStageSelectNodeId: model.setStageSelectNodeId,
+  }));
+
   const { deleteComModelByIds } = useModel('comsStructures', (model) => {
     return {
       deleteComModelByIds: model.deleteComModelByIds,
@@ -24,7 +28,7 @@ export const useDeleteComsFromStage = () => {
   );
 
   const { deleteComsStatusRelationslByIds } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => {
       return {
         deleteComsStatusRelationslByIds: model.deleteComsStatusRelationslByIds,
@@ -65,6 +69,12 @@ export const useDeleteComsFromStage = () => {
     deleteComsEventsByIds(comIds);
     deleteComsStylesByIds(comIds);
     deleteComsSettingsByIds(comIds);
+    setStageSelectNodeId((prev) => {
+      if (prev && comIds.includes(prev)) {
+        return undefined;
+      }
+      return prev;
+    });
   });
 
   return {

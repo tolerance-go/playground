@@ -1,17 +1,37 @@
-import { ComponentControllerDestroy } from '@/services/server/ComponentController';
-import { ProList } from '@ant-design/pro-components';
-import { useModel, useRequest } from '@umijs/max';
-import { Spin } from 'antd';
-import styles from './index.less';
+import { SiderContentTopper } from '@/components/SiderContentTopper';
+import { makeTreeWithRelation } from '@/utils/treeUtils/makeTreeWithRelation';
+import { mapTree } from '@/utils/treeUtils/mapTree';
+import { useModel } from '@umijs/max';
+import { Tree } from 'antd';
+import { DataNode } from 'antd/lib/tree';
+import { useMemo } from 'react';
 import MaterialCreator from './MaterialCreator';
+import { TreeItem } from './TreeItem';
+
+type TreeNode = DataNode & {
+  parentStatId?: string;
+  relationId?: string;
+};
 
 export default () => {
-  const { comsMaterials, comsMaterialListLoading, removeComMaterial } =
-    useModel('comsMaterialList', (model) => ({
-      comsMaterials: model.comsMaterialList,
-      comsMaterialListLoading: model.comsMaterialListLoading,
-      removeComMaterial: model.removeComMaterial,
-    }));
+  const {
+    comsMaterials,
+    comsMaterialListLoading,
+    comsMaterialMap,
+    removeComMaterial,
+  } = useModel('comsMaterialList', (model) => ({
+    comsMaterials: model.comsMaterialList,
+    comsMaterialListLoading: model.comsMaterialListLoading,
+    removeComMaterial: model.removeComMaterial,
+    comsMaterialMap: model.comsMaterialMap,
+  }));
+
+  const { materialInheritConnectionMap } = useModel(
+    'materialInheritRelation',
+    (model) => ({
+      materialInheritConnectionMap: model.materialInheritConnectionMap,
+    }),
+  );
 
   const { setComActiveMaterialId, comActiveMaterialId } = useModel(
     'comActiveMaterialId',
@@ -23,67 +43,40 @@ export default () => {
     },
   );
 
-  const { loading: removeLoading, run } = useRequest(
-    async (id: API.Component['id']) => {
-      return await ComponentControllerDestroy({
-        id: String(id),
-      });
-    },
-    {
-      manual: true,
-      onSuccess: (data) => {
-        if (data?.id) {
-          removeComMaterial(data?.id);
-        }
+  const treeData = useMemo(() => {
+    return mapTree(
+      makeTreeWithRelation(comsMaterialMap, materialInheritConnectionMap),
+      (item) => {
+        return {
+          key: item.id,
+          title: <TreeItem record={item}></TreeItem>,
+          parentStatId: item.parentId,
+          relationId: item.relationId,
+        } as TreeNode;
       },
-    },
-  );
+    );
+  }, [comsMaterialMap, materialInheritConnectionMap]);
 
   return (
-    <ProList<API.Component>
-      className={styles.list}
-      style={{
-        marginTop: 10,
-      }}
-      split
-      loading={comsMaterialListLoading}
-      rowKey="id"
-      dataSource={comsMaterials}
-      showActions="hover"
-      onRow={(record) => {
-        return {
-          className:
-            record.id === comActiveMaterialId ? styles.active : undefined,
-          onClick: () => {
-            setComActiveMaterialId(record.id);
-          },
-        };
-      }}
-      metas={{
-        title: {
-          dataIndex: 'name',
-        },
-        description: {
-          dataIndex: 'desc',
-        },
-        actions: {
-          render: (dom, entity) => {
-            return [
-              <Spin key="remove" spinning={removeLoading}>
-                <a
-                  onClick={() => {
-                    run(entity.id);
-                  }}
-                >
-                  删除
-                </a>
-              </Spin>,
-            ];
-          },
-        },
-      }}
-      headerTitle={'暂存组件'}
-      toolBarRender={() => [<MaterialCreator key={'0'} />]}
-    />
+    <div>
+      <SiderContentTopper
+        title="暂存组件"
+        renderCreator={() => <MaterialCreator />}
+      ></SiderContentTopper>
+      <Tree<TreeNode>
+        showLine={{
+          showLeafIcon: false,
+        }}
+        blockNode
+        selectable
+        selectedKeys={comActiveMaterialId ? [comActiveMaterialId] : undefined}
+        treeData={treeData}
+        onSelect={(selectedKeys) => {
+          if (selectedKeys[0]) {
+            setComActiveMaterialId(Number(selectedKeys[0]));
+          }
+        }}
+      />
+    </div>
   );
 };

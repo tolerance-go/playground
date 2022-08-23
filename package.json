@@ -20,9 +20,10 @@
     "@ant-design/pro-components": "^1.1.15",
     "@antv/s2": "^1.23.0",
     "@antv/s2-react": "^1.21.0",
-    "@umijs/max": "^4.0.11",
+    "@umijs/max": "^4.0.13",
     "ahooks": "^3.5.2",
     "antd": "^4.22.3",
+    "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "clsx": "^1.2.1",
     "consola": "^2.15.3",
@@ -33,7 +34,8 @@
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
     "qs": "^6.11.0",
-    "react-hotkeys-hook": "^3.4.7"
+    "react-hotkeys-hook": "^3.4.7",
+    "use-immer": "^0.7.0"
   },
   "devDependencies": {
     "@types/consola": "^2.2.5",

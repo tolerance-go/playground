@@ -1,4 +1,5 @@
-import { Col, Row, Typography } from 'antd';
+import { SiderContentTopper } from '@/components/SiderContentTopper';
+import { Col, Row } from 'antd';
 import { PageCreator } from './PageCreator';
 import PageNav from './PageNav';
 
@@ -13,28 +14,10 @@ export default () => {
       wrap={false}
     >
       <Col flex={'none'}>
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{
-            background: '#fff',
-            paddingBottom: 15,
-          }}
-        >
-          <Col>
-            <Typography.Text
-              style={{
-                fontSize: 14,
-              }}
-              strong
-            >
-              路径
-            </Typography.Text>
-          </Col>
-          <Col>
-            <PageCreator />
-          </Col>
-        </Row>
+        <SiderContentTopper
+          title="路径"
+          renderCreator={() => <PageCreator />}
+        ></SiderContentTopper>
       </Col>
       <Col
         flex={'auto'}

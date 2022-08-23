@@ -1,5 +1,7 @@
 import { VersionControllerIndex } from '@/services/server/VersionController';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
+
 import { useMemoizedFn } from 'ahooks';
 import consola from 'consola';
 import { produce } from 'immer';

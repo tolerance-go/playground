@@ -4,7 +4,9 @@ import {
   AppControllerShow,
   AppControllerUpdateStageSize,
 } from '@/services/server/AppController';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
+
 import { useGetState, useMemoizedFn, useUpdateEffect } from 'ahooks';
 import { useRef } from 'react';
 import { BoxSize } from './comsStyles';
@@ -30,27 +32,23 @@ const useStageSize = () => {
 
       if (!query.appId) return;
 
-      const result = await AppControllerUpdateStageSize(
+      await AppControllerUpdateStageSize(
         {
           id: query.appId as string,
         },
         JSON.stringify(data ?? {}),
       );
 
-      if (result.success) {
-        if (updateCauseRecoverRef.current) {
-          updateCauseRecoverRef.current = false;
-        } else {
-          historyManager.commit({
-            [HISTORY_AREA_NAMES.STAGE_SIZE]: {
-              state: data,
-              commitInfo: undefined,
-            },
-          });
-        }
+      if (updateCauseRecoverRef.current) {
+        updateCauseRecoverRef.current = false;
+      } else {
+        historyManager.commit({
+          [HISTORY_AREA_NAMES.STAGE_SIZE]: {
+            state: data,
+            commitInfo: undefined,
+          },
+        });
       }
-
-      return result;
     },
     {
       manual: true,

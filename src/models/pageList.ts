@@ -1,5 +1,5 @@
 import { PageControllerIndex } from '@/services/server/PageController';
-import { useRequest } from '@umijs/max';
+import { useRequest } from 'ahooks';
 import { useMemoizedFn } from 'ahooks';
 import { message } from 'antd';
 import produce from 'immer';

@@ -68,6 +68,50 @@ declare namespace API {
     showType?: number;
   };
 
+  type ComIheritRelation = {
+    id: number;
+    toId: number;
+    fromId: number;
+    appId: number;
+  };
+
+  type ComIheritRelationControllerDestroyParams = {
+    /** id  */
+    id: number;
+  };
+
+  type ComIheritRelationControllerIndexParams = {
+    appId?: number;
+    limit?: number;
+    offset?: number;
+  };
+
+  type ComIheritRelationControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type ComIheritRelationControllerUpdateParams = {
+    /** id  */
+    id: number;
+  };
+
+  type ComIheritRelationListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: ShownComIheritRelation[];
+  };
+
+  type ComIheritRelationShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data?: ShownComIheritRelation;
+  };
+
   type Comment = {
     id: number;
     content?: string;
@@ -193,6 +237,12 @@ declare namespace API {
     history_data?: string;
     stage_size_data?: string;
     labels?: string[];
+  };
+
+  type CreationComIheritRelation = {
+    toId: number;
+    fromId: number;
+    appId: number;
   };
 
   type CreationComment = {
@@ -416,6 +466,15 @@ declare namespace API {
     data?: Page;
   };
 
+  type ShownComIheritRelation = {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    toId: number;
+    fromId: number;
+    appId: number;
+  };
+
   type ShownComment = {
     id: number;
     createdAt: string;
@@ -455,6 +514,12 @@ declare namespace API {
     containerTop: number;
     pageId: number;
     resolved?: boolean;
+  };
+
+  type UpdationComIheritRelation = {
+    toId?: number;
+    fromId?: number;
+    appId?: number;
   };
 
   type UpdationComment = {

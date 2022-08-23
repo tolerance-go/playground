@@ -32,7 +32,7 @@ export default () => {
   const { extendRelation } = useSelectedComActiveStatExtendRelation();
 
   const { lockComExtendStyleField, unlockComExtendStyleField } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => ({
       lockComExtendStyleField: model.lockComExtendStyleField,
       unlockComExtendStyleField: model.unlockComExtendStyleField,

@@ -8,8 +8,8 @@ import {
 import { SettingFormConfig } from '@/typings/SettingFormConfig';
 import { moveOffsetArrayItem } from '@/utils/moveOffsetArrayItem';
 import { ProColumns, ProFieldValueType } from '@ant-design/pro-components';
-import { useModel, useRequest } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
+import { useModel,  } from '@umijs/max';
+import { useMemoizedFn,useRequest } from 'ahooks';
 import { message } from 'antd';
 import produce from 'immer';
 import qs from 'qs';

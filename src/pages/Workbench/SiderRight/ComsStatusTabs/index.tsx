@@ -24,7 +24,7 @@ export const ComsStatusTabs = () => {
   );
 
   const { deleteComStatRelationFromToStatId } = useModel(
-    'statusRelations',
+    'statusConnectRelations',
     (model) => ({
       deleteComStatRelationFromToStatId:
         model.deleteComStatRelationFromToStatId,

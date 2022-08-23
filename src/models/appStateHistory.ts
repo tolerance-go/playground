@@ -8,8 +8,7 @@ import {
   AppControllerShow,
   AppControllerUpdateHistory,
 } from '@/services/server/AppController';
-import { useRequest } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
+import { useMemoizedFn, useRequest } from 'ahooks';
 import utl from 'lodash';
 import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -32,13 +31,10 @@ const useAppStateHistory = () => {
 
       if (query.appId) {
         // 请求服务器历史记录
-        const { success, data } = await AppControllerShow({
+        const data = await AppControllerShow({
           id: query.appId as string,
         });
-        return {
-          success,
-          data: data?.history_data && JSON.parse(data?.history_data),
-        };
+        return data?.history_data && JSON.parse(data?.history_data);
       }
     },
     {

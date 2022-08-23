@@ -56,9 +56,14 @@ export default () => {
               type="link"
               danger
               request={async () => {
-                return await DatabaseControllerDestroy({
-                  id: String(entity.id),
-                });
+                return DatabaseControllerDestroy(
+                  {
+                    id: String(entity.id),
+                  },
+                  {
+                    alwaysServerStructure: true,
+                  },
+                ) as unknown as Promise<API.DatabaseShowResponse>;
               }}
               onSuccess={() => {
                 message.success('删除成功');

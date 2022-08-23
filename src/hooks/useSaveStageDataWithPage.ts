@@ -15,16 +15,15 @@ export const useSaveStageDataWithPage = () => {
 
   const saveStageDataWithPage = useMemoizedFn(() => {
     if (activePageId) {
-      return PageControllerUpdate(
+      PageControllerUpdate(
         {
           id: activePageId,
         },
         JSON.stringify(getStageData()),
       );
+    } else {
+      message.warn('缺少 ID 信息，无法正常保存');
     }
-    message.warn('缺少 ID 信息，无法正常保存');
-
-    return { success: false };
   });
 
   return {

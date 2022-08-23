@@ -1,6 +1,8 @@
 import { VersionControllerShow } from '@/services/server/VersionController';
 import { ExportOutlined } from '@ant-design/icons';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
+
 import { Popover, Space, Spin, Tag, Tooltip } from 'antd';
 import HistoryList from './HistoryList';
 import styles from './index.less';

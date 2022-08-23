@@ -10,8 +10,8 @@ export type UnsyncFields = Record<string, boolean>;
 /** from 是被继承的，to 是继承者 */
 export type ComStatRelation = {
   id: string;
-  toStatId: string;
-  fromStatId: string;
+  toId: string;
+  fromId: string;
   /** 锁住的字段，不进行继承同步 */
   settingUnsyncFields: UnsyncFields;
   /** 样式锁 */
@@ -79,7 +79,7 @@ const useStatusRelations = () => {
     (comId: string, toStatId: string) => {
       Object.keys(comsStatusRelations[comId]).forEach((relationId) => {
         const relation = comsStatusRelations[comId][relationId];
-        if (relation.toStatId === toStatId) {
+        if (relation.toId === toStatId) {
           deleteComStatRelation(comId, relation.id);
         }
       });
@@ -123,7 +123,7 @@ const useStatusRelations = () => {
       return Object.keys(comsStatusRelations[comId] ?? {})
         .filter((relationId) => {
           const relation = comsStatusRelations[comId][relationId];
-          return relation.fromStatId === fromStatId;
+          return relation.fromId === fromStatId;
         })
         .map((relationId) => comsStatusRelations[comId][relationId]);
     },

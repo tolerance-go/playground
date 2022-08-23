@@ -1,21 +1,18 @@
 import { PageControllerCreate } from '@/services/server/PageController';
-import { useModel, useRequest, useSearchParams } from '@umijs/max';
+import { useModel, useSearchParams } from '@umijs/max';
+import { useRequest } from 'ahooks';
 import { Input, message, Spin } from 'antd';
 
 export const TempInput = () => {
-  const {
-    setCreatePathing,
-    pushPath,
-    tempInputValue,
-    setTempInputValue,
-  } = useModel('pageList', (model) => ({
-    tempInputValue: model?.tempInputValue,
-    createPathing: model?.createPathing,
-    setCreatePathing: model?.setCreatePathing,
-    pushPath: model?.pushPath,
-    setTempInputValue: model?.setTempInputValue,
-    setActivePageId: model?.setActivePageId,
-  }));
+  const { setCreatePathing, pushPath, tempInputValue, setTempInputValue } =
+    useModel('pageList', (model) => ({
+      tempInputValue: model?.tempInputValue,
+      createPathing: model?.createPathing,
+      setCreatePathing: model?.setCreatePathing,
+      pushPath: model?.pushPath,
+      setTempInputValue: model?.setTempInputValue,
+      setActivePageId: model?.setActivePageId,
+    }));
 
   const [searchParams] = useSearchParams();
 
@@ -29,7 +26,7 @@ export const TempInput = () => {
           return;
         }
 
-        return await PageControllerCreate({
+        return PageControllerCreate({
           path: tempInputValue,
           app_id: appId,
         });

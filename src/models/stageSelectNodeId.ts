@@ -1,10 +1,11 @@
 import { useModel } from '@umijs/max';
-import { useMemoizedFn, useUpdateEffect } from 'ahooks';
+import { useGetState, useUpdateEffect } from 'ahooks';
 import consola from 'consola';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const useStageSelectNodeId = () => {
-  const [stageSelectNodeId, setStageSelectNodeId] = useState<string>();
+  const [stageSelectNodeId, setStageSelectNodeId, getStageSelectNodeId] =
+    useGetState<string>();
 
   const { openTargetFromTreeMenu } = useModel('comsLayout', (model) => ({
     openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
@@ -37,10 +38,6 @@ const useStageSelectNodeId = () => {
   const { setMode: setRightBarMode } = useModel('siderRightMode', (model) => ({
     setMode: model?.setMode,
   }));
-
-  const getStageSelectNodeId = useMemoizedFn(() => {
-    return stageSelectNodeId;
-  });
 
   /** 当舞台选中组件 id 发生变化，打开树形节点菜单 */
   useEffect(() => {

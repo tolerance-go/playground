@@ -11,7 +11,7 @@ export const useComStatusExtendActions = () => {
     }),
   );
 
-  const { getStatLockActionFields } = useModel('statusRelations', (model) => ({
+  const { getStatLockActionFields } = useModel('statusConnectRelations', (model) => ({
     getStatLockActionFields: model.getStatLockActionFields,
   }));
 

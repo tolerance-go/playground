@@ -1,6 +1,8 @@
 import { PageControllerDestroy } from '@/services/server/PageController';
 import { EllipsisOutlined } from '@ant-design/icons';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
+
 import { Button, Dropdown, Menu, Row, Spin } from 'antd';
 import { useState } from 'react';
 

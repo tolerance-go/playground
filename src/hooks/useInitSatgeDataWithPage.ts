@@ -6,9 +6,14 @@ export const useInitSatgeDataWithPage = () => {
   const { initStageData } = useInitSatgeData();
 
   const initSatgeDataWithPage = useMemoizedFn(async (activePageId: string) => {
-    const { success, data } = await PageControllerShow({
+      debugger
+      const { success, data } = await PageControllerShow({
       id: activePageId,
-    });
+    }, {
+      alwaysServerStructure: true
+    }) as unknown as API.PageShowResponse;
+
+    debugger
 
     const stageData = data?.stage_data ? JSON.parse(data?.stage_data) : {};
 

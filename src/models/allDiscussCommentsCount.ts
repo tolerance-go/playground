@@ -1,6 +1,6 @@
 import { getURLQuery } from '@/helps/getURLQuery';
 import { DiscussControllerCountComments } from '@/services/server/DiscussController';
-import { useRequest } from '@umijs/max';
+import { useRequest } from 'ahooks';
 import { useMemoizedFn } from 'ahooks';
 import { useState } from 'react';
 
