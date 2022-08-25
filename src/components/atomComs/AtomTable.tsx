@@ -33,15 +33,15 @@ export const AtomTable = (
 ) => {
   const { ...rest } = props.settings ?? {};
 
-  const { eventManager } = useModel('eventManager', (model) => ({
+  const { eventManager } = useModel('stage.eventManager', (model) => ({
     eventManager: model.eventManager,
   }));
 
-  const { getTableDataSourceByDataId } = useModel('dataList', (model) => ({
+  const { getTableDataSourceByDataId } = useModel('database.dataList', (model) => ({
     getTableDataSourceByDataId: model.getTableDataSourceByDataId,
   }));
 
-  const { updateComStatSetting } = useModel('comsSettings', (model) => ({
+  const { updateComStatSetting } = useModel('stage.comsSettings', (model) => ({
     updateComStatSetting: model.updateComStatSetting,
   }));
 

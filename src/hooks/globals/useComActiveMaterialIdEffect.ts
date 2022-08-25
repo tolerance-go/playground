@@ -1,13 +1,13 @@
 import { useModel, useSearchParams } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
 import { useEffect } from 'react';
-import { useInitSatgeDataWithMaterial } from '../useInitSatgeDataWithMaterial';
+import { useInitSatgeDataWithMaterial } from '../initials/useInitSatgeDataWithMaterial';
 
 export const useComActiveMaterialIdEffect = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { comActiveMaterialId, setComActiveMaterialId } = useModel(
-    'comActiveMaterialId',
+    'component.activeId',
     (model) => {
       return {
         comActiveMaterialId: model.comActiveMaterialId,
@@ -18,7 +18,7 @@ export const useComActiveMaterialIdEffect = () => {
 
   const { initSatgeDataWithMaterial } = useInitSatgeDataWithMaterial();
 
-  const { setActivePageId } = useModel('pageList', (model) => ({
+  const { setActivePageId } = useModel('page.pageList', (model) => ({
     setActivePageId: model?.setActivePageId,
   }));
 

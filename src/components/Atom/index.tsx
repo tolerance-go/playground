@@ -17,7 +17,7 @@ import { AtomWorkbenchWrapper } from './wrappers/Workbench';
  * 舞台上的组件
  */
 export const Atom = (props: StageComponentsModelItem) => {
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
 
@@ -26,7 +26,7 @@ export const Atom = (props: StageComponentsModelItem) => {
   const Element = elements[props.type];
   const { slots } = props;
 
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 

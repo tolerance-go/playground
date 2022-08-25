@@ -1,6 +1,6 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { useFormReset } from '@/hooks/useFormReset';
-import { useSelectedData } from '@/hooks/useSelectedData';
+import { useSelectedData } from '@/hooks/selected/useSelectedData';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 import { Empty, Form, Result } from 'antd';
@@ -16,18 +16,18 @@ export const ColumSettingsForm = () => {
     dataColumnSettingsConfigs,
     updateDataListItemColumn,
     getColumnDataMetaAfterUpdateColumnSettings,
-  } = useModel('dataList', (model) => ({
+  } = useModel('database.dataList', (model) => ({
     dataColumnSettingsConfigs: model.dataColumnSettingsConfigs,
     getColumnDataMetaAfterUpdateColumnSettings:
       model.getColumnDataMetaAfterUpdateColumnSettings,
     updateDataListItemColumn: model.updateDataListItemColumn,
   }));
 
-  const { selectedColumnFieldId } = useModel('dataFieldsConfig', (model) => ({
+  const { selectedColumnFieldId } = useModel('database.dataFieldsConfig', (model) => ({
     selectedColumnFieldId: model.selectedColumnFieldId,
   }));
 
-  const { selectedDataId } = useModel('selectedDataId', (model) => ({
+  const { selectedDataId } = useModel('database.selectedDataId', (model) => ({
     selectedDataId: model.selectedDataId,
   }));
 

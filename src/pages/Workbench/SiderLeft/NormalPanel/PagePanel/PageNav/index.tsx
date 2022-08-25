@@ -7,13 +7,13 @@ import { MenuItem } from './MenuItem';
 import { TempInput } from './TempInput';
 
 const PageNav = () => {
-  const { pageList, fetchListLoading } = useModel('pageList', (model) => ({
+  const { pageList, fetchListLoading } = useModel('page.pageList', (model) => ({
     pageList: model?.pageList,
     fetchListLoading: model?.fetchListLoading,
   }));
 
   const { activePageId, createPathing, setActivePageId } = useModel(
-    'pageList',
+    'page.pageList',
     (model) => ({
       createPathing: model?.createPathing,
       activePageId: model?.activePageId,

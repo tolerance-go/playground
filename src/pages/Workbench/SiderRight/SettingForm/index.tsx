@@ -1,12 +1,12 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
 import { useComActiveStatSetting } from '@/hooks/useComActiveStatSetting';
-import { useComStatusExtendSettings } from '@/hooks/useComStatusExtendSettings';
-import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
+import { useComStatusExtendSettings } from '@/hooks/relations/useComStatusExtendSettings';
+import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/actions/useDebounceTriggerPrepareSaveTimeChange';
 import { useComStatFormReset } from '@/hooks/useComStatFormReset';
-import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
-import { useSelectedComSettingsConfigs } from '@/hooks/useSelectedComSettingsConfigs';
-import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/selected/useSelectedComActiveStatExtendRelation';
+import { useSelectedComSettingsConfigs } from '@/hooks/selected/useSelectedComSettingsConfigs';
+import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
 import { useModel } from '@umijs/max';
 import { Form } from 'antd';
 import consola from 'consola';
@@ -33,14 +33,14 @@ export const SettingForm = () => {
     useDebounceTriggerPrepareSaveTimeChange();
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),
   );
 
   const { lockComExtendField, unlockComExtendField } = useModel(
-    'statusConnectRelations',
+    'stage.statusConnectRelations',
     (model) => ({
       lockComExtendField: model.lockComExtendSettingField,
       unlockComExtendField: model.unlockComExtendSettingField,

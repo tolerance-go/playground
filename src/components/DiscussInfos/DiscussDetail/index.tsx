@@ -7,7 +7,7 @@ import { TagItem } from './TagItem';
 import { TitleItem } from './TitleItem';
 
 export const DiscussContent = () => {
-  const { discussComments } = useModel('discussComments', (model) => ({
+  const { discussComments } = useModel('discuss.discussComments', (model) => ({
     discussComments: model.discussComments,
   }));
 

@@ -1,6 +1,6 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
-import { useComStatusExtendActions } from '@/hooks/useComStatusExtendActions';
-import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { useComStatusExtendActions } from '@/hooks/relations/useComStatusExtendActions';
+import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
 import { ComponentAction } from '@/models/comsActions';
 import { ComStatRelation } from '@/models/statusRelations';
 import { EditOutlined } from '@ant-design/icons';
@@ -25,7 +25,7 @@ export default ({
   actionItem?: ComponentAction;
   extendRelation?: ComStatRelation;
 }) => {
-  const { comsActionsConfigs } = useModel('comsActionsConfigs', (model) => ({
+  const { comsActionsConfigs } = useModel('stage.comsActionsConfigs', (model) => ({
     comsActionsConfigs: model.comsActionsConfigs,
   }));
 
@@ -39,7 +39,7 @@ export default ({
   const formRef = useRef<ProFormInstance>();
 
   const { createComStatAction, comsActions } = useModel(
-    'comsActions',
+    'stage.comsActions',
     (model) => ({
       createComStatAction: model.createComStatAction,
       comsActions: model.comsActions,
@@ -47,7 +47,7 @@ export default ({
   );
 
   const { getStageSelectNodeId, stageSelectNodeId } = useModel(
-    'stageSelectNodeId',
+    'stage.stageSelectNodeId',
     (model) => ({
       getStageSelectNodeId: model.getStageSelectNodeId,
       stageSelectNodeId: model.stageSelectNodeId,
@@ -55,7 +55,7 @@ export default ({
   );
 
   const { getSelectedComponentStatusId, selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       getSelectedComponentStatusId: model.getSelectedComponentStatusId,
       selectedComponentStatusId: model.selectedComponentStatusId,
@@ -63,7 +63,7 @@ export default ({
   );
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),

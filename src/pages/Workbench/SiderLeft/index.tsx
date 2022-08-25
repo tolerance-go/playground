@@ -8,10 +8,10 @@ import NormalPanel from './NormalPanel';
 const { Sider } = Layout;
 
 export default function App() {
-  const { mode } = useModel('siderLeftMode');
+  const { mode } = useModel('workbench.siderLeftMode');
   const siderRef = useRef<HTMLDivElement>(null);
 
-  const { siderLeftWidth } = useModel('workbenchIDESettings', (model) => ({
+  const { siderLeftWidth } = useModel('workbench.workbenchIDESettings', (model) => ({
     siderLeftWidth: model.siderLeftWidth,
   }));
 

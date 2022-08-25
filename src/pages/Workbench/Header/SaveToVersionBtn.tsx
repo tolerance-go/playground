@@ -6,15 +6,15 @@ import { Button, message } from 'antd';
 export default () => {
   const [searchParams] = useSearchParams();
 
-  const { pushFromStart } = useModel('versionList', (model) => ({
+  const { pushFromStart } = useModel('app.versionList', (model) => ({
     pushFromStart: model?.pushFromStart,
   }));
 
-  const { pageList } = useModel('pageList', (model) => ({
+  const { pageList } = useModel('page.pageList', (model) => ({
     pageList: model?.pageList,
   }));
 
-  const { setActiveVersionId } = useModel('versionList', (model) => ({
+  const { setActiveVersionId } = useModel('app.versionList', (model) => ({
     setActiveVersionId: model?.setActiveVersionId,
   }));
 

@@ -24,15 +24,15 @@ import SettingsBtn from './SettingsBtn';
 
 const App = () => {
   // const navigate = useNavigate();
-  const { setMode } = useModel('siderLeftMode', (model) => ({
+  const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
     setMode: model.setMode,
   }));
 
-  const { headerHeight } = useModel('workbenchIDESettings', (model) => ({
+  const { headerHeight } = useModel('workbench.workbenchIDESettings', (model) => ({
     headerHeight: model.headerHeight,
   }));
 
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
 

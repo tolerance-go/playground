@@ -2,7 +2,7 @@ import { useModel } from '@umijs/max';
 import { Typography } from 'antd';
 
 export const ComInfo = () => {
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     stageSelectNodeId: model?.stageSelectNodeId,
   }));
 

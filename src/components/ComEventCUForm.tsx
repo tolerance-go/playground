@@ -1,6 +1,6 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
-import { useComStatusExtendEvents } from '@/hooks/useComStatusExtendEvents';
-import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { useComStatusExtendEvents } from '@/hooks/relations/useComStatusExtendEvents';
+import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
 import { ComponentEvent } from '@/models/comsEvents';
 import { ComStatRelation } from '@/models/statusRelations';
 import { EditOutlined } from '@ant-design/icons';
@@ -25,7 +25,7 @@ export default ({
   eventItem?: ComponentEvent;
   extendRelation?: ComStatRelation;
 }) => {
-  const { comsEventsConfigs } = useModel('comsEventsConfigs', (model) => ({
+  const { comsEventsConfigs } = useModel('stage.comsEventsConfigs', (model) => ({
     comsEventsConfigs: model.comsEventsConfigs,
   }));
 
@@ -38,12 +38,12 @@ export default ({
   // const [form] = Form.useForm();
   const formRef = useRef<ProFormInstance>();
 
-  const { getComStatActions } = useModel('comsActions', (model) => ({
+  const { getComStatActions } = useModel('stage.comsActions', (model) => ({
     getComStatActions: model.getComStatActions,
   }));
 
   const { createComStatEvent, comsEvents } = useModel(
-    'comsEvents',
+    'stage.comsEvents',
     (model) => ({
       createComStatEvent: model.createComStatEvent,
       comsEvents: model.comsEvents,
@@ -51,7 +51,7 @@ export default ({
   );
 
   const { getStageSelectNodeId, stageSelectNodeId } = useModel(
-    'stageSelectNodeId',
+    'stage.stageSelectNodeId',
     (model) => ({
       getStageSelectNodeId: model.getStageSelectNodeId,
       stageSelectNodeId: model.stageSelectNodeId,
@@ -59,19 +59,19 @@ export default ({
   );
 
   const { getSelectedComponentStatusId, selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       getSelectedComponentStatusId: model.getSelectedComponentStatusId,
       selectedComponentStatusId: model.selectedComponentStatusId,
     }),
   );
 
-  const { getComStatus } = useModel('comsStatus', (model) => ({
+  const { getComStatus } = useModel('stage.comsStatus', (model) => ({
     getComStatus: model.getComStatus,
   }));
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),

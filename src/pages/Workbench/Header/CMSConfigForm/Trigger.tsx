@@ -3,10 +3,10 @@ import { useModel } from '@umijs/max';
 import { Button } from 'antd';
 
 export const Trigger = () => {
-  const { open } = useModel('dataMaskVisible', (model) => ({
+  const { open } = useModel('database.dataMaskVisible', (model) => ({
     open: model.open,
   }));
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
   return (

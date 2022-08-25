@@ -1,5 +1,5 @@
 import { SegmentedSwitch } from '@/components/SegmentedSwitch';
-import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
+import { useSelectedComponentStatus } from '@/hooks/selected/useSelectedComponentStatus';
 import { RecordType } from '@/typings';
 import { WithDependencies } from '@/typings/SettingFormConfig';
 import { ProFormDependency } from '@ant-design/pro-components';
@@ -32,7 +32,7 @@ export const ConfigInput = ({
 }: ConfigInputProps) => {
   const { getSelectedComStatus } = useSelectedComponentStatus();
 
-  const { getComponentsStatus } = useModel('comsStatus', (model) => {
+  const { getComponentsStatus } = useModel('stage.comsStatus', (model) => {
     return {
       getComponentsStatus: model.getComponentsStatus,
     };

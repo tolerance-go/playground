@@ -62,7 +62,7 @@ const ReplyItem = (props: {
   onReplaySuccess: () => void;
 }) => {
   const { requestCreateDiscussComments, requestCreateDiscussCommentsLoading } =
-    useModel('discussComments', (model) => ({
+    useModel('discuss.discussComments', (model) => ({
       requestCreateDiscussComments: model.requestCreateDiscussComments,
       requestCreateDiscussCommentsLoading:
         model.requestCreateDiscussCommentsLoading,
@@ -121,7 +121,7 @@ const CommnetItem = (props: NestDiscussComment) => {
     replyingCommentId,
     setReplyingCommentId,
     requestDeleteDiscussComments,
-  } = useModel('discussComments', (model) => ({
+  } = useModel('discuss.discussComments', (model) => ({
     requestUpdateDiscussComments: model.requestUpdateDiscussComments,
     requestDeleteDiscussComments: model.requestDeleteDiscussComments,
     replyingCommentId: model.replyingCommentId,
@@ -248,7 +248,7 @@ const App = (props: { discussId: number }) => {
     requestIndexDiscussComments,
     requestCreateDiscussComments,
     requestCreateDiscussCommentsLoading,
-  } = useModel('discussComments', (model) => ({
+  } = useModel('discuss.discussComments', (model) => ({
     requestIndexDiscussComments: model.requestIndexDiscussComments,
     requestCreateDiscussComments: model.requestCreateDiscussComments,
     requestCreateDiscussCommentsLoading:

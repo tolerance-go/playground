@@ -12,19 +12,19 @@ export const useComStatusExtendProps = <P extends object>(options: {
   ) => void;
   setComStatProps: (comId: string, statId: string, props: P) => void;
 }) => {
-  const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { getStageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     getStageSelectNodeId: model.getStageSelectNodeId,
   }));
 
   const { getSelectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       getSelectedComponentStatusId: model.getSelectedComponentStatusId,
     }),
   );
 
   const { getComExtendStatusFromStat } = useModel(
-    'statusConnectRelations',
+    'stage.statusConnectRelations',
     (model) => ({
       getComExtendStatusFromStat: model.getComExtendRelationsFromStat,
     }),

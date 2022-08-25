@@ -18,11 +18,11 @@ export const AddSlotBtn = ({
   slotName: string;
   slots?: Record<string, string[]>;
 }) => {
-  const { setMode } = useModel('siderLeftMode', (model) => ({
+  const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
     setMode: model?.setMode,
   }));
 
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
 
@@ -33,7 +33,7 @@ export const AddSlotBtn = ({
     focusSlotPosition,
     focusComId,
     focusSlotName,
-  } = useModel('slotsInsert', (model) => ({
+  } = useModel('stage.slotsInsert', (model) => ({
     setFocusComId: model?.setFocusComId,
     setFocusSlotName: model?.setFocusSlotName,
     setFocusSlotPosition: model?.setFocusSlotPosition,
@@ -42,7 +42,7 @@ export const AddSlotBtn = ({
     focusSlotName: model?.focusSlotName,
   }));
 
-  const { stageComponentsModel } = useModel('comsStructures', (model) => {
+  const { stageComponentsModel } = useModel('stage.comsStructures', (model) => {
     return {
       stageComponentsModel: model?.stageComponentsModel,
     };

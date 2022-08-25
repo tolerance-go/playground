@@ -5,7 +5,7 @@ import Sheet from './Sheet';
 import { Trigger } from './Trigger';
 
 export default () => {
-  const { visible, close } = useModel('dataMaskVisible', (model) => ({
+  const { visible, close } = useModel('database.dataMaskVisible', (model) => ({
     visible: model.visible,
     close: model.close,
   }));

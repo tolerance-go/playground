@@ -1,5 +1,5 @@
-import { useDeleteComsFromStage } from '@/hooks/useDeleteComsFromStage';
-import { useGetSliceStageData } from '@/hooks/useGetSliceStageData';
+import { useDeleteComsFromStage } from '@/hooks/actions/useDeleteComsFromStage';
+import { useGetSliceStageData } from '@/hooks/initials/useGetSliceStageData';
 import { ComponentControllerCreate } from '@/services/server/ComponentController';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
@@ -12,12 +12,12 @@ export default () => {
     ignoreQueryPrefix: true,
   });
   const { appId } = query;
-  const { createComMaterial } = useModel('comsMaterialList', (model) => ({
+  const { createComMaterial } = useModel('component.componentList', (model) => ({
     createComMaterial: model.createComMaterial,
   }));
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),

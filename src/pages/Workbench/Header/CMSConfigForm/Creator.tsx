@@ -7,7 +7,7 @@ import { Button, message } from 'antd';
 export default () => {
   const [searchParams] = useSearchParams();
 
-  const { pushData } = useModel('dataList', (model) => ({
+  const { pushData } = useModel('database.dataList', (model) => ({
     pushData: model.pushData,
   }));
 

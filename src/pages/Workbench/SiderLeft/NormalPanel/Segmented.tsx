@@ -4,7 +4,7 @@ import { Segmented } from 'antd';
 
 export default () => {
   const { normalStatus, setNormalStatus } = useModel(
-    'siderLeftMode',
+    'workbench.siderLeftMode',
     (model) => ({
       setNormalStatus: model?.setNormalStatus,
       normalStatus: model?.normalStatus,

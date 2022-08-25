@@ -1,8 +1,8 @@
 import ComActionCUForm from '@/components/ComActionCUForm';
 import ComActionViewForm from '@/components/ComActionViewForm';
 import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
-import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
-import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/selected/useSelectedComActiveStatExtendRelation';
+import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
 import { ComponentAction } from '@/models/comsActions';
 import { isExtendReactionView } from '@/utils/isExtendReactionView';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -11,19 +11,19 @@ import { useModel } from '@umijs/max';
 import './index.less';
 
 export default () => {
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     stageSelectNodeId: model?.stageSelectNodeId,
   }));
 
   const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       selectedComponentStatusId: model.selectedComponentStatusId,
     }),
   );
 
   const { comsActions, deleteComStatAction } = useModel(
-    'comsActions',
+    'stage.comsActions',
     (model) => ({
       comsActions: model.comsActions,
       deleteComStatAction: model.deleteComStatAction,
@@ -36,7 +36,7 @@ export default () => {
       : undefined;
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),
@@ -45,7 +45,7 @@ export default () => {
   const { stageSelectNode } = useSelectedNode();
 
   const { lockComExtendActionField, unlockComExtendActionField } = useModel(
-    'statusConnectRelations',
+    'stage.statusConnectRelations',
     (model) => ({
       lockComExtendActionField: model.lockComExtendActionField,
       unlockComExtendActionField: model.unlockComExtendActionField,

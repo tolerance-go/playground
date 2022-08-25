@@ -7,7 +7,7 @@ export const StageWorkbenchWrapper = (
     id: string;
   }>,
 ) => {
-  const { stageSize } = useModel('stageSize', (model) => ({
+  const { stageSize } = useModel('stage.stageSize', (model) => ({
     stageSize: model.stageSize,
   }));
 

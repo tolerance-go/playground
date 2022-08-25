@@ -360,8 +360,7 @@ export class HistoryManager {
             .changedAreasSnapshots,
       ).map((areaName) => {
         const meta = movedNode.areasSnapshots[areaName];
-        return this.areas[areaName]
-          .recover({
+        return this.areas[areaName]?.recover({
             state: meta.state,
             commitInfo: movedNode.changedAreasSnapshots[areaName]?.commitInfo,
             areaName,
@@ -382,7 +381,7 @@ export class HistoryManager {
       }),
     );
 
-    if (results.some((item) => item.result.success === false)) {
+    if (results.some((item) => item?.result.success === false)) {
       const falses = results.filter((item) => item.result.success === false);
 
       /**

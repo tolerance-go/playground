@@ -4,7 +4,7 @@ import { useModel } from '@umijs/max';
 import { Popover, Space, Typography } from 'antd';
 
 export const StageSizeManager = () => {
-  const { stageSize, setStageSize } = useModel('stageSize', (model) => ({
+  const { stageSize, setStageSize } = useModel('stage.stageSize', (model) => ({
     stageSize: model.stageSize,
     setStageSize: model.changeStageSize,
   }));

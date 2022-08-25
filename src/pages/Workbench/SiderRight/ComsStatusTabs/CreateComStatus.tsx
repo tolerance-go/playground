@@ -22,12 +22,12 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     open: () => setVisible(true),
   }));
 
-  const { createSelectedComponentStat } = useModel('comsStatus', (model) => ({
+  const { createSelectedComponentStat } = useModel('stage.comsStatus', (model) => ({
     createSelectedComponentStat: model.createSelectedComponentStat,
   }));
 
   const { copySelectedComSettingFromActiveStatToOtherStat } = useModel(
-    'comsSettings',
+    'stage.comsSettings',
     (model) => ({
       copySelectedComSettingFromActiveStatToOtherStat:
         model.copySelectedComSettingFromActiveStatToOtherStat,
@@ -35,7 +35,7 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { copySelectedComActionFromActiveStatToOtherStat } = useModel(
-    'comsActions',
+    'stage.comsActions',
     (model) => ({
       copySelectedComActionFromActiveStatToOtherStat:
         model.copySelectedComActionFromActiveStatToOtherStat,
@@ -43,7 +43,7 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { copySelectedComEventFromActiveStatToOtherStat } = useModel(
-    'comsEvents',
+    'stage.comsEvents',
     (model) => ({
       copySelectedComEventFromActiveStatToOtherStat:
         model.copySelectedComEventFromActiveStatToOtherStat,
@@ -51,19 +51,19 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { copySelectedComStyleFromActiveStatToOtherStat } = useModel(
-    'comsStyles',
+    'stage.comsStyles',
     (model) => ({
       copySelectedComStyleFromActiveStatToOtherStat:
         model.copySelectedComStyleFromActiveStatToOtherStat,
     }),
   );
 
-  const { triggerSave } = useModel('stageAutoSave', (model) => ({
+  const { triggerSave } = useModel('app.stageAutoSave', (model) => ({
     triggerSave: model.triggerPrepareSaveTimeChange,
   }));
 
   const { setSelectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       setSelectedComponentStatusId: model.setSelectedComponentStatusId,
     }),

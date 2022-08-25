@@ -1,4 +1,4 @@
-import { useSelectedComponentStatus } from '@/hooks/useSelectedComponentStatus';
+import { useSelectedComponentStatus } from '@/hooks/selected/useSelectedComponentStatus';
 import { makeTreeWithRelation } from '@/utils/treeUtils/makeTreeWithRelation';
 import { mapTree } from '@/utils/treeUtils/mapTree';
 import { useModel } from '@umijs/max';
@@ -17,16 +17,16 @@ export const ComStatusTreeMap = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>();
 
   const { comsStatusRelations, createComStatRelation, deleteComStatRelation } =
-    useModel('statusConnectRelations', (model) => ({
+    useModel('stage.statusConnectRelations', (model) => ({
       comsStatusRelations: model.comsStatusRelations,
       createComStatRelation: model.createComStatRelation,
       deleteComStatRelation: model.deleteComStatRelation,
     }));
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 
-  const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
+  const { triggerSaveTimeChange } = useModel('app.stageAutoSave', (model) => {
     return {
       triggerSaveTimeChange: model?.triggerPrepareSaveTimeChange,
     };

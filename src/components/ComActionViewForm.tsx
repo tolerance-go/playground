@@ -1,7 +1,7 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
-import { useSelectedNode } from '@/hooks/useSelectedNode';
-import { ComponentAction } from '@/models/comsActions';
-import { ComStatRelation } from '@/models/statusRelations';
+import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
+import { ComponentAction } from '@/models/stage/comsActions';
+import { ComStatRelation } from '@/models/stage/statusConnectRelations';
 import { EyeOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -21,7 +21,7 @@ export default ({
   actionItem?: ComponentAction;
   extendRelation?: ComStatRelation;
 }) => {
-  const { comsActionsConfigs } = useModel('comsActionsConfigs', (model) => ({
+  const { comsActionsConfigs } = useModel('stage.comsActionsConfigs', (model) => ({
     comsActionsConfigs: model.comsActionsConfigs,
   }));
 
@@ -34,16 +34,16 @@ export default ({
   // const [form] = Form.useForm();
   const formRef = useRef<ProFormInstance>();
 
-  const { comsActions } = useModel('comsActions', (model) => ({
+  const { comsActions } = useModel('stage.comsActions', (model) => ({
     comsActions: model.comsActions,
   }));
 
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 
   const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       selectedComponentStatusId: model.selectedComponentStatusId,
     }),

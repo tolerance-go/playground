@@ -15,14 +15,14 @@ export default ({
   type: 'slots' | 'component';
 }>) => {
   const { removeComFromTree, removeSlotFromTree } = useModel(
-    'comsStructures',
+    'stage.comsStructures',
     (model) => ({
       removeComFromTree: model?.removeComFromTree,
       removeSlotFromTree: model?.removeSlotFromTree,
     }),
   );
 
-  const { refreshLastAutoSaveTime } = useModel('stageAutoSave', (model) => {
+  const { refreshLastAutoSaveTime } = useModel('app.stageAutoSave', (model) => {
     return {
       refreshLastAutoSaveTime: model?.triggerPrepareSaveTimeChange,
     };

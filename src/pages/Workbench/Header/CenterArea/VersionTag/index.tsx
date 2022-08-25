@@ -9,7 +9,7 @@ import styles from './index.less';
 
 export const VersionTag = () => {
   const { setActiveVersionId, activeVersionId } = useModel(
-    'versionList',
+    'app.versionList',
     (model) => ({
       setActiveVersionId: model.setActiveVersionId,
       activeVersionId: model.activeVersionId,

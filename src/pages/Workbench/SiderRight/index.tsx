@@ -15,10 +15,10 @@ const { TabPane } = Tabs;
 const { Sider } = Layout;
 
 export default function App() {
-  const { siderRightMode } = useModel('siderRightMode', (model) => ({
+  const { siderRightMode } = useModel('workbench.siderRightMode', (model) => ({
     siderRightMode: model.mode,
   }));
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
 

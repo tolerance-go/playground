@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export const MenuItem = ({ item }: { item: API.Page }) => {
   const { deletePath, setCreatePathing, setTempInputValueByTarget } = useModel(
-    'pageList',
+    'page.pageList',
     (model) => ({
       deletePath: model?.deletePath,
       setCreatePathing: model?.setCreatePathing,

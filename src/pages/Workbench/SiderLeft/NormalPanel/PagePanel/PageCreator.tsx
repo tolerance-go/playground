@@ -3,7 +3,7 @@ import { useModel } from '@umijs/max';
 
 export const PageCreator = () => {
   const { setCreatePathing, setTempInputValueByIndex } = useModel(
-    'pageList',
+    'page.pageList',
     (model) => ({
       setCreatePathing: model?.setCreatePathing,
       setTempInputValue: model?.setTempInputValue,

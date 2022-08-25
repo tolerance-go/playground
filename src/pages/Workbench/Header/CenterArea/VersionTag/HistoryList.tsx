@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './HistoryList.less';
 
 export const RemoveBtn = ({ item }: { item: API.Version }) => {
-  const { deleteVersion } = useModel('versionList', (model) => ({
+  const { deleteVersion } = useModel('app.versionList', (model) => ({
     deleteVersion: model?.deleteVersion,
   }));
 
@@ -41,7 +41,7 @@ export default () => {
   const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
 
   const { data, loading, runLoadList, activeVersionId, setActiveVersionId } =
-    useModel('versionList', (model) => ({
+    useModel('app.versionList', (model) => ({
       data: model?.data,
       loading: model?.loading,
       runLoadList: model?.runLoadList,

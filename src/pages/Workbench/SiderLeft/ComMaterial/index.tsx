@@ -19,7 +19,7 @@ export default () => {
     comsMaterialListLoading,
     comsMaterialMap,
     removeComMaterial,
-  } = useModel('comsMaterialList', (model) => ({
+  } = useModel('component.componentList', (model) => ({
     comsMaterials: model.comsMaterialList,
     comsMaterialListLoading: model.comsMaterialListLoading,
     removeComMaterial: model.removeComMaterial,
@@ -27,14 +27,14 @@ export default () => {
   }));
 
   const { materialInheritConnectionMap } = useModel(
-    'materialInheritRelation',
+    'component.componentInheritRelation',
     (model) => ({
       materialInheritConnectionMap: model.materialInheritConnectionMap,
     }),
   );
 
   const { setComActiveMaterialId, comActiveMaterialId } = useModel(
-    'comActiveMaterialId',
+    'component.activeId',
     (model) => {
       return {
         setComActiveMaterialId: model.setComActiveMaterialId,

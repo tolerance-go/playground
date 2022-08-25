@@ -5,12 +5,12 @@ import { nanoid } from 'nanoid';
 import { ComGridItem } from './index';
 
 export const useHandleComGridItemClick = () => {
-  const { mode: siderLeftMode } = useModel('siderLeftMode', (model) => ({
+  const { mode: siderLeftMode } = useModel('workbench.siderLeftMode', (model) => ({
     mode: model?.mode,
   }));
 
   const { addComponentToStage, addComToStageSlot } = useModel(
-    'comsStructures',
+    'stage.comsStructures',
     (model) => ({
       addComponentToStage: model?.addComponentToStage,
       addComToStageSlot: model?.addComToStageSlot,
@@ -18,14 +18,14 @@ export const useHandleComGridItemClick = () => {
   );
 
   const { getLatestComsInitalSettings } = useModel(
-    'comsSettingsConfigs',
+    'stage.comsSettingsConfigs',
     (model) => ({
       getLatestComsInitalSettings: model?.getLatestComsInitalSettings,
     }),
   );
 
   const { focusComId, focusSlotName, focusSlotPosition } = useModel(
-    'slotsInsert',
+    'stage.slotsInsert',
     (model) => ({
       focusComId: model?.focusComId,
       focusSlotName: model?.focusSlotName,
@@ -34,36 +34,36 @@ export const useHandleComGridItemClick = () => {
   );
 
   const { setSelectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       setSelectedComponentStatusId: model?.setSelectedComponentStatusId,
     }),
   );
 
-  const { initComStatus } = useModel('comsStatus', (model) => ({
+  const { initComStatus } = useModel('stage.comsStatus', (model) => ({
     initComStatus: model?.initComStatus,
   }));
 
-  const { setComStatSetting } = useModel('comsSettings', (model) => ({
+  const { setComStatSetting } = useModel('stage.comsSettings', (model) => ({
     setComStatSetting: model.setComStatSetting,
   }));
 
-  const { setComStatStyle } = useModel('comsStyles', (model) => ({
+  const { setComStatStyle } = useModel('stage.comsStyles', (model) => ({
     setComStatStyle: model.setComStatStyle,
   }));
 
   const { setComStatusSettingsDefaults } = useModel(
-    'statusSettingsDefaults',
+    'stage.statusSettingsDefaults',
     (model) => ({
       setComStatusSettingsDefaults: model.setComStatusSettingsDefaults,
     }),
   );
 
-  const { setStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { setStageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     setStageSelectNodeId: model?.setStageSelectNodeId,
   }));
 
-  const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
+  const { triggerSaveTimeChange } = useModel('app.stageAutoSave', (model) => {
     return {
       triggerSaveTimeChange: model?.triggerPrepareSaveTimeChange,
     };

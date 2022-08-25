@@ -31,11 +31,11 @@ const DiscussItem = (
   });
 
   /** 监听组件状态，判断显示 */
-  const { usedStatId } = useModel('statusSettingsUsed', (model) => ({
+  const { usedStatId } = useModel('stage.statusSettingsUsed', (model) => ({
     usedStatId: model.statusSettingsUsed[props.belongsToComId],
   }));
 
-  const { defaultStatId } = useModel('statusSettingsDefaults', (model) => ({
+  const { defaultStatId } = useModel('stage.statusSettingsDefaults', (model) => ({
     defaultStatId: model.statusSettingsDefaults[props.belongsToComId],
   }));
 

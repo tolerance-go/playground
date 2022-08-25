@@ -7,13 +7,13 @@ import { message } from 'antd';
 import Creator from './Creator';
 
 export default () => {
-  const { dataList, deleteData } = useModel('dataList', (model) => ({
+  const { dataList, deleteData } = useModel('database.dataList', (model) => ({
     dataList: model.dataList,
     deleteData: model.deleteData,
   }));
 
   const { selectWithDataId, selectedDataId } = useModel(
-    'selectedDataId',
+    'database.selectedDataId',
     (model) => ({
       selectWithDataId: model.selectWithDataId,
       selectedDataId: model.selectedDataId,
@@ -63,7 +63,7 @@ export default () => {
                   {
                     alwaysServerStructure: true,
                   },
-                ) as unknown as Promise<API.DatabaseShowResponse>;
+                ) as unknown as API.DatabaseShowResponse;
               }}
               onSuccess={() => {
                 message.success('删除成功');

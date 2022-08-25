@@ -9,7 +9,7 @@ import TreeItemMenu from './TreeItemMenu';
 
 export default () => {
   const { stageComponentsModel, rootIds, moveComFromTree } = useModel(
-    'comsStructures',
+    'stage.comsStructures',
     (model) => ({
       stageComponentsModel: model?.stageComponentsModel,
       rootIds: model?.rootIds,
@@ -24,7 +24,7 @@ export default () => {
     setExpanedKeys,
     setSelectedKeys,
     showAllSlots,
-  } = useModel('comsLayout', (model) => ({
+  } = useModel('layers.comsLayout', (model) => ({
     expanedKeys: model?.expanedKeys,
     setExpanedKeys: model?.setExpanedKeys,
     selectedKeys: model?.selectedKeys,
@@ -34,26 +34,26 @@ export default () => {
     showAllSlots: model.showAllSlots,
   }));
 
-  const { comsSlotsNames } = useModel('componentsSlots', (model) => ({
+  const { comsSlotsNames } = useModel('configs.componentsSlots', (model) => ({
     comsSlotsNames: model.comsSlotsNames,
   }));
 
-  const { setHoverNodeId } = useModel('hoverNodeId', (model) => ({
+  const { setHoverNodeId } = useModel('stage.hoverNodeId', (model) => ({
     setHoverNodeId: model?.setHoverNodeId,
   }));
 
-  const { setStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { setStageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     setStageSelectNodeId: model?.setStageSelectNodeId,
   }));
 
   const { setStageSelectSlotGroupId } = useModel(
-    'stageSelectSlotGroupId',
+    'stage.stageSelectSlotGroupId',
     (model) => ({
       setStageSelectSlotGroupId: model?.setStageSelectSlotGroupId,
     }),
   );
 
-  const { triggerSaveTimeChange } = useModel('stageAutoSave', (model) => {
+  const { triggerSaveTimeChange } = useModel('app.stageAutoSave', (model) => {
     return {
       triggerSaveTimeChange: model?.triggerPrepareSaveTimeChange,
     };

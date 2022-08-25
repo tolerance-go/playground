@@ -24,7 +24,7 @@ export const usePositionResize = (
   const [initResized, setInitResized] = useState(false);
 
   const { siderLeftWidth, headerHeight } = useModel(
-    'workbenchIDESettings',
+    'workbench.workbenchIDESettings',
     (model) => ({
       siderLeftWidth: model.siderLeftWidth,
       headerHeight: model.headerHeight,

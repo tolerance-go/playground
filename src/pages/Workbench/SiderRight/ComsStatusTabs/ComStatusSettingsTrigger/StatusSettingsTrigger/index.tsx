@@ -1,7 +1,7 @@
 /** 组件的状态配置（当前 tab 激活的状态） */
 
-import { useSelectedComDefaultStatId } from '@/hooks/useSelectedComDefaultStatId';
-import { useSelectedComponentActiveStatus } from '@/hooks/useSelectedComponentActiveStatus';
+import { useSelectedComDefaultStatId } from '@/hooks/selected/useSelectedComDefaultStatId';
+import { useSelectedComponentActiveStatus } from '@/hooks/selected/useSelectedComponentActiveStatus';
 import {
   DrawerForm,
   ProFormInstance,
@@ -20,25 +20,25 @@ export default () => {
   const { selectedComDefaultStatId } = useSelectedComDefaultStatId();
 
   const { setComStatusSettingsDefaults } = useModel(
-    'statusSettingsDefaults',
+    'stage.statusSettingsDefaults',
     (model) => ({
       setComStatusSettingsDefaults: model.setComStatusSettingsDefaults,
     }),
   );
 
   const { setSelectedComActiveStatName } = useModel(
-    'comsStatus',
+    'stage.comsStatus',
     (model) => ({
       setSelectedComActiveStatName: model.setSelectedComActiveStatName,
     }),
   );
 
-  const { getStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { getStageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     getStageSelectNodeId: model.getStageSelectNodeId,
   }));
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),

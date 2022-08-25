@@ -25,7 +25,7 @@ export const AtomButton = (
 ) => {
   const { text, ...rest } = props.settings ?? {};
 
-  const { eventManager } = useModel('eventManager', (model) => ({
+  const { eventManager } = useModel('stage.eventManager', (model) => ({
     eventManager: model.eventManager,
   }));
 

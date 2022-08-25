@@ -17,6 +17,7 @@ export const ConfigsForm = ({
     const renderInner = () => {
       const formControl = (
         <ConfigFormItem
+          key={item.name}
           item={item}
           formItemNamePrefix={formItemNamePrefix}
           theme={theme}
@@ -28,6 +29,7 @@ export const ConfigsForm = ({
       if (item.visible) {
         return (
           <ProFormDependency
+            key={item.name}
             name={
               formItemNamePrefix
                 ? [formItemNamePrefix, ...item.visible[1].dependencies]

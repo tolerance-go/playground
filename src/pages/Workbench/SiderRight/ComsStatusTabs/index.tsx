@@ -1,5 +1,5 @@
-import { useSelectedComDefaultStatId } from '@/hooks/useSelectedComDefaultStatId';
-import { useSetNearSelectedComponentStatusId } from '@/hooks/useSetNearSelectedComponentStatusId';
+import { useSelectedComDefaultStatId } from '@/hooks/selected/useSelectedComDefaultStatId';
+import { useSetNearSelectedComponentStatusId } from '@/hooks/actions/useSetNearSelectedComponentStatusId';
 import { useModel } from '@umijs/max';
 import { Badge, Tabs, Typography } from 'antd';
 import { useRef } from 'react';
@@ -11,12 +11,12 @@ const { TabPane } = Tabs;
 export const ComsStatusTabs = () => {
   const createFormRef = useRef<CreateComStatusAPI>(null);
 
-  const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     stageSelectNodeId: model?.stageSelectNodeId,
   }));
 
   const { componentsStatus, deleteComStat } = useModel(
-    'comsStatus',
+    'stage.comsStatus',
     (model) => ({
       componentsStatus: model.componentsStatus,
       deleteComStat: model.deleteComStat,
@@ -24,7 +24,7 @@ export const ComsStatusTabs = () => {
   );
 
   const { deleteComStatRelationFromToStatId } = useModel(
-    'statusConnectRelations',
+    'stage.statusConnectRelations',
     (model) => ({
       deleteComStatRelationFromToStatId:
         model.deleteComStatRelationFromToStatId,
@@ -37,7 +37,7 @@ export const ComsStatusTabs = () => {
     useSetNearSelectedComponentStatusId();
 
   const { selectedComponentStatusId, setSelectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       selectedComponentStatusId: model.selectedComponentStatusId,
       setSelectedComponentStatusId: model.setSelectedComponentStatusId,
@@ -45,7 +45,7 @@ export const ComsStatusTabs = () => {
   );
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),

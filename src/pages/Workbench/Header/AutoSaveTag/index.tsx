@@ -1,5 +1,5 @@
 import { useModel } from '@/.umi/plugin-model';
-import { useAutoSave } from '@/hooks/useAutoSave';
+import { useAutoSave } from '@/hooks/initials/useAutoSave';
 import { CloudOutlined } from '@ant-design/icons';
 import { useSearchParams } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
@@ -25,18 +25,18 @@ const Text = (props: PropsWithChildren<TextProps>) => {
 };
 
 export const AutoSaveTag = () => {
-  const { autoSaveLastTime } = useModel('stageAutoSave');
+  const { autoSaveLastTime } = useModel('app.stageAutoSave');
 
   const { loading } = useAutoSave();
 
-  const { setPageListByVersionId } = useModel('pageList', (model) => ({
+  const { setPageListByVersionId } = useModel('page.pageList', (model) => ({
     setPageListByVersionId: model?.setPageListByVersionId,
   }));
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { activeVersionId, setActiveVersionId } = useModel(
-    'versionList',
+    'app.versionList',
     (model) => ({
       activeVersionId: model?.activeVersionId,
       setActiveVersionId: model?.setActiveVersionId,

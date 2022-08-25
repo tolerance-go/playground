@@ -8,7 +8,7 @@ export const HistoryCommitLine = () => {
     snapshotsStack,
     index: current,
     cleanHistory,
-  } = useModel('appStateHistory', (model) => ({
+  } = useModel('app.appStateHistory', (model) => ({
     snapshotsStack: model.snapshotsStack,
     index: model.index,
     cleanHistory: model.cleanHistory,

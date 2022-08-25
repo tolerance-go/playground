@@ -3,7 +3,7 @@ import { useModel } from '@umijs/max';
 import { Button } from 'antd';
 
 export const DisscusTrigger = () => {
-  const { setMode, stageMode } = useModel('stageMode', (model) => ({
+  const { setMode, stageMode } = useModel('stage.stageMode', (model) => ({
     setMode: model.setMode,
     stageMode: model.mode,
   }));

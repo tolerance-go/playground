@@ -1,4 +1,4 @@
-import { useSelectedData } from '@/hooks/useSelectedData';
+import { useSelectedData } from '@/hooks/selected/useSelectedData';
 import { DataItem } from '@/models/dataList';
 import {
   BetaSchemaForm,
@@ -17,14 +17,14 @@ export default (props: { record: DataItem }) => {
 
   const { columns } = selectedData?.data ?? {};
 
-  const { selectedDataId } = useModel('selectedDataId', (model) => ({
+  const { selectedDataId } = useModel('database.selectedDataId', (model) => ({
     selectedDataId: model.selectedDataId,
   }));
 
   const {
     getColumnDataMetaAfterUpdateDataSource,
     updateDataListItemDataSource,
-  } = useModel('dataList', (model) => ({
+  } = useModel('database.dataList', (model) => ({
     getColumnDataMetaAfterUpdateDataSource:
       model.getColumnDataMetaAfterUpdateDataSource,
     updateDataListItemDataSource: model.updateDataListItemDataSource,

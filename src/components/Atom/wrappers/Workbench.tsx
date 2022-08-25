@@ -19,13 +19,13 @@ export const AtomWorkbenchWrapper = (
   >,
 ) => {
   const { setStageSelectNodeId, stageSelectNodeId } = useModel(
-    'stageSelectNodeId',
+    'stage.stageSelectNodeId',
     (model) => ({
       setStageSelectNodeId: model?.setStageSelectNodeId,
       stageSelectNodeId: model?.stageSelectNodeId,
     }),
   );
-  const { hoverNodeId, setHoverNodeId } = useModel('hoverNodeId', (model) => ({
+  const { hoverNodeId, setHoverNodeId } = useModel('stage.hoverNodeId', (model) => ({
     hoverNodeId: model?.hoverNodeId,
     setHoverNodeId: model?.setHoverNodeId,
   }));

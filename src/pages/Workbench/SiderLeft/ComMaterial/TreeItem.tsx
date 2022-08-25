@@ -8,7 +8,7 @@ export const TreeItem = ({
   record: RelationTreeItem<API.Component>;
 }) => {
   const { requestRemove, requestCreate } = useModel(
-    'comsMaterialList',
+    'component.componentList',
     (model) => ({
       requestRemove: model.requestRemove,
       requestCreate: model.requestCreate,

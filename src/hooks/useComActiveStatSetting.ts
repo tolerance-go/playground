@@ -1,14 +1,14 @@
 import { useModel } from '@umijs/max';
 
 export const useComActiveStatSetting = (comId?: string) => {
-  const { comsSettings } = useModel('comsSettings', (model) => {
+  const { comsSettings } = useModel('stage.comsSettings', (model) => {
     return {
       comsSettings: model.comsSettings,
     };
   });
 
   const { selectedComponentStatusId } = useModel(
-    'selectedComponentStatusId',
+    'stage.selectedComponentStatusId',
     (model) => ({
       selectedComponentStatusId: model.selectedComponentStatusId,
     }),

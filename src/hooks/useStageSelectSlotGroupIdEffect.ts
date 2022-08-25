@@ -7,13 +7,13 @@ import { useUpdateEffect } from 'ahooks';
  */
 const useStageSelectSlotGroupIdEffect = () => {
   const { stageSelectSlotGroupId } = useModel(
-    'stageSelectSlotGroupId',
+    'stage.stageSelectSlotGroupId',
     (model) => ({
       stageSelectSlotGroupId: model?.stageSelectSlotGroupId,
     }),
   );
 
-  const { setStageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  const { setStageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
     setStageSelectNodeId: model?.setStageSelectNodeId,
   }));
 

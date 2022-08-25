@@ -5,7 +5,7 @@ import { Input, message, Spin } from 'antd';
 
 export const TempInput = () => {
   const { setCreatePathing, pushPath, tempInputValue, setTempInputValue } =
-    useModel('pageList', (model) => ({
+    useModel('page.pageList', (model) => ({
       tempInputValue: model?.tempInputValue,
       createPathing: model?.createPathing,
       setCreatePathing: model?.setCreatePathing,

@@ -3,7 +3,7 @@
 
 export const useComponentStatusChange = () => {
   // const { selectedComponentStatusId } = useModel(
-  //   'selectedComponentStatusId',
+  //   'stage.selectedComponentStatusId',
   //   (model) => ({
   //     selectedComponentStatusId: model?.selectedComponentStatusId,
   //   }),
@@ -13,11 +13,11 @@ export const useComponentStatusChange = () => {
   //   setComponentSettings: model?.setComponentSettings,
   // }));
 
-  // const { getLatestComponentsStatus } = useModel('comsStatus', (model) => ({
+  // const { getLatestComponentsStatus } = useModel('stage.comsStatus', (model) => ({
   //   getLatestComponentsStatus: model?.getComponentsStatus,
   // }));
 
-  // const { stageSelectNodeId } = useModel('stageSelectNodeId', (model) => ({
+  // const { stageSelectNodeId } = useModel('stage.stageSelectNodeId', (model) => ({
   //   stageSelectNodeId: model?.stageSelectNodeId,
   // }));
 

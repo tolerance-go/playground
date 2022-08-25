@@ -16,7 +16,7 @@ export default () => {
   );
 
   const { allDiscussCommentsCount } = useModel(
-    'allDiscussCommentsCount',
+    'discuss.allDiscussCommentsCount',
     (model) => ({
       allDiscussCommentsCount: model.allDiscussCommentsCount,
     }),

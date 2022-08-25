@@ -2,40 +2,43 @@ import { useMemoizedFn } from 'ahooks';
 import { Button, ButtonProps, Popconfirm, PopconfirmProps } from 'antd';
 import { useState } from 'react';
 
-export const RequestButton = <P extends any>(
-  props: ButtonProps & {
-    request?: () => Promise<{ success: boolean; params?: P }>;
-    onSuccess?: (params?: P) => void;
-    popconfirm?: PopconfirmProps;
-  },
-) => {
+export const RequestButton = <P extends any>({
+  request,
+  onSuccess,
+  popconfirm,
+  ...buttonProps
+}: ButtonProps & {
+  request?: () => Promise<{ success: boolean; params?: P }>;
+  onSuccess?: (params?: P) => void;
+  popconfirm?: PopconfirmProps;
+}) => {
   const [loading, setLoading] = useState(false);
 
   const requestFn = useMemoizedFn(async () => {
-    if (props.request) {
+    if (request) {
       setLoading(true);
-      const result = await props.request();
+      const result = await request();
       if (result.success) {
-        props.onSuccess?.(result.params);
+        onSuccess?.(result.params);
       }
       setLoading(false);
     }
   });
 
-  if (props.popconfirm) {
+  if (popconfirm) {
     return (
-      <Popconfirm {...props.popconfirm} onConfirm={requestFn}>
-        <Button {...props} loading={loading}></Button>
+      <Popconfirm {...popconfirm} onConfirm={requestFn}>
+        <Button {...buttonProps} loading={loading}></Button>
       </Popconfirm>
     );
   }
 
   return (
     <Button
-      {...props}
+      {...buttonProps}
       loading={loading}
       onClick={async (event) => {
-        props.onClick?.(event);
+        buttonProps.onClick?.(event);
         requestFn();
       }}
     ></Button>

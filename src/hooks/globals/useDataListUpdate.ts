@@ -5,19 +5,19 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn, usePrevious, useUpdateEffect } from 'ahooks';
 import { message } from 'antd';
 import { pick } from 'lodash';
-import { useSelectedDataListItem } from '../useSelectedDataListItem';
+import { useSelectedDataListItem } from '../selected/useSelectedDataListItem';
 
 export const useDataListUpdate = () => {
   const { selectedDataListItem, selectedDataId } = useSelectedDataListItem();
 
-  const { historyManager } = useModel('appStateHistory', (model) => ({
+  const { historyManager } = useModel('app.appStateHistory', (model) => ({
     historyManager: model.historyManager,
   }));
 
   const prevSelectedDataId = usePrevious(selectedDataId, () => true);
 
   const { getDataList, tagWithTriggerUpdateByRecoverUpdateDataListItemRef } =
-    useModel('dataList', (model) => ({
+    useModel('database.dataList', (model) => ({
       getDataList: model.getDataList,
       tagWithTriggerUpdateByRecoverUpdateDataListItemRef:
         model.tagWithTriggerUpdateByRecoverUpdateDataListItemRef,

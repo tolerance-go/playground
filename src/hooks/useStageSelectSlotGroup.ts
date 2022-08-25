@@ -4,14 +4,14 @@ import { useMemo } from 'react';
 
 const useStageSelectSlotGroup = () => {
   const { stageSelectSlotGroupId } = useModel(
-    'stageSelectSlotGroupId',
+    'stage.stageSelectSlotGroupId',
     (model) => ({
       stageSelectSlotGroupId: model.stageSelectSlotGroupId,
     }),
   );
 
   const { stageComponentsModel } = useModel(
-    'comsStructures',
+    'stage.comsStructures',
     (model) => ({
       stageComponentsModel: model.stageComponentsModel,
     }),

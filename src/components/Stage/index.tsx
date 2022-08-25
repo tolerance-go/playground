@@ -20,7 +20,7 @@ const Elements: ElementCenter = {
 
 export default function Stage(props: {}) {
   const { rootIds, stageComponentsModel } = useModel(
-    'comsStructures',
+    'stage.comsStructures',
     (model) => {
       return {
         stageComponentsModel: model.stageComponentsModel,
@@ -39,7 +39,7 @@ export default function Stage(props: {}) {
     return null;
   }
 
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
 

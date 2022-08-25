@@ -6,11 +6,11 @@ import { Layout } from 'antd';
 const { Content } = Layout;
 
 export default () => {
-  const { setMode } = useModel('siderLeftMode', (model) => ({
+  const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
     setMode: model.setMode,
   }));
 
-  const { stageMode } = useModel('stageMode', (model) => ({
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));
 

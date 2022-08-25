@@ -1,12 +1,12 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
-import { useComStatusExtendStyles } from '@/hooks/useComStatusExtendStyles';
-import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/useDebounceTriggerPrepareSaveTimeChange';
+import { useComStatusExtendStyles } from '@/hooks/relations/useComStatusExtendStyles';
+import { useDebounceTriggerPrepareSaveTimeChange } from '@/hooks/actions/useDebounceTriggerPrepareSaveTimeChange';
 import { useComStatFormReset } from '@/hooks/useComStatFormReset';
-import { useSelectedComActiveStatExtendRelation } from '@/hooks/useSelectedComActiveStatExtendRelation';
-import { useSelectedComActiveStatStyle } from '@/hooks/useSelectedComActiveStatStyle';
-import { useSelectedComStyleConfigs } from '@/hooks/useSelectedComStyleConfigs';
-import { useSelectedNode } from '@/hooks/useSelectedNode';
+import { useSelectedComActiveStatExtendRelation } from '@/hooks/selected/useSelectedComActiveStatExtendRelation';
+import { useSelectedComActiveStatStyle } from '@/hooks/selected/useSelectedComActiveStatStyle';
+import { useSelectedComStyleConfigs } from '@/hooks/selected/useSelectedComStyleConfigs';
+import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
 import { useModel } from '@umijs/max';
 import { Form } from 'antd';
 
@@ -19,7 +19,7 @@ export default () => {
   const { setCurrentComStylesExtendsStyles } = useComStatusExtendStyles();
 
   const { triggerPrepareSaveTimeChange } = useModel(
-    'stageAutoSave',
+    'app.stageAutoSave',
     (model) => ({
       triggerPrepareSaveTimeChange: model.triggerPrepareSaveTimeChange,
     }),
@@ -32,7 +32,7 @@ export default () => {
   const { extendRelation } = useSelectedComActiveStatExtendRelation();
 
   const { lockComExtendStyleField, unlockComExtendStyleField } = useModel(
-    'statusConnectRelations',
+    'stage.statusConnectRelations',
     (model) => ({
       lockComExtendStyleField: model.lockComExtendStyleField,
       unlockComExtendStyleField: model.unlockComExtendStyleField,

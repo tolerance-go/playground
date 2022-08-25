@@ -21,7 +21,7 @@ export const StagePlaygroundWrapper = (
     }));
 
   const { siderLeftWidth, headerHeight } = useModel(
-    'workbenchIDESettings',
+    'workbench.workbenchIDESettings',
     (model) => ({
       siderLeftWidth: model.siderLeftWidth,
       headerHeight: model.headerHeight,
