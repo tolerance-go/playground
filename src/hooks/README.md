@@ -1,12 +1,16 @@
-一般使用多个 model 之间数据，或者复用状态&逻辑，或者是全局做一件事或者是独立维护状态，方便管理
+~~一般使用多个 model 之间数据，或者复用状态&逻辑，或者是全局做一件事或者是独立维护状态，方便管理~~
 
-解决 model 间的循环依赖
+~~解决 model 间的循环依赖~~
 
-- 用名字表示这是谁的 effect
+~~- 用名字表示这是谁的 effect~~
 
-或者是通过 id memo 一个数据返回
+~~或者是通过 id memo 一个数据返回~~
 
-- eg: useStageSelectSlotGroup
+~~- eg: useStageSelectSlotGroup~~
+
+# 注意
+
+1. hooks 具有全局通用性，复用才放过来，如果是为了解决 model 循环依赖问题的话，放到视图层完成，一般是 model 中副作用相关的操作起冲突了，对应的视图 hook 名称可以为相应 model 名称 + effect
 
 # 设计
 
