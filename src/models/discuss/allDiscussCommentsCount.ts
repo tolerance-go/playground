@@ -1,7 +1,6 @@
-import { getURLQuery } from '@/helps/getURLQuery';
+import { getPageIdOrThrow } from '@/helps/getPageIdOrThrow';
 import { DiscussControllerCountComments } from '@/services/server/DiscussController';
-import { useRequest } from 'ahooks';
-import { useMemoizedFn } from 'ahooks';
+import { useMemoizedFn, useRequest } from 'ahooks';
 import { useState } from 'react';
 
 const useAllDiscussCommentsCount = () => {
@@ -11,9 +10,10 @@ const useAllDiscussCommentsCount = () => {
 
   useRequest(
     async () => {
-      const query = getURLQuery();
+      const pageId = getPageIdOrThrow();
+
       return DiscussControllerCountComments({
-        pageId: Number(query.pageId),
+        pageId,
       });
     },
     {

@@ -45,7 +45,11 @@ export const makeTreeWithRelation = <
 
     fromItem.children = fromItem.children
       ? fromItem.children.concat(clonedItems[toItem.id])
-      : [clonedItems[toItem.id]];
+      : /**
+         * 注意这里是引用，可能后续还有对他的操作
+         * 不用担心不可变，之前已经全部 clone 过了
+         */
+        [clonedItems[toItem.id]];
   });
 
   const nextTree: RelationTreeItem<I>[] = [];

@@ -78,3 +78,18 @@ export async function ComponentControllerDestroy(
     ...(options || {}),
   });
 }
+
+/** 创建 component  POST /api/components/createWithRelation */
+export async function ComponentControllerCreateWithRelation(
+  body: API.CreationWithRelationComponent,
+  options?: { [key: string]: any },
+) {
+  return request<API.CreationWithRelationComponentResponse>('/api/components/createWithRelation', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}

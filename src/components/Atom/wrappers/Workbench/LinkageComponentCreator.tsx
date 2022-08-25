@@ -1,4 +1,5 @@
-import { getURLQuery } from '@/helps/getURLQuery';
+import { getAppIdOrThrow } from '@/helps/getAppIdOrThrow';
+import { getPageIdOrThrow } from '@/helps/getPageIdOrThrow';
 import { useGetSliceStageData } from '@/hooks/initials/useGetSliceStageData';
 import { ComponentStructure } from '@/models/page/comsStructures';
 import { ComponentControllerCreate } from '@/services/server/ComponentController';
@@ -56,17 +57,15 @@ export const LinkageComponentCreator = (props: {
       params: Pick<API.CreationComponent, 'name' | 'desc'>,
     ) => {
       const stageData = getSliceStageData([stateNodeId]);
-      const query = getURLQuery();
-      const { appId, pageId } = query;
-
-      if (!appId || !pageId) throw new Error('appId or pageId 未定义');
+      const appId = getAppIdOrThrow();
+      const pageId = getPageIdOrThrow();
 
       return ComponentControllerCreate({
         name: params.name,
         desc: params.desc,
-        app_id: appId as string,
+        app_id: appId,
         stage_data: JSON.stringify(stageData),
-        usedInPageIds: [Number(pageId)],
+        usedInPageIds: [pageId],
       });
     },
     {

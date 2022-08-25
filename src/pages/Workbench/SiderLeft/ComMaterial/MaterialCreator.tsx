@@ -1,4 +1,5 @@
-import { getURLQuery } from '@/helps/getURLQuery';
+import { getAppIdOrThrow } from '@/helps/getAppIdOrThrow';
+import { getPageIdOrThrow } from '@/helps/getPageIdOrThrow';
 import { useGetSliceStageData } from '@/hooks/initials/useGetSliceStageData';
 import { ComponentControllerCreate } from '@/services/server/ComponentController';
 import { PlusOutlined } from '@ant-design/icons';
@@ -43,11 +44,13 @@ export default () => {
   const { runAsync: requestCreateComponentAsync } = useRequest(
     async (values: FormValues) => {
       const { name, desc, nodeId, isLink } = values;
-      const { appId, pageId } = getURLQuery();
+
+      const pageId = getPageIdOrThrow();
+      const appId = getAppIdOrThrow();
 
       const params = (() => {
         const draft: Parameters<typeof ComponentControllerCreate>[0] = {
-          app_id: appId as string,
+          app_id: appId,
           name,
           desc,
         };

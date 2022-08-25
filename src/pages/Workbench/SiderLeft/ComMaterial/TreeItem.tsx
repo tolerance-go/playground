@@ -1,5 +1,8 @@
+import { getAppIdOrThrow } from '@/helps/getAppIdOrThrow';
+import { ComponentControllerCreateWithRelation } from '@/services/server/ComponentController';
 import { RelationTreeItem } from '@/utils/treeUtils/makeTreeWithRelation';
 import { useModel } from '@umijs/max';
+import { useRequest } from 'ahooks';
 import { Dropdown, Menu, Row, Tag, Tooltip, Typography } from 'antd';
 
 export const TreeItem = ({
@@ -7,11 +10,11 @@ export const TreeItem = ({
 }: {
   record: RelationTreeItem<API.Component>;
 }) => {
-  const { requestRemove, requestCreate } = useModel(
+  const { requestRemove, addComMaterial } = useModel(
     'component.componentList',
     (model) => ({
       requestRemove: model.requestRemove,
-      requestCreate: model.requestCreateComponent,
+      addComMaterial: model.addComMaterial,
     }),
   );
 
@@ -20,6 +23,34 @@ export const TreeItem = ({
     (model) => ({
       highlightId: model.highlightId,
     }),
+  );
+
+  const { addMaterialInheritConnection } = useModel(
+    'component.componentInheritRelation',
+    (model) => ({
+      addMaterialInheritConnection: model.addMaterialInheritConnection,
+    }),
+  );
+
+  /** 从其他组件继承创建 */
+  const { run: requestCreateComIheritOtherCom } = useRequest(
+    async (otherComId: number) => {
+      const appId = getAppIdOrThrow();
+
+      return ComponentControllerCreateWithRelation({
+        name: `from-${record.id}`,
+        desc: '从组件派生',
+        fromComId: otherComId,
+        appId,
+      });
+    },
+    {
+      manual: true,
+      onSuccess: (data) => {
+        addComMaterial(data.component);
+        addMaterialInheritConnection(data.comIheritRelation);
+      },
+    },
   );
 
   return (
@@ -32,7 +63,9 @@ export const TreeItem = ({
               {
                 key: 'extend',
                 label: '派生',
-                onClick: () => {},
+                onClick: () => {
+                  requestCreateComIheritOtherCom(record.id);
+                },
               },
               {
                 key: 'remove',

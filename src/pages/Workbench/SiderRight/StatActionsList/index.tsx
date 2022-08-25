@@ -3,7 +3,7 @@ import ComActionViewForm from '@/components/ComActionViewForm';
 import { FormItemExtendLabel } from '@/components/FormItemExtendLabel';
 import { useSelectedComActiveStatExtendRelation } from '@/hooks/selected/useSelectedComActiveStatExtendRelation';
 import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
-import { ComponentAction } from '@/models/comsActions';
+import { ComponentAction } from '@/models/page/comsActions';
 import { isExtendReactionView } from '@/utils/isExtendReactionView';
 import { DeleteOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';

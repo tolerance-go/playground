@@ -1,7 +1,7 @@
 import DiscussItem from '@/components/DiscussItem';
 import { TempDiscussItem } from '@/components/TempDiscussItem';
 import { PLAYGROUND_ATOM_WRAPPER_CLASS_NAME } from '@/constants/atoms';
-import { getURLQuery } from '@/helps/getURLQuery';
+import { getPageIdOrThrow } from '@/helps/getPageIdOrThrow';
 import { findClosestParentHTMLElement } from '@/utils/findClosestParentHTMLElement';
 import { useModel } from '@umijs/max';
 import { PropsWithChildren } from 'react';
@@ -72,7 +72,7 @@ export const StagePlaygroundWrapper = (
           const { comid: comId, statid: statId } =
             parentAtomWrapper.dataset ?? {};
 
-          const query = getURLQuery();
+          const pageId = getPageIdOrThrow();
 
           setTempDiscuss({
             left: pageLeft,
@@ -83,7 +83,7 @@ export const StagePlaygroundWrapper = (
             containerTop: containerRectTop,
             belongsToComId: comId!,
             belongsToComStatId: statId!,
-            pageId: Number(query.pageId),
+            pageId,
           });
 
           setDetailMode('detail');

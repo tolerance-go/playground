@@ -1,4 +1,4 @@
-import { useActivePageIdEffect } from '@/hooks/globals/useActivePageIdEffect';
+import { useActivePageIdEffect } from '@/pages/Workbench/Executor/_hooks/useActivePageIdEffect';
 // import { useComActiveMaterialIdEffect } from '@/hooks/globals/useComActiveMaterialIdEffect';
 // import { useComponentStatusChange } from '@/hooks/useComponentStatusChange';
 // import { useSelectedNode } from '@/hooks/useSelectedNode';

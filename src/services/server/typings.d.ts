@@ -70,10 +70,10 @@ declare namespace API {
 
   type ComIheritRelation = {
     id: number;
-    toId: number;
-    fromId: number;
     appId: number;
     componentId: number;
+    fromId: number;
+    toId: number;
   };
 
   type ComIheritRelationControllerDestroyParams = {
@@ -166,9 +166,9 @@ declare namespace API {
     id: number;
     name: string;
     desc?: string;
-    app_id: string;
+    app_id: number;
     stage_data?: string;
-    comIheritRelationId?: string;
+    comIheritRelationId?: number;
     usedInPageIds?: number[];
   };
 
@@ -201,7 +201,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data: Component[];
+    data: ShownComponent[];
   };
 
   type ComponentShowResponse = {
@@ -209,7 +209,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data: Component;
+    data: ShownComponent;
   };
 
   type Counter = {
@@ -243,10 +243,10 @@ declare namespace API {
   };
 
   type CreationComIheritRelation = {
-    toId: number;
-    fromId: number;
     appId: number;
     componentId: number;
+    fromId: number;
+    toId: number;
   };
 
   type CreationComment = {
@@ -260,9 +260,9 @@ declare namespace API {
   type CreationComponent = {
     name: string;
     desc?: string;
-    app_id: string;
+    app_id: number;
     stage_data?: string;
-    comIheritRelationId?: string;
+    comIheritRelationId?: number;
     usedInPageIds?: number[];
   };
 
@@ -292,8 +292,8 @@ declare namespace API {
 
   type CreationPage = {
     path: string;
-    app_id: string;
-    version_id?: string;
+    app_id: number;
+    version_id?: number;
     stage_data?: string;
   };
 
@@ -301,6 +301,26 @@ declare namespace API {
     name: string;
     app_id: string;
     pageIds?: number[];
+  };
+
+  type CreationWithRelationComponent = {
+    fromComId: number;
+    appId: number;
+    name: string;
+    desc?: string;
+  };
+
+  type CreationWithRelationComponentResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: CreationWithRelationComponentResponseData;
+  };
+
+  type CreationWithRelationComponentResponseData = {
+    component: ShownComponent;
+    comIheritRelation: ShownComIheritRelation;
   };
 
   type Database = {
@@ -425,8 +445,8 @@ declare namespace API {
   type Page = {
     id: number;
     path: string;
-    app_id: string;
-    version_id?: string;
+    app_id: number;
+    version_id?: number;
     stage_data?: string;
   };
 
@@ -473,13 +493,13 @@ declare namespace API {
   };
 
   type ShownComIheritRelation = {
-    id: number;
     createdAt: string;
     updatedAt: string;
-    toId: number;
-    fromId: number;
+    id: number;
     appId: number;
     componentId: number;
+    fromId: number;
+    toId: number;
   };
 
   type ShownComment = {
@@ -491,6 +511,18 @@ declare namespace API {
     likeNum?: number;
     dislikeNum?: number;
     discussId: number;
+  };
+
+  type ShownComponent = {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    desc?: string;
+    app_id: number;
+    stage_data?: string;
+    comIheritRelationId?: number;
+    usedInPageIds?: number[];
   };
 
   type ShownDatabase = {
@@ -524,10 +556,10 @@ declare namespace API {
   };
 
   type UpdationComIheritRelation = {
-    toId?: number;
-    fromId?: number;
     appId?: number;
     componentId?: number;
+    fromId?: number;
+    toId?: number;
   };
 
   type UpdationComment = {

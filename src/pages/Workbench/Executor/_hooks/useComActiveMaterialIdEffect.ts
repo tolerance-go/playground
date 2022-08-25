@@ -1,7 +1,8 @@
+import { ElementTypeEnums, URL_STATE } from '@/constants/urlState';
 import { useModel, useSearchParams } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
 import { useEffect } from 'react';
-import { useInitSatgeDataWithMaterial } from '../initials/useInitSatgeDataWithMaterial';
+import { useInitSatgeDataWithMaterial } from '../../../../hooks/initials/useInitSatgeDataWithMaterial';
 
 export const useComActiveMaterialIdEffect = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,33 +19,25 @@ export const useComActiveMaterialIdEffect = () => {
 
   const { initSatgeDataWithMaterial } = useInitSatgeDataWithMaterial();
 
-  const { setActivePageId } = useModel('page.pageList', (model) => ({
-    setActivePageId: model?.setActivePageId,
-  }));
-
   useEffect(() => {
     /** 根据 url 初始化当前激活的 pageId */
-    const id = searchParams.get('materialId');
-    if (id) {
+    const id = searchParams.get(URL_STATE.ELEMENT_ID);
+    const type = searchParams.get(URL_STATE.ELEMENT_TYPE);
+
+    if (id && type === ElementTypeEnums.Component) {
       setComActiveMaterialId(Number(id));
-      initSatgeDataWithMaterial(id);
     }
   }, []);
 
   useUpdateEffect(() => {
     if (comActiveMaterialId) {
       /** 同步 url，下次刷新页面的时候可以记住 */
-      searchParams.delete('materialId');
-      searchParams.append('materialId', String(comActiveMaterialId));
-      searchParams.delete('pageId');
-      setSearchParams(searchParams);
-      setActivePageId(undefined);
-    }
-  }, [comActiveMaterialId]);
+      searchParams.set(URL_STATE.ELEMENT_ID, String(comActiveMaterialId));
+      searchParams.set(URL_STATE.ELEMENT_TYPE, ElementTypeEnums.Component);
 
-  useUpdateEffect(() => {
-    if (comActiveMaterialId) {
-      initSatgeDataWithMaterial(String(comActiveMaterialId));
+      setSearchParams(searchParams);
+
+      initSatgeDataWithMaterial(comActiveMaterialId);
     }
   }, [comActiveMaterialId]);
 };

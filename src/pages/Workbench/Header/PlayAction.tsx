@@ -1,6 +1,8 @@
+import { getAppIdOrThrow } from '@/helps/getAppIdOrThrow';
+import { getPageIdOrThrow } from '@/helps/getPageIdOrThrow';
 import { PlayCircleTwoTone } from '@ant-design/icons';
 import { useSearchParams } from '@umijs/max';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 
 export const PlayAction = () => {
   const [searchParams] = useSearchParams();
@@ -9,18 +11,8 @@ export const PlayAction = () => {
       type="text"
       icon={<PlayCircleTwoTone />}
       onClick={() => {
-        const appId = searchParams.get('appId');
-        const pageId = searchParams.get('pageId');
-
-        if (!appId) {
-          message.warn('appId 缺失，无法正常跳转，请检查访问地址');
-          return;
-        }
-
-        if (!pageId) {
-          message.warn('pageId 缺失，无法正常跳转，请检查访问地址');
-          return;
-        }
+        const pageId = getPageIdOrThrow();
+        const appId = getAppIdOrThrow();
 
         window.open(`/playground?appId=${appId}&pageId=${pageId}`);
       }}

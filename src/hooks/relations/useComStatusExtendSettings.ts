@@ -1,5 +1,5 @@
 import { useModel } from '@umijs/max';
-import { useComStatusExtendProps } from '../__utils/useComStatusExtendProps';
+import { useComStatusExtendProps } from '../_utils/useComStatusExtendProps';
 
 /** 组件继承状态修改 */
 export const useComStatusExtendSettings = () => {

@@ -5,37 +5,29 @@ import {
   ComponentControllerIndex,
 } from '@/services/server/ComponentController';
 import { convertListToMap } from '@/utils/listUtils/convertListToMap';
-import { useModel } from '@umijs/max';
 import { useMemoizedFn, useRequest } from 'ahooks';
 import { produce } from 'immer';
 import { useMemo, useState } from 'react';
+import { getAppIdOrThrow } from './../../helps/getAppIdOrThrow';
 
 const useComsMaterialList = () => {
-  const [comsMaterialList, setComsMaterialList] = useState<API.Component[]>();
+  const [comsMaterialList, setComsMaterialList] =
+    useState<API.ShownComponent[]>();
 
-  // const { removeTargetComsAndSaveTheirSettings } = useModel(
-  //   'page.comsStructures',
-  //   (model) => {
-  //     return {
-  //       removeTargetComsAndSaveTheirSettings:
-  //         model.removeTargetComsAndSaveTheirSettings,
-  //     };
-  //   },
-  // );
+  const getComponentByIdOrThrow = useMemoizedFn((comId: number) => {
+    const item = comsMaterialList?.find((item) => item.id === comId);
+    if (item) {
+      return item;
+    }
 
-  const { requestCreateMaterialInheritRelation } = useModel(
-    'component.componentInheritRelation',
-    (model) => ({
-      requestCreateMaterialInheritRelation:
-        model.requestCreateMaterialInheritRelation,
-    }),
-  );
+    throw new Error('组件未找到');
+  });
 
   const comsMaterialMap = useMemo(() => {
     return convertListToMap(comsMaterialList ?? []);
   }, [comsMaterialList]);
 
-  const addComMaterial = useMemoizedFn((newComMaterial: API.Component) => {
+  const addComMaterial = useMemoizedFn((newComMaterial: API.ShownComponent) => {
     setComsMaterialList(
       produce((draft) => {
         draft?.push(newComMaterial);
@@ -102,11 +94,11 @@ const useComsMaterialList = () => {
     runAsync: requestCreateComponentAsync,
   } = useRequest(
     async (params: Omit<API.CreationComponent, 'app_id'>) => {
-      const { appId } = getURLQuery();
+      const appId = getAppIdOrThrow();
       return ComponentControllerCreate({
         name: params.name,
         desc: params.desc,
-        app_id: appId as string,
+        app_id: appId,
         stage_data: params.stage_data,
         usedInPageIds: params.usedInPageIds,
       });
@@ -156,6 +148,7 @@ const useComsMaterialList = () => {
   // );
 
   return {
+    getComponentByIdOrThrow,
     comsMaterialListLoading: loading,
     comsMaterialList,
     comsMaterialMap,

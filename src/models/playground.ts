@@ -1,3 +1,4 @@
+import { getPageIdOrThrow } from '@/helps/getPageIdOrThrow';
 import {
   DiscussControllerCreate,
   DiscussControllerDestroy,
@@ -9,7 +10,6 @@ import { useRequest } from 'ahooks';
 import { useGetState, useLatest, useMemoizedFn, useUpdateEffect } from 'ahooks';
 import { produce } from 'immer';
 import { useMemo, useState } from 'react';
-import { getURLQuery } from './../helps/getURLQuery';
 
 export type PlaygroundMode = 'cursor' | 'discuss';
 
@@ -225,9 +225,9 @@ const usePlayground = () => {
 
   useRequest(
     async () => {
-      const query = getURLQuery();
+      const pageId = getPageIdOrThrow();
       return DiscussControllerIndex({
-        pageId: Number(query.pageId),
+        pageId,
       });
     },
     {

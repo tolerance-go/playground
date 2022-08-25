@@ -1,16 +1,12 @@
-import { useActivePageIdEffect } from '@/hooks/globals/useActivePageIdEffect';
-import { useComActiveMaterialIdEffect } from '@/hooks/globals/useComActiveMaterialIdEffect';
-import { useDataListUpdate } from '@/hooks/globals/useDataListUpdate';
-import { useStageSelectedNodeIdEffect } from '@/hooks/globals/useStageSelectedNodeIdEffect';
-import { useComponentStatusChange } from '@/hooks/useComponentStatusChange';
-import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
-import useStageSelectSlotGroupIdEffect from '@/hooks/useStageSelectSlotGroupIdEffect';
+import { useActivePageIdEffect } from '@/pages/Workbench/Executor/_hooks/useActivePageIdEffect';
+import { useComActiveMaterialIdEffect } from '@/pages/Workbench/Executor/_hooks/useComActiveMaterialIdEffect';
+import { useStageSelectedNodeIdEffect } from '@/pages/Workbench/Executor/_hooks/useStageSelectedNodeIdEffect';
+import { useDataListUpdate } from '@/pages/Workbench/Executor/_hooks/useDataListUpdate';
+import useStageSelectSlotGroupIdEffect from '@/pages/Workbench/Executor/_hooks/useStageSelectSlotGroupIdEffect';
 
 /** 存放一些全局的 view model */
 export default () => {
   useStageSelectSlotGroupIdEffect();
-  useComponentStatusChange();
-  useSelectedNode();
   useComActiveMaterialIdEffect();
   useActivePageIdEffect();
   useDataListUpdate();

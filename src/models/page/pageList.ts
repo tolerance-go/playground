@@ -1,6 +1,5 @@
 import { PageControllerIndex } from '@/services/server/PageController';
-import { useRequest } from 'ahooks';
-import { useMemoizedFn } from 'ahooks';
+import { useMemoizedFn, useRequest } from 'ahooks';
 import { message } from 'antd';
 import produce from 'immer';
 import qs from 'qs';
@@ -9,7 +8,7 @@ import { useState } from 'react';
 /** 路径管理 */
 const usePageList = () => {
   /** 当前激活的 page path */
-  const [activePageId, setActivePageId] = useState<string>();
+  const [activePageId, setActivePageId] = useState<number>();
 
   /** 当前是否正在创建新的 path */
   const [createPathing, setCreatePathing] = useState<boolean>(false);
@@ -88,16 +87,14 @@ const usePageList = () => {
     });
     const { appId } = query;
 
-    const { success, data } = await PageControllerIndex({
+    const data = await PageControllerIndex({
       appId: Number(appId),
       versionId: versionId,
     });
 
-    if (success) {
-      setList(data);
-      if (data?.length) {
-        setActivePageId(String(data[0].id));
-      }
+    setList(data);
+    if (data?.length) {
+      setActivePageId(data[0].id);
     }
   });
 

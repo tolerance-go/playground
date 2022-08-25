@@ -37,19 +37,21 @@ export default () => {
           message.warn('appId 缺失');
           return false;
         }
-        const { success, data } = await VersionControllerCreate({
-          name: values.name,
-          app_id: appId,
-          pageIds: pageList?.map((page) => page.id),
-        });
-        if (success) {
+        try {
+          const data = await VersionControllerCreate({
+            name: values.name,
+            app_id: appId,
+            pageIds: pageList?.map((page) => page.id),
+          });
           if (data) {
             pushFromStart(data);
             setActiveVersionId(data.id);
           }
           message.success('版本保存成功');
+          return true;
+        } catch {
+          return false;
         }
-        return success;
       }}
     >
       <ProFormText
