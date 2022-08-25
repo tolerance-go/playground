@@ -1,7 +1,7 @@
 import { useModel } from '@umijs/max';
 
 export const useSelectedComActiveStatStyle = (comId?: string) => {
-  const { comsStyles } = useModel('stage.comsStyles', (model) => {
+  const { comsStyles } = useModel('page.comsStyles', (model) => {
     return {
       comsStyles: model.comsStyles,
     };

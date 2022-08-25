@@ -6,9 +6,10 @@ import PagePanel from './PagePanel';
 import Segmented from './Segmented';
 
 export default () => {
-  const { normalStatus } = useModel('workbench.siderLeftMode', (model) => ({
-    normalStatus: model?.normalStatus,
+  const { normalStatus } = useModel('siderLeft.normalModeSubMode', (model) => ({
+    normalStatus: model.normalStatus,
   }));
+
   return (
     <Row
       style={{

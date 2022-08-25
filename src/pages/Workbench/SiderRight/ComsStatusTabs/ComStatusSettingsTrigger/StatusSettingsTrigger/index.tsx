@@ -20,14 +20,14 @@ export default () => {
   const { selectedComDefaultStatId } = useSelectedComDefaultStatId();
 
   const { setComStatusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => ({
       setComStatusSettingsDefaults: model.setComStatusSettingsDefaults,
     }),
   );
 
   const { setSelectedComActiveStatName } = useModel(
-    'stage.comsStatus',
+    'page.comsStatus',
     (model) => ({
       setSelectedComActiveStatName: model.setSelectedComActiveStatName,
     }),

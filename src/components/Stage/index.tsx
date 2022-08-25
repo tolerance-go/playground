@@ -1,7 +1,7 @@
 import { Atom } from '@/components/Atom';
 import { AtomButton } from '@/components/atomComs/AtomButton';
 import { ElementsCxt } from '@/components/ElementsCtx';
-import { StageComponentsModelItem } from '@/models/stageComponentsModel';
+import { ComponentStructure } from '@/models/page/comsStructures';
 import { ElementCenter } from '@/typings/ElementCenter';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
@@ -20,7 +20,7 @@ const Elements: ElementCenter = {
 
 export default function Stage(props: {}) {
   const { rootIds, stageComponentsModel } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => {
       return {
         stageComponentsModel: model.stageComponentsModel,
@@ -32,7 +32,7 @@ export default function Stage(props: {}) {
   const rootNodeModels = useMemo(() => {
     return rootIds
       .map((id) => stageComponentsModel?.[id])
-      .filter((item): item is StageComponentsModelItem => item !== undefined);
+      .filter((item): item is ComponentStructure => item !== undefined);
   }, [rootIds, stageComponentsModel]);
 
   if (!rootNodeModels) {

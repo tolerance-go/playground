@@ -5,7 +5,7 @@ import { useComDefaultStatId } from '@/hooks/useComDefaultStatId';
 import { useComDefaultStatSetting } from '@/hooks/useComDefaultStatSetting';
 import { useComDefaultStatStyle } from '@/hooks/useComDefaultStatStyle';
 import { useComponentUsedSettings } from '@/hooks/useComponentUsedSettings';
-import { StageComponentsModelItem } from '@/models/stageComponentsModel';
+import { ComponentStructure } from '@/models/page/comsStructures';
 import { useModel } from '@umijs/max';
 import consola from 'consola';
 import { useContext } from 'react';
@@ -16,7 +16,7 @@ import { AtomWorkbenchWrapper } from './wrappers/Workbench';
  * 通过 model 生成组件
  * 舞台上的组件
  */
-export const Atom = (props: StageComponentsModelItem) => {
+export const Atom = (props: ComponentStructure) => {
   const { stageMode } = useModel('stage.stageMode', (model) => ({
     stageMode: model.mode,
   }));

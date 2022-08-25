@@ -7,13 +7,19 @@ const useStageSelectNodeId = () => {
   const [stageSelectNodeId, setStageSelectNodeId, getStageSelectNodeId] =
     useGetState<string>();
 
-  const { openTargetFromTreeMenu } = useModel('layers.comsLayout', (model) => ({
+  const { openTargetFromTreeMenu } = useModel('layer.comsLayout', (model) => ({
     openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
   }));
 
-  const { setNormalStatus, setMode } = useModel('workbench.siderLeftMode', (model) => ({
-    setNormalStatus: model?.setNormalStatus,
-    setMode: model?.setMode,
+  const { setNormalStatus } = useModel(
+    'siderLeft.normalModeSubMode',
+    (model) => ({
+      setNormalStatus: model.setNormalStatus,
+    }),
+  );
+
+  const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
+    setMode: model.setMode,
   }));
 
   const { setStageSelectSlotGroupId } = useModel(
@@ -23,21 +29,24 @@ const useStageSelectNodeId = () => {
     }),
   );
 
-  const { setSelectedKeys } = useModel('layers.comsLayout', (model) => ({
+  const { setSelectedKeys } = useModel('layer.comsLayout', (model) => ({
     setSelectedKeys: model?.setSelectedKeys,
   }));
 
   const { selectedComponentStatusIdFromComDefaultStatus } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => ({
       selectedComponentStatusIdFromComDefaultStatus:
         model.selectRightPanelComStatusIdFromDefault,
     }),
   );
 
-  const { setMode: setRightBarMode } = useModel('workbench.siderRightMode', (model) => ({
-    setMode: model?.setMode,
-  }));
+  const { setMode: setRightBarMode } = useModel(
+    'workbench.siderRightMode',
+    (model) => ({
+      setMode: model?.setMode,
+    }),
+  );
 
   /** 当舞台选中组件 id 发生变化，打开树形节点菜单 */
   useEffect(() => {

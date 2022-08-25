@@ -2,7 +2,7 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 
 export const useSetNearSelectedComponentStatusId = () => {
-  const { getLatestComponentsStatus } = useModel('stage.comsStatus', (model) => ({
+  const { getLatestComponentsStatus } = useModel('page.comsStatus', (model) => ({
     getLatestComponentsStatus: model.getComponentsStatus,
   }));
 

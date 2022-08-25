@@ -10,7 +10,7 @@ export const useHandleComGridItemClick = () => {
   }));
 
   const { addComponentToStage, addComToStageSlot } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => ({
       addComponentToStage: model?.addComponentToStage,
       addComToStageSlot: model?.addComToStageSlot,
@@ -18,7 +18,7 @@ export const useHandleComGridItemClick = () => {
   );
 
   const { getLatestComsInitalSettings } = useModel(
-    'stage.comsSettingsConfigs',
+    'config.comsSettingsConfigs',
     (model) => ({
       getLatestComsInitalSettings: model?.getLatestComsInitalSettings,
     }),
@@ -40,20 +40,20 @@ export const useHandleComGridItemClick = () => {
     }),
   );
 
-  const { initComStatus } = useModel('stage.comsStatus', (model) => ({
+  const { initComStatus } = useModel('page.comsStatus', (model) => ({
     initComStatus: model?.initComStatus,
   }));
 
-  const { setComStatSetting } = useModel('stage.comsSettings', (model) => ({
+  const { setComStatSetting } = useModel('page.comsSettings', (model) => ({
     setComStatSetting: model.setComStatSetting,
   }));
 
-  const { setComStatStyle } = useModel('stage.comsStyles', (model) => ({
+  const { setComStatStyle } = useModel('page.comsStyles', (model) => ({
     setComStatStyle: model.setComStatStyle,
   }));
 
   const { setComStatusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => ({
       setComStatusSettingsDefaults: model.setComStatusSettingsDefaults,
     }),

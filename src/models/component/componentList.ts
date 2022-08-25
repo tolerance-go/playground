@@ -1,3 +1,4 @@
+import { getURLQuery } from '@/helps/getURLQuery';
 import {
   ComponentControllerCreate,
   ComponentControllerDestroy,
@@ -7,19 +8,13 @@ import { convertListToMap } from '@/utils/listUtils/convertListToMap';
 import { useModel } from '@umijs/max';
 import { useMemoizedFn, useRequest } from 'ahooks';
 import { produce } from 'immer';
-import qs from 'qs';
 import { useMemo, useState } from 'react';
 
 const useComsMaterialList = () => {
   const [comsMaterialList, setComsMaterialList] = useState<API.Component[]>();
 
-  const query = qs.parse(location.search, {
-    ignoreQueryPrefix: true,
-  });
-  const { appId } = query;
-
   // const { removeTargetComsAndSaveTheirSettings } = useModel(
-  //   'stage.comsStructures',
+  //   'page.comsStructures',
   //   (model) => {
   //     return {
   //       removeTargetComsAndSaveTheirSettings:
@@ -66,8 +61,12 @@ const useComsMaterialList = () => {
     return comsMaterialList?.find((item) => item.id === id);
   });
 
+  /** 默认拉取当前组件列表 */
   const { loading } = useRequest(
     async () => {
+      const query = getURLQuery();
+      const { appId } = query;
+
       return ComponentControllerIndex({
         appId: Number(appId),
       });
@@ -79,6 +78,7 @@ const useComsMaterialList = () => {
     },
   );
 
+  /** 删除组件 */
   const { loading: requestRemoveLoading, run: requestRemove } = useRequest(
     async (id: API.Component['id']) => {
       return ComponentControllerDestroy({
@@ -95,13 +95,20 @@ const useComsMaterialList = () => {
     },
   );
 
-  const { loading: requestCreateLoading, run: requestCreate } = useRequest(
+  /** 创建新组件 */
+  const {
+    loading: requestCreateComponentLoading,
+    run: requestCreateComponent,
+    runAsync: requestCreateComponentAsync,
+  } = useRequest(
     async (params: Omit<API.CreationComponent, 'app_id'>) => {
+      const { appId } = getURLQuery();
       return ComponentControllerCreate({
         name: params.name,
         desc: params.desc,
         app_id: appId as string,
-        stage_data: JSON.stringify(params.stage_data),
+        stage_data: params.stage_data,
+        usedInPageIds: params.usedInPageIds,
       });
     },
     {
@@ -114,36 +121,32 @@ const useComsMaterialList = () => {
     },
   );
 
-  /**
-   * 创建一个新的物料
-   * 从旧的物料复制，并创建相应的关联
-   */
-  const {
-    loading: requestCreateAndInheritInFromCurrentLoading,
-    run: requestCreateAndInheritInFromCurrent,
-  } = useRequest(
-    async (mtlId: number) => {
-      const current = comsMaterialMap[mtlId];
-      return ComponentControllerCreate({
-        name: current.name,
-        desc: current.desc,
-        app_id: appId as string,
-        stage_data: current.stage_data,
-      });
-    },
-    {
-      manual: true,
-      onSuccess: (data, params) => {
-        if (data) {
-          addComMaterial(data);
-          requestCreateMaterialInheritRelation({
-            toId: data!.id,
-            fromId: params[0],
-          });
-        }
-      },
-    },
-  );
+  // const {
+  //   loading: requestCreateAndInheritInFromCurrentLoading,
+  //   run: requestCreateAndInheritInFromCurrent,
+  // } = useRequest(
+  //   async (mtlId: number) => {
+  //     const current = comsMaterialMap[mtlId];
+  //     return ComponentControllerCreate({
+  //       name: current.name,
+  //       desc: current.desc,
+  //       app_id: appId as string,
+  //       stage_data: current.stage_data,
+  //     });
+  //   },
+  //   {
+  //     manual: true,
+  //     onSuccess: (data, params) => {
+  //       if (data) {
+  //         addComMaterial(data);
+  //         requestCreateMaterialInheritRelation({
+  //           toId: data!.id,
+  //           fromId: params[0],
+  //         });
+  //       }
+  //     },
+  //   },
+  // );
 
   /** 从当前物料创建，创建后继承该物料 */
   // const requestCreateAndInheritInFromCurrent = useMemoizedFn(
@@ -159,11 +162,12 @@ const useComsMaterialList = () => {
     removeComMaterial,
     getComMaterial,
     setComsMaterialList,
-    createComMaterial: addComMaterial,
+    addComMaterial,
     requestRemoveLoading,
     requestRemove,
-    requestCreate,
-    requestCreateLoading,
+    requestCreateComponentAsync,
+    requestCreateComponent,
+    requestCreateComponentLoading,
   };
 };
 

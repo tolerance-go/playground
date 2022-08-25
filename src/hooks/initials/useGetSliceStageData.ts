@@ -3,7 +3,7 @@ import { useMemoizedFn } from 'ahooks';
 
 export const useGetSliceStageData = () => {
   const { getSliceData: getComsTreeData } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => {
       return {
         getSliceData: model.getSliceData,
@@ -12,7 +12,7 @@ export const useGetSliceStageData = () => {
   );
 
   const { getSliceData: getStatusSettings } = useModel(
-    'stage.comsStatus',
+    'page.comsStatus',
     (model) => {
       return {
         getSliceData: model.getSliceData,
@@ -21,7 +21,7 @@ export const useGetSliceStageData = () => {
   );
 
   const { getSliceData: getStatusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => {
       return {
         getSliceData: model.getSliceData,
@@ -30,7 +30,7 @@ export const useGetSliceStageData = () => {
   );
 
   const { getSliceData: getStatusRelations } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => {
       return {
         getSliceData: model.getSliceData,
@@ -38,26 +38,26 @@ export const useGetSliceStageData = () => {
     },
   );
 
-  const { getSliceData: getComsActions } = useModel('stage.comsActions', (model) => {
+  const { getSliceData: getComsActions } = useModel('page.comsActions', (model) => {
     return {
       getSliceData: model.getSliceData,
     };
   });
 
-  const { getSliceData: getComsEvents } = useModel('stage.comsEvents', (model) => {
+  const { getSliceData: getComsEvents } = useModel('page.comsEvents', (model) => {
     return {
       getSliceData: model.getSliceData,
     };
   });
 
-  const { getSliceData: getComsStyles } = useModel('stage.comsStyles', (model) => {
+  const { getSliceData: getComsStyles } = useModel('page.comsStyles', (model) => {
     return {
       getSliceData: model.getSliceData,
     };
   });
 
   const { getSliceData: getComsSettings } = useModel(
-    'stage.comsSettings',
+    'page.comsSettings',
     (model) => {
       return {
         getSliceData: model.getSliceData,

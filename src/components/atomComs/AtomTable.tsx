@@ -41,7 +41,7 @@ export const AtomTable = (
     getTableDataSourceByDataId: model.getTableDataSourceByDataId,
   }));
 
-  const { updateComStatSetting } = useModel('stage.comsSettings', (model) => ({
+  const { updateComStatSetting } = useModel('page.comsSettings', (model) => ({
     updateComStatSetting: model.updateComStatSetting,
   }));
 

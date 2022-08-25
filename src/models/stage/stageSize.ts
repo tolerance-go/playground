@@ -9,7 +9,7 @@ import { useRequest } from 'ahooks';
 
 import { useGetState, useMemoizedFn, useUpdateEffect } from 'ahooks';
 import { useRef } from 'react';
-import { BoxSize } from './comsStyles';
+import { BoxSize } from '../page/comsStyles';
 
 /** 舞台插槽组的选择 */
 const useStageSize = () => {

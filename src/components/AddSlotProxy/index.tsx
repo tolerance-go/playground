@@ -1,7 +1,7 @@
 import { SLOTS_NAME } from '@/constants';
 import { joinSlotGroupId } from '@/helps';
 import { SlotPosition } from '@/models/slotsInsert';
-import { StageComponentsModelItem } from '@/models/stageComponentsModel';
+import { ComponentStructure } from '@/models/page/comsStructures';
 import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Button } from 'antd';
@@ -42,7 +42,7 @@ export const AddSlotBtn = ({
     focusSlotName: model?.focusSlotName,
   }));
 
-  const { stageComponentsModel } = useModel('stage.comsStructures', (model) => {
+  const { stageComponentsModel } = useModel('page.comsStructures', (model) => {
     return {
       stageComponentsModel: model?.stageComponentsModel,
     };
@@ -53,7 +53,7 @@ export const AddSlotBtn = ({
       ? slots?.[slotName]
           .map((childId) => stageComponentsModel?.[childId])
           .filter(
-            (item): item is StageComponentsModelItem => item !== undefined,
+            (item): item is ComponentStructure => item !== undefined,
           )
       : undefined;
   }, [slots, slotName, stageComponentsModel]);

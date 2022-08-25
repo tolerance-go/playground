@@ -1,13 +1,13 @@
-import { NormalStatus } from '@/models/siderLeftMode';
+import { NormalStatus } from '@/models/siderLeft/normalModeSubMode';
 import { useModel } from '@umijs/max';
 import { Segmented } from 'antd';
 
 export default () => {
   const { normalStatus, setNormalStatus } = useModel(
-    'workbench.siderLeftMode',
+    'siderLeft.normalModeSubMode',
     (model) => ({
-      setNormalStatus: model?.setNormalStatus,
-      normalStatus: model?.normalStatus,
+      normalStatus: model.normalStatus,
+      setNormalStatus: model.setNormalStatus,
     }),
   );
 

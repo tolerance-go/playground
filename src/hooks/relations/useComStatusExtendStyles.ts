@@ -4,14 +4,14 @@ import { useComStatusExtendProps } from '../__utils/useComStatusExtendProps';
 /** 组件继承状态修改 */
 export const useComStatusExtendStyles = () => {
   const { setComStatStyle, updateComStatStyle } = useModel(
-    'stage.comsStyles',
+    'page.comsStyles',
     (model) => ({
       setComStatStyle: model.setComStatStyle,
       updateComStatStyle: model.updateComStatStyle,
     }),
   );
 
-  const { getStatLockStyleFields } = useModel('stage.statusConnectRelations', (model) => ({
+  const { getStatLockStyleFields } = useModel('page.statusConnectRelations', (model) => ({
     getStatLockStyleFields: model.getStatLockStyleFields,
   }));
 

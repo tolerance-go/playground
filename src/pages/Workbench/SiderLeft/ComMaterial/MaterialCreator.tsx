@@ -1,19 +1,27 @@
-import { useDeleteComsFromStage } from '@/hooks/actions/useDeleteComsFromStage';
+import { getURLQuery } from '@/helps/getURLQuery';
 import { useGetSliceStageData } from '@/hooks/initials/useGetSliceStageData';
 import { ComponentControllerCreate } from '@/services/server/ComponentController';
 import { PlusOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormText } from '@ant-design/pro-components';
+import {
+  ModalForm,
+  ProFormDependency,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { message } from 'antd';
-import qs from 'qs';
+import { useRequest } from 'ahooks';
+
+type FormValues = {
+  name: string;
+  nodeId?: string;
+  desc?: string;
+  isLink?: boolean;
+};
 
 export default () => {
-  const query = qs.parse(location.search, {
-    ignoreQueryPrefix: true,
-  });
-  const { appId } = query;
-  const { createComMaterial } = useModel('component.componentList', (model) => ({
-    createComMaterial: model.createComMaterial,
+  const { addComMaterial } = useModel('component.componentList', (model) => ({
+    addComMaterial: model.addComMaterial,
   }));
 
   const { triggerPrepareSaveTimeChange } = useModel(
@@ -23,38 +31,63 @@ export default () => {
     }),
   );
 
-  const { deleteComsFromStage } = useDeleteComsFromStage();
-
   const { getSliceStageData } = useGetSliceStageData();
 
+  const { markNodeFromComponent } = useModel(
+    'page.comsStructures',
+    (model) => ({
+      markNodeFromComponent: model.markNodeFromComponent,
+    }),
+  );
+
+  const { runAsync: requestCreateComponentAsync } = useRequest(
+    async (values: FormValues) => {
+      const { name, desc, nodeId, isLink } = values;
+      const { appId, pageId } = getURLQuery();
+
+      const params = (() => {
+        const draft: Parameters<typeof ComponentControllerCreate>[0] = {
+          app_id: appId as string,
+          name,
+          desc,
+        };
+        if (nodeId) {
+          const stageData = getSliceStageData([nodeId]);
+          draft.stage_data = JSON.stringify(stageData);
+
+          if (isLink) {
+            draft.usedInPageIds = [Number(pageId)];
+          }
+        }
+        return draft;
+      })();
+
+      return ComponentControllerCreate(params);
+    },
+    {
+      manual: true,
+    },
+  );
+
   return (
-    <ModalForm<{
-      name: string;
-      rootId: string;
-      desc?: string;
-    }>
-      title="新建物料"
+    <ModalForm<FormValues>
+      title="新建组件"
       trigger={<PlusOutlined />}
       autoFocusFirstInput
       submitTimeout={2000}
       onFinish={async (values) => {
-        const stageData = getSliceStageData([values.rootId]);
+        try {
+          const data = await requestCreateComponentAsync(values);
+          addComMaterial(data);
+          if (values.nodeId) {
+            markNodeFromComponent(data.id, values.nodeId);
+            triggerPrepareSaveTimeChange();
+          }
 
-        const { success, data } = await ComponentControllerCreate({
-          name: values.name,
-          desc: values.desc,
-          app_id: appId as string,
-          stage_data: JSON.stringify(stageData),
-        });
-
-        if (success) {
-          message.success('提交成功');
-          createComMaterial(data!);
-          deleteComsFromStage([values.rootId]);
-          triggerPrepareSaveTimeChange();
+          return true;
+        } catch (error) {
+          return false;
         }
-
-        return success;
       }}
     >
       <ProFormText
@@ -68,16 +101,18 @@ export default () => {
         placeholder="请输入名称"
       />
       <ProFormText
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-        name="rootId"
-        label="组件 ID"
+        name="nodeId"
+        label="从舞台组件复制"
         placeholder="请输入 ID"
       />
-      <ProFormText name="desc" label="描述" placeholder="请输入描述" />
+      <ProFormDependency name={['nodeId']}>
+        {(values) => {
+          return values.nodeId ? (
+            <ProFormSwitch name="isLink" label="是否关联" />
+          ) : null;
+        }}
+      </ProFormDependency>
+      <ProFormTextArea name="desc" label="描述" placeholder="请输入描述" />
     </ModalForm>
   );
 };

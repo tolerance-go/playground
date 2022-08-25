@@ -24,7 +24,7 @@ export const useComStatusExtendProps = <P extends object>(options: {
   );
 
   const { getComExtendStatusFromStat } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => ({
       getComExtendStatusFromStat: model.getComExtendRelationsFromStat,
     }),

@@ -21,4 +21,5 @@ function useGetImmer<S>(initialState?: S) {
   return [state, setState, getState];
 }
 
+export { useGetImmer };
 export default useGetImmer;

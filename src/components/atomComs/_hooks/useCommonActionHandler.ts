@@ -5,12 +5,12 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
 
 export const useCommonActionHandler = () => {
-  const { getComStatAction } = useModel('stage.comsActions', (model) => ({
+  const { getComStatAction } = useModel('page.comsActions', (model) => ({
     getComStatAction: model.getComStatAction,
   }));
 
   const { setComStatusSettingsUsed } = useModel(
-    'stage.statusSettingsUsed',
+    'page.statusSettingsUsed',
     (model) => ({
       setComStatusSettingsUsed: model.setComStatusSettingsUsed,
     }),

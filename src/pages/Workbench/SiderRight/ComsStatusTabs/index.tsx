@@ -16,7 +16,7 @@ export const ComsStatusTabs = () => {
   }));
 
   const { componentsStatus, deleteComStat } = useModel(
-    'stage.comsStatus',
+    'page.comsStatus',
     (model) => ({
       componentsStatus: model.componentsStatus,
       deleteComStat: model.deleteComStat,
@@ -24,7 +24,7 @@ export const ComsStatusTabs = () => {
   );
 
   const { deleteComStatRelationFromToStatId } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => ({
       deleteComStatRelationFromToStatId:
         model.deleteComStatRelationFromToStatId,

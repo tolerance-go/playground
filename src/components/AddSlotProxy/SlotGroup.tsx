@@ -28,7 +28,7 @@ export default ({
     }),
   );
 
-  const { setSelectedKeys } = useModel('layers.comsLayout', (model) => ({
+  const { setSelectedKeys } = useModel('layer.comsLayout', (model) => ({
     setSelectedKeys: model?.setSelectedKeys,
   }));
 

@@ -22,12 +22,12 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
     open: () => setVisible(true),
   }));
 
-  const { createSelectedComponentStat } = useModel('stage.comsStatus', (model) => ({
+  const { createSelectedComponentStat } = useModel('page.comsStatus', (model) => ({
     createSelectedComponentStat: model.createSelectedComponentStat,
   }));
 
   const { copySelectedComSettingFromActiveStatToOtherStat } = useModel(
-    'stage.comsSettings',
+    'page.comsSettings',
     (model) => ({
       copySelectedComSettingFromActiveStatToOtherStat:
         model.copySelectedComSettingFromActiveStatToOtherStat,
@@ -35,7 +35,7 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { copySelectedComActionFromActiveStatToOtherStat } = useModel(
-    'stage.comsActions',
+    'page.comsActions',
     (model) => ({
       copySelectedComActionFromActiveStatToOtherStat:
         model.copySelectedComActionFromActiveStatToOtherStat,
@@ -43,7 +43,7 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { copySelectedComEventFromActiveStatToOtherStat } = useModel(
-    'stage.comsEvents',
+    'page.comsEvents',
     (model) => ({
       copySelectedComEventFromActiveStatToOtherStat:
         model.copySelectedComEventFromActiveStatToOtherStat,
@@ -51,7 +51,7 @@ export default React.forwardRef<CreateComStatusAPI>((props, ref) => {
   );
 
   const { copySelectedComStyleFromActiveStatToOtherStat } = useModel(
-    'stage.comsStyles',
+    'page.comsStyles',
     (model) => ({
       copySelectedComStyleFromActiveStatToOtherStat:
         model.copySelectedComStyleFromActiveStatToOtherStat,

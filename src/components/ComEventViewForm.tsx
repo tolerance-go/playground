@@ -21,7 +21,7 @@ export default ({
   eventItem?: ComponentEvent;
   extendRelation?: ComStatRelation;
 }) => {
-  const { comsEventsConfigs } = useModel('stage.comsEventsConfigs', (model) => ({
+  const { comsEventsConfigs } = useModel('config.comsEventsConfigs', (model) => ({
     comsEventsConfigs: model.comsEventsConfigs,
   }));
 
@@ -34,11 +34,11 @@ export default ({
   // const [form] = Form.useForm();
   const formRef = useRef<ProFormInstance>();
 
-  const { getComStatActions } = useModel('stage.comsActions', (model) => ({
+  const { getComStatActions } = useModel('page.comsActions', (model) => ({
     getComStatActions: model.getComStatActions,
   }));
 
-  const { comsEvents } = useModel('stage.comsEvents', (model) => ({
+  const { comsEvents } = useModel('page.comsEvents', (model) => ({
     comsEvents: model.comsEvents,
   }));
 
@@ -53,7 +53,7 @@ export default ({
     }),
   );
 
-  const { getComStatus } = useModel('stage.comsStatus', (model) => ({
+  const { getComStatus } = useModel('page.comsStatus', (model) => ({
     getComStatus: model.getComStatus,
   }));
 

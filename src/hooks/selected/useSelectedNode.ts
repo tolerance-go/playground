@@ -1,10 +1,10 @@
-import { StageComponentsModelItem } from '@/models/stageComponentsModel';
+import { ComponentStructure } from '@/models/page/comsStructures';
 import { useModel } from '@umijs/max';
 import { useMemo } from 'react';
 
 export const useSelectedNode = () => {
   const { stageComponentsModel } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => ({
       stageComponentsModel: model.stageComponentsModel,
     }),
@@ -14,7 +14,7 @@ export const useSelectedNode = () => {
     stageSelectNodeId: model?.stageSelectNodeId,
   }));
 
-  const stageSelectNode: StageComponentsModelItem | undefined = useMemo(() => {
+  const stageSelectNode: ComponentStructure | undefined = useMemo(() => {
     if (stageSelectNodeId) {
       return stageComponentsModel?.[stageSelectNodeId];
     }

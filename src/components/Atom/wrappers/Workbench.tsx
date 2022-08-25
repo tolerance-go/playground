@@ -1,9 +1,11 @@
-import { StageComponentsModelItem } from '@/models/stageComponentsModel';
+import { ComponentStructure } from '@/models/page/comsStructures';
 import { useModel } from '@umijs/max';
+import { Dropdown, Menu } from 'antd';
 import clsx from 'clsx';
 import consola from 'consola';
 import React from 'react';
 import styles from './Workbench.less';
+import { LinkageComponentCreator } from './Workbench/LinkageComponentCreator';
 
 /**
  * 舞台节点的包装组件
@@ -12,7 +14,7 @@ import styles from './Workbench.less';
  */
 export const AtomWorkbenchWrapper = (
   props: React.PropsWithChildren<
-    StageComponentsModelItem & {
+    ComponentStructure & {
       /** 事件交互中，处于状态改变时 */
       usedStat: boolean;
     }
@@ -25,54 +27,73 @@ export const AtomWorkbenchWrapper = (
       stageSelectNodeId: model?.stageSelectNodeId,
     }),
   );
-  const { hoverNodeId, setHoverNodeId } = useModel('stage.hoverNodeId', (model) => ({
-    hoverNodeId: model?.hoverNodeId,
-    setHoverNodeId: model?.setHoverNodeId,
-  }));
+  const { hoverNodeId, setHoverNodeId } = useModel(
+    'stage.hoverNodeId',
+    (model) => ({
+      hoverNodeId: model?.hoverNodeId,
+      setHoverNodeId: model?.setHoverNodeId,
+    }),
+  );
 
   return (
-    <div
-      className={clsx(styles.wrap, {
-        [styles.selected]: stageSelectNodeId === props.id,
-        [styles.hover]: hoverNodeId === props.id,
-        [styles.warn]: props.usedStat,
-      })}
-      style={{
-        padding: 8,
-        display: props.display === 'inline' ? 'inline-block' : 'block',
-      }}
-      onMouseEnter={(event) => {
-        event.stopPropagation();
-        if (props.id !== hoverNodeId) {
-          consola.info('hover', '进入组件', props.id);
-          setHoverNodeId(props.id);
-        }
-      }}
-      onMouseOver={(event) => {
-        event.stopPropagation();
-        if (props.id !== hoverNodeId) {
-          consola.info('hover', '悬停组件', props.id);
-          setHoverNodeId(props.id);
-        }
-      }}
-      onMouseLeave={(event) => {
-        event.stopPropagation();
-        if (props.id === hoverNodeId) {
-          consola.info('hover', '离开组件', props.id);
-          setHoverNodeId(undefined);
-        }
-      }}
-      onClick={(event) => {
-        consola.info('atom 被点击', props);
-
-        consola.success('选中组件', props.id);
-        setStageSelectNodeId(props.id);
-
-        /** 防止多层级的 Atom */
-        event.stopPropagation();
-      }}
+    <Dropdown
+      trigger={['contextMenu']}
+      overlay={
+        <Menu
+          items={[
+            {
+              label: (
+                <LinkageComponentCreator nodeId={props.id} type={props.type} />
+              ),
+              key: 'createComponent',
+            },
+          ]}
+        ></Menu>
+      }
     >
-      {props.children}
-    </div>
+      <div
+        className={clsx(styles.wrap, {
+          [styles.selected]: stageSelectNodeId === props.id,
+          [styles.hover]: hoverNodeId === props.id,
+          [styles.warn]: props.usedStat,
+        })}
+        style={{
+          padding: 8,
+          display: props.display === 'inline' ? 'inline-block' : 'block',
+        }}
+        onMouseEnter={(event) => {
+          event.stopPropagation();
+          if (props.id !== hoverNodeId) {
+            consola.info('hover', '进入组件', props.id);
+            setHoverNodeId(props.id);
+          }
+        }}
+        onMouseOver={(event) => {
+          event.stopPropagation();
+          if (props.id !== hoverNodeId) {
+            consola.info('hover', '悬停组件', props.id);
+            setHoverNodeId(props.id);
+          }
+        }}
+        onMouseLeave={(event) => {
+          event.stopPropagation();
+          if (props.id === hoverNodeId) {
+            consola.info('hover', '离开组件', props.id);
+            setHoverNodeId(undefined);
+          }
+        }}
+        onClick={(event) => {
+          consola.info('atom 被点击', props);
+
+          consola.success('选中组件', props.id);
+          setStageSelectNodeId(props.id);
+
+          /** 防止多层级的 Atom */
+          event.stopPropagation();
+        }}
+      >
+        {props.children}
+      </div>
+    </Dropdown>
   );
 };

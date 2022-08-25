@@ -23,7 +23,7 @@ export default () => {
   );
 
   const { comsActions, deleteComStatAction } = useModel(
-    'stage.comsActions',
+    'page.comsActions',
     (model) => ({
       comsActions: model.comsActions,
       deleteComStatAction: model.deleteComStatAction,
@@ -45,7 +45,7 @@ export default () => {
   const { stageSelectNode } = useSelectedNode();
 
   const { lockComExtendActionField, unlockComExtendActionField } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => ({
       lockComExtendActionField: model.lockComExtendActionField,
       unlockComExtendActionField: model.unlockComExtendActionField,

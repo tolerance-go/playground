@@ -2,12 +2,12 @@ import { useModel } from '@umijs/max';
 import { Tag } from 'antd';
 
 export const TagItem = () => {
-  const { componentsStatus } = useModel('stage.comsStatus', (model) => ({
+  const { componentsStatus } = useModel('page.comsStatus', (model) => ({
     componentsStatus: model.componentsStatus,
   }));
 
   const { stageComponentsModel } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => ({
       stageComponentsModel: model.stageComponentsModel,
     }),

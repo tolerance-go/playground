@@ -7,7 +7,7 @@ export const useSelectedComStyleConfigs = () => {
   const { stageSelectNode } = useSelectedNode();
 
   const { comsStylesConfigs } = useModel(
-    'stage.comsStyleConfigs',
+    'config.comsStyleConfigs',
     (model) => {
       consola.info('准备返回渲染配置', stageSelectNode, model);
       return {

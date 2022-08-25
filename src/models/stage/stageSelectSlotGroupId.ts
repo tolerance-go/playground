@@ -22,7 +22,7 @@ const useStageSelectSlotGroup = () => {
   const [stageSelectSlotGroupId, setStageSelectSlotGroupId] =
     useState<string>();
 
-  const { openTargetFromTreeMenu } = useModel('layers.comsLayout', (model) => ({
+  const { openTargetFromTreeMenu } = useModel('layer.comsLayout', (model) => ({
     openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
   }));
 

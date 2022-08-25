@@ -113,23 +113,3 @@ keys
 https://github.com/jaywcjlove/hotkeys/#defining-shortcuts
 
 可以通过 useHotkeys('\*', (event) => { 打印 key });
-
-# 设计
-
-1. models 文件组织
-
-他们的共同点是：
-
-1. 公共，全局的
-2. 都是面向对象的划分的
-
-model 文件夹的分类按对象划分，分为两种：
-
-1. 视图对象，包含各种视图状态 eg：stage，workbench
-2. 业务模型对象 eg：app，page，configs
-
-分类的核心目的是方便代码维护！！
-
-2. hooks 文件组织
-
-分类方法是，按照特征，而不是具体对象

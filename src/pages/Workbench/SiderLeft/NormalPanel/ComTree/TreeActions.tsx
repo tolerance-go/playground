@@ -8,7 +8,7 @@ import { Button, Col, Row, Space } from 'antd';
 
 export default () => {
   const { setExpanedKeys, showAllSlots, setShowAllSlots } = useModel(
-    'layers.comsLayout',
+    'layer.comsLayout',
     (model) => ({
       setExpanedKeys: model?.setExpanedKeys,
       showAllSlots: model.showAllSlots,

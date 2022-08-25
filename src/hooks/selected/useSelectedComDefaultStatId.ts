@@ -6,7 +6,7 @@ export const useSelectedComDefaultStatId = () => {
   }));
 
   const { statusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => ({
       statusSettingsDefaults: model.statusSettingsDefaults,
     }),

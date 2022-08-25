@@ -2,8 +2,6 @@ import { useModel } from '@umijs/max';
 import { usePrevious, useUpdateLayoutEffect } from 'ahooks';
 import { useState } from 'react';
 
-export type NormalStatus = 'page' | 'layout' | 'material';
-
 const useSiderLeftMode = () => {
   /**
    * insert 点击舞台组件等待插入
@@ -13,7 +11,6 @@ const useSiderLeftMode = () => {
   const [mode, setMode] = useState<'normal' | 'components' | 'insert'>(
     'normal',
   );
-  const [normalStatus, setNormalStatus] = useState<NormalStatus>('page');
 
   const prevMode = usePrevious(mode);
 
@@ -31,8 +28,6 @@ const useSiderLeftMode = () => {
 
   return {
     mode,
-    normalStatus,
-    setNormalStatus,
     setMode,
   };
 };

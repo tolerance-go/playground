@@ -25,7 +25,7 @@ export default ({
   actionItem?: ComponentAction;
   extendRelation?: ComStatRelation;
 }) => {
-  const { comsActionsConfigs } = useModel('stage.comsActionsConfigs', (model) => ({
+  const { comsActionsConfigs } = useModel('config.comsActionsConfigs', (model) => ({
     comsActionsConfigs: model.comsActionsConfigs,
   }));
 
@@ -39,7 +39,7 @@ export default ({
   const formRef = useRef<ProFormInstance>();
 
   const { createComStatAction, comsActions } = useModel(
-    'stage.comsActions',
+    'page.comsActions',
     (model) => ({
       createComStatAction: model.createComStatAction,
       comsActions: model.comsActions,

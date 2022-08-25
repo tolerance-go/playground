@@ -1,6 +1,6 @@
 import { RelationTreeItem } from '@/utils/treeUtils/makeTreeWithRelation';
 import { useModel } from '@umijs/max';
-import { Dropdown, Menu } from 'antd';
+import { Dropdown, Menu, Typography } from 'antd';
 
 export const TreeItem = ({
   record,
@@ -11,7 +11,14 @@ export const TreeItem = ({
     'component.componentList',
     (model) => ({
       requestRemove: model.requestRemove,
-      requestCreate: model.requestCreate,
+      requestCreate: model.requestCreateComponent,
+    }),
+  );
+
+  const { highlightId } = useModel(
+    'component.listHighlightItemId',
+    (model) => ({
+      highlightId: model.highlightId,
     }),
   );
 
@@ -38,7 +45,11 @@ export const TreeItem = ({
         />
       }
     >
-      <div>{record.name}</div>
+      <div>
+        <Typography.Text mark={highlightId === record.id}>
+          {record.name}
+        </Typography.Text>
+      </div>
     </Dropdown>
   );
 };

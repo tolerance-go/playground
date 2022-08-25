@@ -32,7 +32,7 @@ export const ConfigInput = ({
 }: ConfigInputProps) => {
   const { getSelectedComStatus } = useSelectedComponentStatus();
 
-  const { getComponentsStatus } = useModel('stage.comsStatus', (model) => {
+  const { getComponentsStatus } = useModel('page.comsStatus', (model) => {
     return {
       getComponentsStatus: model.getComponentsStatus,
     };

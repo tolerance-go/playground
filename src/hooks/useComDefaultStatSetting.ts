@@ -1,14 +1,14 @@
 import { useModel } from '@umijs/max';
 
 export const useComDefaultStatSetting = (comId?: string) => {
-  const { comsSettings } = useModel('stage.comsSettings', (model) => {
+  const { comsSettings } = useModel('page.comsSettings', (model) => {
     return {
       comsSettings: model.comsSettings,
     };
   });
 
   const { statusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => ({
       statusSettingsDefaults: model.statusSettingsDefaults,
     }),

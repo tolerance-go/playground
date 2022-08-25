@@ -1,7 +1,7 @@
 import { ConfigsForm } from '@/components/ConfigsForm';
 import { useSelectedNode } from '@/hooks/selected/useSelectedNode';
-import { ComponentAction } from '@/models/stage/comsActions';
-import { ComStatRelation } from '@/models/stage/statusConnectRelations';
+import { ComponentAction } from '@/models/page/comsActions';
+import { ComStatRelation } from '@/models/page/statusConnectRelations';
 import { EyeOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -21,7 +21,7 @@ export default ({
   actionItem?: ComponentAction;
   extendRelation?: ComStatRelation;
 }) => {
-  const { comsActionsConfigs } = useModel('stage.comsActionsConfigs', (model) => ({
+  const { comsActionsConfigs } = useModel('config.comsActionsConfigs', (model) => ({
     comsActionsConfigs: model.comsActionsConfigs,
   }));
 
@@ -34,7 +34,7 @@ export default ({
   // const [form] = Form.useForm();
   const formRef = useRef<ProFormInstance>();
 
-  const { comsActions } = useModel('stage.comsActions', (model) => ({
+  const { comsActions } = useModel('page.comsActions', (model) => ({
     comsActions: model.comsActions,
   }));
 

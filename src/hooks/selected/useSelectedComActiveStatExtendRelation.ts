@@ -14,7 +14,7 @@ export const useSelectedComActiveStatExtendRelation = () => {
     stageSelectNodeId: model.stageSelectNodeId,
   }));
 
-  const { comsStatusRelations } = useModel('stage.statusConnectRelations', (model) => ({
+  const { comsStatusRelations } = useModel('page.statusConnectRelations', (model) => ({
     comsStatusRelations: model.comsStatusRelations,
   }));
 

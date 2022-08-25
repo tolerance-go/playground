@@ -50,7 +50,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: App[];
+    data: App[];
   };
 
   type AppShowResponse = {
@@ -58,7 +58,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: App;
+    data: App;
   };
 
   type BaseResponse = {
@@ -73,6 +73,7 @@ declare namespace API {
     toId: number;
     fromId: number;
     appId: number;
+    componentId: number;
   };
 
   type ComIheritRelationControllerDestroyParams = {
@@ -101,7 +102,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownComIheritRelation[];
+    data: ShownComIheritRelation[];
   };
 
   type ComIheritRelationShowResponse = {
@@ -109,7 +110,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownComIheritRelation;
+    data: ShownComIheritRelation;
   };
 
   type Comment = {
@@ -150,7 +151,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownComment[];
+    data: ShownComment[];
   };
 
   type CommentShowResponse = {
@@ -158,7 +159,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownComment;
+    data: ShownComment;
   };
 
   type Component = {
@@ -167,6 +168,8 @@ declare namespace API {
     desc?: string;
     app_id: string;
     stage_data?: string;
+    comIheritRelationId?: string;
+    usedInPageIds?: number[];
   };
 
   type ComponentControllerDestroyParams = {
@@ -198,7 +201,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Component[];
+    data: Component[];
   };
 
   type ComponentShowResponse = {
@@ -206,7 +209,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Component;
+    data: Component;
   };
 
   type Counter = {
@@ -243,6 +246,7 @@ declare namespace API {
     toId: number;
     fromId: number;
     appId: number;
+    componentId: number;
   };
 
   type CreationComment = {
@@ -258,6 +262,8 @@ declare namespace API {
     desc?: string;
     app_id: string;
     stage_data?: string;
+    comIheritRelationId?: string;
+    usedInPageIds?: number[];
   };
 
   type CreationDatabase = {
@@ -336,7 +342,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownDatabase[];
+    data: ShownDatabase[];
   };
 
   type DatabaseShowResponse = {
@@ -344,7 +350,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownDatabase;
+    data: ShownDatabase;
   };
 
   type Discuss = {
@@ -397,7 +403,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownDiscuss[];
+    data: ShownDiscuss[];
   };
 
   type DiscussShowResponse = {
@@ -405,7 +411,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: ShownDiscuss;
+    data: ShownDiscuss;
   };
 
   type Identities = {
@@ -455,7 +461,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Page[];
+    data: Page[];
   };
 
   type PageShowResponse = {
@@ -463,7 +469,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Page;
+    data: Page;
   };
 
   type ShownComIheritRelation = {
@@ -473,6 +479,7 @@ declare namespace API {
     toId: number;
     fromId: number;
     appId: number;
+    componentId: number;
   };
 
   type ShownComment = {
@@ -520,6 +527,7 @@ declare namespace API {
     toId?: number;
     fromId?: number;
     appId?: number;
+    componentId?: number;
   };
 
   type UpdationComment = {
@@ -582,7 +590,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Version[];
+    data: Version[];
   };
 
   type VersionShowResponse = {
@@ -590,6 +598,6 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data?: Version;
+    data: Version;
   };
 }

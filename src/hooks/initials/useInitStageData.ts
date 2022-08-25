@@ -3,25 +3,25 @@ import { useMemoizedFn } from 'ahooks';
 
 export const useInitSatgeData = () => {
   const { initData: initComsTreeData } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => ({
       initData: model.initData,
     }),
   );
 
-  const { initData: initStatusSettings } = useModel('stage.comsStatus', (model) => ({
+  const { initData: initStatusSettings } = useModel('page.comsStatus', (model) => ({
     initData: model.initData,
   }));
 
   const { initData: initStatusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => ({
       initData: model.initData,
     }),
   );
 
   const { initData: initStatusRelations } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => {
       return {
         initData: model.initData,
@@ -29,25 +29,25 @@ export const useInitSatgeData = () => {
     },
   );
 
-  const { initData: initComsActions } = useModel('stage.comsActions', (model) => {
+  const { initData: initComsActions } = useModel('page.comsActions', (model) => {
     return {
       initData: model.initData,
     };
   });
 
-  const { initData: initComsEvents } = useModel('stage.comsEvents', (model) => {
+  const { initData: initComsEvents } = useModel('page.comsEvents', (model) => {
     return {
       initData: model.initData,
     };
   });
 
-  const { initData: initComsStyles } = useModel('stage.comsStyles', (model) => {
+  const { initData: initComsStyles } = useModel('page.comsStyles', (model) => {
     return {
       initData: model.initData,
     };
   });
 
-  const { initData: initComsSettings } = useModel('stage.comsSettings', (model) => {
+  const { initData: initComsSettings } = useModel('page.comsSettings', (model) => {
     return {
       initData: model.initData,
     };

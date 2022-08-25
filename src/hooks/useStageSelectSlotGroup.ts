@@ -11,7 +11,7 @@ const useStageSelectSlotGroup = () => {
   );
 
   const { stageComponentsModel } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => ({
       stageComponentsModel: model.stageComponentsModel,
     }),

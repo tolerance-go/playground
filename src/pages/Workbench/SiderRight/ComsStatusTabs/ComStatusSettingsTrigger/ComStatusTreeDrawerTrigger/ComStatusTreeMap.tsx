@@ -17,7 +17,7 @@ export const ComStatusTreeMap = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>();
 
   const { comsStatusRelations, createComStatRelation, deleteComStatRelation } =
-    useModel('stage.statusConnectRelations', (model) => ({
+    useModel('page.statusConnectRelations', (model) => ({
       comsStatusRelations: model.comsStatusRelations,
       createComStatRelation: model.createComStatRelation,
       deleteComStatRelation: model.deleteComStatRelation,

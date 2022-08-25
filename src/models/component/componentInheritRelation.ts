@@ -7,7 +7,8 @@ import {
 import useGetImmer from '@/utils/useGetImmer';
 import { useMemoizedFn, useRequest } from 'ahooks';
 import { useMemo } from 'react';
-import { ComponentStructure } from '../comsStructures';
+import { ComponentStructure } from '@/models/page/comsStructures';
+
 
 /** from 是被继承的，to 是继承者 */
 export type MaterialInheritConnection = {

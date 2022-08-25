@@ -9,7 +9,7 @@ import TreeItemMenu from './TreeItemMenu';
 
 export default () => {
   const { stageComponentsModel, rootIds, moveComFromTree } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => ({
       stageComponentsModel: model?.stageComponentsModel,
       rootIds: model?.rootIds,
@@ -24,7 +24,7 @@ export default () => {
     setExpanedKeys,
     setSelectedKeys,
     showAllSlots,
-  } = useModel('layers.comsLayout', (model) => ({
+  } = useModel('layer.comsLayout', (model) => ({
     expanedKeys: model?.expanedKeys,
     setExpanedKeys: model?.setExpanedKeys,
     selectedKeys: model?.selectedKeys,
@@ -34,7 +34,7 @@ export default () => {
     showAllSlots: model.showAllSlots,
   }));
 
-  const { comsSlotsNames } = useModel('configs.componentsSlots', (model) => ({
+  const { comsSlotsNames } = useModel('config.componentsSlots', (model) => ({
     comsSlotsNames: model.comsSlotsNames,
   }));
 

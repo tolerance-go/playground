@@ -20,7 +20,7 @@ const getNotifactionDescEle = (errorContent: string) => {
 };
 
 const noticeServerErrorMessage = (
-  errorInfo: ServerResponseStructure | undefined,
+  errorInfo: ServerResponseData | undefined,
 ) => {
   if (errorInfo) {
     const { errorMessage, data } = errorInfo;
@@ -66,21 +66,23 @@ enum ErrorShowType {
   REDIRECT = 9,
 }
 
-// 与后端约定的响应数据格式
-interface ServerResponseStructure {
+type ServerResponseStructure = {
   success: boolean;
-  data?: any;
+  data: any;
   errorCode?: number;
   errorMessage?: string;
   showType?: ErrorShowType;
-}
+};
+
+// 与后端约定的响应数据格式
+type ServerResponseData = ServerResponseStructure | any;
 
 axios.interceptors.response.use(
-  (response: AxiosResponse<ServerResponseStructure>) => {
+  (response: AxiosResponse<ServerResponseData>) => {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     /** 服务器业务错误 */
-    if (response.data.success === false) {
+    if (typeof response.data === 'object' && response.data.success === false) {
       noticeServerErrorMessage(response.data);
 
       const customError = new Error(response.data.errorMessage);
@@ -115,23 +117,23 @@ axios.interceptors.response.use(
   },
 );
 
-export function request<T extends ServerResponseStructure>(
+export function request<T extends ServerResponseData>(
   url: string,
   opts: AxiosRequestConfig & {
     getResponse: true;
   },
-): AxiosPromise<T['data']>;
-export function request<T extends ServerResponseStructure>(
+): AxiosPromise<T extends ServerResponseStructure ? T['data'] : T>;
+export function request<T extends ServerResponseData>(
   url: string,
   opts: AxiosRequestConfig & {
     alwaysServerStructure: true;
   },
 ): Promise<T>;
-export function request<T extends ServerResponseStructure>(
+export function request<T extends ServerResponseData>(
   url: string,
   opts: AxiosRequestConfig,
-): Promise<T['data']>;
-export function request<T extends ServerResponseStructure>(
+): Promise<T extends ServerResponseStructure ? T['data'] : T>;
+export function request<T extends ServerResponseData>(
   url: string,
   opts: AxiosRequestConfig & {
     /** 如果为 true，则返回带 responese 的相关数据 */
@@ -143,17 +145,17 @@ export function request<T extends ServerResponseStructure>(
   return axios(url, opts)
     .then((response: AxiosResponse<T>) => {
       if (opts.alwaysServerStructure) {
-        return response.data;
-      }
-
-      if (opts.getResponse) {
         return {
-          ...response,
-          data: response.data.data,
+          success: true,
+          data: response.data,
         };
       }
 
-      return response.data.data;
+      if (opts.getResponse) {
+        return response;
+      }
+
+      return response.data;
     })
     .catch((error) => {
       if (opts.alwaysServerStructure) {

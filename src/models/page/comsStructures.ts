@@ -1,7 +1,7 @@
-import { SlotPosition } from '@/models/slotsInsert';
+import { SlotPosition } from '@/models/stage/slotsInsert';
 import { ComId, SlotName } from '@/typings/keys';
 // import { useModel } from '@umijs/max';
-import { useMemoizedFn } from 'ahooks';
+import { useGetState, useMemoizedFn } from 'ahooks';
 import { produce } from 'immer';
 import { useState } from 'react';
 
@@ -19,13 +19,16 @@ export type ComponentStructure = {
    */
   slots: Record<SlotName, string[]>;
   display: 'block' | 'inline';
+  /** 标记该组件是否和 component 关联 */
+  fromComId?: number;
 };
 
 export type ComponentsStructure = Record<ComId, ComponentStructure>;
 
 const useStageComponentsModel = () => {
   const [rootIds, setRootIds] = useState<string[]>([]);
-  const [comsStructures, setComsStructures] = useState<ComponentsStructure>();
+  const [comsStructures, setComsStructures, getComsStructures] =
+    useGetState<ComponentsStructure>();
 
   // const { removeComSettings } = useModel('comsActiveSettings', (model) => ({
   //   removeComSettings: model?.removeComSettings,
@@ -481,12 +484,26 @@ const useStageComponentsModel = () => {
     },
   );
 
-  window.__consola.info('model:', 'stage.comsStructures', comsStructures);
-  window.__consola.info('model:', 'rootIds', rootIds);
+  /**
+   * 设置 node 的 component 引用标记
+   */
+  const markNodeFromComponent = useMemoizedFn(
+    (comId: number, nodeId: string) => {
+      setComsStructures(
+        produce((draft) => {
+          if (draft) {
+            draft[nodeId].fromComId = comId;
+          }
+        }),
+      );
+    },
+  );
 
   return {
     rootIds,
     stageComponentsModel: comsStructures,
+    markNodeFromComponent,
+    getComsStructures,
     deleteComModelByIds,
     getSliceData,
     removeTargetComsAndSaveTheirSettings,

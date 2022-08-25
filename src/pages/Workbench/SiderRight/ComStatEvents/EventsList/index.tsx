@@ -23,7 +23,7 @@ export default () => {
   );
 
   const { comsEvents, deleteComStatEvent } = useModel(
-    'stage.comsEvents',
+    'page.comsEvents',
     (model) => ({
       comsEvents: model.comsEvents,
       deleteComStatEvent: model.deleteComStatEvent,
@@ -45,7 +45,7 @@ export default () => {
   const { extendRelation } = useSelectedComActiveStatExtendRelation();
 
   const { lockComExtendEventField, unlockComExtendEventField } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => ({
       lockComExtendEventField: model.lockComExtendEventField,
       unlockComExtendEventField: model.unlockComExtendEventField,

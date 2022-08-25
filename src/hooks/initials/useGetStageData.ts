@@ -3,7 +3,7 @@ import { useMemoizedFn } from 'ahooks';
 
 export const useGetStageData = () => {
   const { getData: getComsTreeData } = useModel(
-    'stage.comsStructures',
+    'page.comsStructures',
     (model) => {
       return {
         getData: model.getData,
@@ -11,14 +11,14 @@ export const useGetStageData = () => {
     },
   );
 
-  const { getData: getStatusSettings } = useModel('stage.comsStatus', (model) => {
+  const { getData: getStatusSettings } = useModel('page.comsStatus', (model) => {
     return {
       getData: model.getData,
     };
   });
 
   const { getData: getStatusSettingsDefaults } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => {
       return {
         getData: model.getData,
@@ -27,7 +27,7 @@ export const useGetStageData = () => {
   );
 
   const { getData: getStatusRelations } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => {
       return {
         getData: model.getData,
@@ -35,25 +35,25 @@ export const useGetStageData = () => {
     },
   );
 
-  const { getData: getComsActions } = useModel('stage.comsActions', (model) => {
+  const { getData: getComsActions } = useModel('page.comsActions', (model) => {
     return {
       getData: model.getData,
     };
   });
 
-  const { getData: getComsEvents } = useModel('stage.comsEvents', (model) => {
+  const { getData: getComsEvents } = useModel('page.comsEvents', (model) => {
     return {
       getData: model.getData,
     };
   });
 
-  const { getData: getComsStyles } = useModel('stage.comsStyles', (model) => {
+  const { getData: getComsStyles } = useModel('page.comsStyles', (model) => {
     return {
       getData: model.getData,
     };
   });
 
-  const { getData: getComsSettings } = useModel('stage.comsSettings', (model) => {
+  const { getData: getComsSettings } = useModel('page.comsSettings', (model) => {
     return {
       getData: model.getData,
     };

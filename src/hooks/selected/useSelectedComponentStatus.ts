@@ -4,7 +4,7 @@ import { useMemoizedFn } from 'ahooks';
 /** 获取当前选中组件的所有配置状态 */
 export const useSelectedComponentStatus = () => {
   const { componentsStatus, getComponentsStatus } = useModel(
-    'stage.comsStatus',
+    'page.comsStatus',
     (model) => {
       return {
         componentsStatus: model.componentsStatus,

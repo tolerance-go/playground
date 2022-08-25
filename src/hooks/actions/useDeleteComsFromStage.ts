@@ -6,20 +6,20 @@ export const useDeleteComsFromStage = () => {
     setStageSelectNodeId: model.setStageSelectNodeId,
   }));
 
-  const { deleteComModelByIds } = useModel('stage.comsStructures', (model) => {
+  const { deleteComModelByIds } = useModel('page.comsStructures', (model) => {
     return {
       deleteComModelByIds: model.deleteComModelByIds,
     };
   });
 
-  const { deleteComStatuslByIds } = useModel('stage.comsStatus', (model) => {
+  const { deleteComStatuslByIds } = useModel('page.comsStatus', (model) => {
     return {
       deleteComStatuslByIds: model.deleteComStatuslByIds,
     };
   });
 
   const { deleteComSettingsDefaultslByIds } = useModel(
-    'stage.statusSettingsDefaults',
+    'page.statusSettingsDefaults',
     (model) => {
       return {
         deleteComSettingsDefaultslByIds: model.deleteComSettingsDefaultslByIds,
@@ -28,7 +28,7 @@ export const useDeleteComsFromStage = () => {
   );
 
   const { deleteComsStatusRelationslByIds } = useModel(
-    'stage.statusConnectRelations',
+    'page.statusConnectRelations',
     (model) => {
       return {
         deleteComsStatusRelationslByIds: model.deleteComsStatusRelationslByIds,
@@ -36,25 +36,25 @@ export const useDeleteComsFromStage = () => {
     },
   );
 
-  const { deleteComsActionsByIds } = useModel('stage.comsActions', (model) => {
+  const { deleteComsActionsByIds } = useModel('page.comsActions', (model) => {
     return {
       deleteComsActionsByIds: model.deleteComsActionsByIds,
     };
   });
 
-  const { deleteComsEventsByIds } = useModel('stage.comsEvents', (model) => {
+  const { deleteComsEventsByIds } = useModel('page.comsEvents', (model) => {
     return {
       deleteComsEventsByIds: model.deleteComsEventsByIds,
     };
   });
 
-  const { deleteComsStylesByIds } = useModel('stage.comsStyles', (model) => {
+  const { deleteComsStylesByIds } = useModel('page.comsStyles', (model) => {
     return {
       deleteComsStylesByIds: model.deleteComsStylesByIds,
     };
   });
 
-  const { deleteComsSettingsByIds } = useModel('stage.comsSettings', (model) => {
+  const { deleteComsSettingsByIds } = useModel('page.comsSettings', (model) => {
     return {
       deleteComsSettingsByIds: model.deleteComsSettingsByIds,
     };
