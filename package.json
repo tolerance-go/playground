@@ -5,13 +5,13 @@
   "scripts": {
     "build": "max build",
     "dev": "PORT=8001 max dev",
-    "test": "jest",
     "postinstall": "max setup",
     "openapi": "max openapi",
     "prepare": "husky install",
     "setup": "max setup",
     "site": "pnpm build && ssh root@123.60.20.238 rm -rf /root/website/dist-playground && scp -r ./dist root@123.60.20.238:/root/website/dist-playground",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "test": "jest"
   },
   "dependencies": {
     "@ant-design/graphs": "^1.2.3",
@@ -20,6 +20,7 @@
     "@ant-design/pro-components": "^1.1.15",
     "@antv/s2": "^1.23.0",
     "@antv/s2-react": "^1.21.0",
+    "@fenxing/app-loading": "^1.0.0",
     "@umijs/max": "^4.0.13",
     "ahooks": "^3.5.2",
     "antd": "^4.22.3",

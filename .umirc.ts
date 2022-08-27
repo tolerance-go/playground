@@ -1,5 +1,4 @@
 import { defineConfig } from '@umijs/max';
-import path from 'path';
 
 export default defineConfig({
   plugins: [require.resolve('@umijs/max-plugin-openapi')],
@@ -21,7 +20,7 @@ export default defineConfig({
   access: {},
   model: {},
   initialState: {
-    loading: path.join(__dirname, 'src', 'components', 'AppLoading.tsx'),
+    loading: '@fenxing/app-loading',
   },
   npmClient: 'pnpm',
   routes: [
