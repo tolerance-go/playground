@@ -311,9 +311,17 @@ declare namespace API {
 
   type CreationPage = {
     path: string;
-    app_id: string;
-    version_id?: string;
+    appId: string;
+    versionId?: string;
     stage_data?: string;
+    nodesStructures?: PlainObject;
+    nodesStyles?: PlainObject;
+    nodesSettings?: PlainObject;
+    nodesEvents?: PlainObject;
+    nodesActions?: PlainObject;
+    nodesStatus?: PlainObject;
+    nodesStatusRelations?: PlainObject;
+    nodesDefaultsStatus?: PlainObject;
   };
 
   type CreationUser = {
@@ -477,9 +485,17 @@ declare namespace API {
   type Page = {
     id: string;
     path: string;
-    app_id: string;
-    version_id?: string;
+    appId: string;
+    versionId?: string;
     stage_data?: string;
+    nodesStructures?: PlainObject;
+    nodesStyles?: PlainObject;
+    nodesSettings?: PlainObject;
+    nodesEvents?: PlainObject;
+    nodesActions?: PlainObject;
+    nodesStatus?: PlainObject;
+    nodesStatusRelations?: PlainObject;
+    nodesDefaultsStatus?: PlainObject;
   };
 
   type PageControllerDestroyParams = {
@@ -488,13 +504,8 @@ declare namespace API {
   };
 
   type PageControllerIndexParams = {
-    /** appId  */
-    appId?: number;
-    /** versionId  */
-    versionId?: number;
-    /** limit  */
+    appId?: any;
     limit?: number;
-    /** offset  */
     offset?: number;
   };
 
@@ -513,7 +524,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data: Page[];
+    data: ShownPage[];
   };
 
   type PageShowResponse = {
@@ -521,8 +532,10 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data: Page;
+    data: ShownPage;
   };
+
+  type PlainObject = {};
 
   type ResultResponse = {
     success: boolean;
@@ -627,6 +640,24 @@ declare namespace API {
     resolved?: boolean;
   };
 
+  type ShownPage = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    path: string;
+    appId: string;
+    versionId?: string;
+    stage_data?: string;
+    nodesStructures?: PlainObject;
+    nodesStyles?: PlainObject;
+    nodesSettings?: PlainObject;
+    nodesEvents?: PlainObject;
+    nodesActions?: PlainObject;
+    nodesStatus?: PlainObject;
+    nodesStatusRelations?: PlainObject;
+    nodesDefaultsStatus?: PlainObject;
+  };
+
   type ShownUser = {
     createdAt: string;
     updatedAt: string;
@@ -683,6 +714,21 @@ declare namespace API {
     containerTop?: number;
     pageId?: string;
     resolved?: boolean;
+  };
+
+  type UpdationPage = {
+    path?: string;
+    appId?: string;
+    versionId?: string;
+    stage_data?: string;
+    nodesStructures?: PlainObject;
+    nodesStyles?: PlainObject;
+    nodesSettings?: PlainObject;
+    nodesEvents?: PlainObject;
+    nodesActions?: PlainObject;
+    nodesStatus?: PlainObject;
+    nodesStatusRelations?: PlainObject;
+    nodesDefaultsStatus?: PlainObject;
   };
 
   type UpdationUser = {

@@ -1,6 +1,5 @@
 import { PageControllerIndex } from '@/services/server/PageController';
-import { useMemoizedFn, useRequest } from 'ahooks';
-import { message } from 'antd';
+import { useMemoizedFn } from 'ahooks';
 import produce from 'immer';
 import qs from 'qs';
 import { useState } from 'react';
@@ -13,33 +12,9 @@ const usePageList = () => {
   /** 当前是否正在创建新的 path */
   const [createPathing, setCreatePathing] = useState<boolean>(false);
 
-  const [list, setList] = useState<API.Page[]>();
+  const [list, setList] = useState<API.ShownPage[]>();
 
   const [tempInputValue, setTempInputValue] = useState<string>();
-
-  const { loading } = useRequest(
-    async () => {
-      const query = qs.parse(location.search, {
-        ignoreQueryPrefix: true,
-      });
-      const { appId, versionId } = query;
-
-      if (!appId) {
-        message.warn('query appId 缺失');
-        return;
-      }
-
-      return PageControllerIndex({
-        appId: Number(appId),
-        versionId: versionId ? Number(versionId) : undefined,
-      });
-    },
-    {
-      onSuccess: (data) => {
-        setList(data);
-      },
-    },
-  );
 
   /** 尾部插入 */
   const pushPath = useMemoizedFn((item: API.Page) => {
@@ -89,7 +64,7 @@ const usePageList = () => {
 
     const data = await PageControllerIndex({
       appId: Number(appId),
-      versionId: versionId,
+      // versionId: versionId,
     });
 
     setList(data);
@@ -100,10 +75,11 @@ const usePageList = () => {
 
   return {
     pageList: list,
-    fetchListLoading: loading,
+    // fetchListLoading: result.loading,
     activePageId,
     createPathing,
     tempInputValue,
+    setList,
     setPageListByVersionId,
     setTempInputValueByIndex,
     setTempInputValue,

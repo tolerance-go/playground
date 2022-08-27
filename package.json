@@ -33,6 +33,7 @@
     "immer": "^9.0.15",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
+    "nprogress": "^0.2.0",
     "qs": "^6.11.0",
     "react-hotkeys-hook": "^3.4.7",
     "use-immer": "^0.7.0"
@@ -41,6 +42,7 @@
     "@types/consola": "^2.2.5",
     "@types/jest": "^28.1.7",
     "@types/lodash": "^4.14.182",
+    "@types/nprogress": "^0.2.0",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
