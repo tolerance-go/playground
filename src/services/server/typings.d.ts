@@ -1,17 +1,28 @@
 declare namespace API {
   type App = {
-    id: number;
+    id: string;
     title: string;
     desc?: string;
-    app_data?: string;
-    history_data?: string;
-    stage_size_data?: string;
+    appData?: string;
+    historyData?: string;
+    stageSizeData?: string;
     labels?: string[];
   };
 
   type AppControllerDestroyParams = {
     /** id  */
     id: string;
+  };
+
+  type AppControllerIndexIncludeUserParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** title  */
+    title?: string;
+    /** labels  */
+    labels?: string;
   };
 
   type AppControllerIndexParams = {
@@ -45,12 +56,20 @@ declare namespace API {
     id: string;
   };
 
+  type AppIncludeUserListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownAppIncludeUser[];
+  };
+
   type AppListResponse = {
     success: boolean;
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data: App[];
+    data: ShownApp[];
   };
 
   type AppShowResponse = {
@@ -58,7 +77,7 @@ declare namespace API {
     errorCode?: number;
     errorMessage?: string;
     showType?: number;
-    data: App;
+    data: ShownApp;
   };
 
   type BaseResponse = {
@@ -69,11 +88,11 @@ declare namespace API {
   };
 
   type ComIheritRelation = {
-    id: number;
-    appId: number;
-    componentId: number;
-    fromId: number;
-    toId: number;
+    id: string;
+    appId: string;
+    componentId: string;
+    fromId: string;
+    toId: string;
   };
 
   type ComIheritRelationControllerDestroyParams = {
@@ -114,12 +133,12 @@ declare namespace API {
   };
 
   type Comment = {
-    id: number;
+    id: string;
     content?: string;
-    replyTo?: number;
+    replyTo?: string;
     likeNum?: number;
     dislikeNum?: number;
-    discussId: number;
+    discussId: string;
   };
 
   type CommentControllerDestroyParams = {
@@ -163,10 +182,10 @@ declare namespace API {
   };
 
   type Component = {
-    id: number;
+    id: string;
     name: string;
     desc?: string;
-    app_id: number;
+    app_id: string;
     stage_data?: string;
     comIheritRelationId?: number;
     usedInPageIds?: number[];
@@ -213,7 +232,7 @@ declare namespace API {
   };
 
   type Counter = {
-    id: number;
+    id: string;
     count: number;
   };
 
@@ -236,31 +255,31 @@ declare namespace API {
   type CreationApp = {
     title: string;
     desc?: string;
-    app_data?: string;
-    history_data?: string;
-    stage_size_data?: string;
+    appData?: string;
+    historyData?: string;
+    stageSizeData?: string;
     labels?: string[];
   };
 
   type CreationComIheritRelation = {
-    appId: number;
-    componentId: number;
-    fromId: number;
-    toId: number;
+    appId: string;
+    componentId: string;
+    fromId: string;
+    toId: string;
   };
 
   type CreationComment = {
     content?: string;
-    replyTo?: number;
+    replyTo?: string;
     likeNum?: number;
     dislikeNum?: number;
-    discussId: number;
+    discussId: string;
   };
 
   type CreationComponent = {
     name: string;
     desc?: string;
-    app_id: number;
+    app_id: string;
     stage_data?: string;
     comIheritRelationId?: number;
     usedInPageIds?: number[];
@@ -286,26 +305,34 @@ declare namespace API {
     containerHeight: number;
     containerLeft: number;
     containerTop: number;
-    pageId: number;
+    pageId: string;
     resolved?: boolean;
   };
 
   type CreationPage = {
     path: string;
-    app_id: number;
-    version_id?: number;
+    app_id: string;
+    version_id?: string;
     stage_data?: string;
+  };
+
+  type CreationUser = {
+    nickname?: string;
+    password: string;
+    username: string;
+    email?: string;
+    avatar?: string;
   };
 
   type CreationVersion = {
     name: string;
     app_id: string;
-    pageIds?: number[];
+    pageIds?: string[];
   };
 
   type CreationWithRelationComponent = {
-    fromComId: number;
-    appId: number;
+    fromComId: string;
+    appId: string;
     name: string;
     desc?: string;
   };
@@ -324,7 +351,7 @@ declare namespace API {
   };
 
   type Database = {
-    id: number;
+    id: string;
     name: string;
     desc?: string;
     data?: string;
@@ -374,7 +401,7 @@ declare namespace API {
   };
 
   type Discuss = {
-    id: number;
+    id: string;
     title?: string;
     desc?: string;
     belongsToComStatId: string;
@@ -385,7 +412,7 @@ declare namespace API {
     containerHeight: number;
     containerLeft: number;
     containerTop: number;
-    pageId: number;
+    pageId: string;
     resolved?: boolean;
   };
 
@@ -435,18 +462,23 @@ declare namespace API {
   };
 
   type Identities = {
-    id: number[];
+    id: string[];
   };
 
   type Identity = {
-    id: number;
+    id: string;
+  };
+
+  type LoginAuth = {
+    password: string;
+    username: string;
   };
 
   type Page = {
-    id: number;
+    id: string;
     path: string;
-    app_id: number;
-    version_id?: number;
+    app_id: string;
+    version_id?: string;
     stage_data?: string;
   };
 
@@ -492,41 +524,81 @@ declare namespace API {
     data: Page;
   };
 
+  type ResultResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: boolean;
+  };
+
+  type ShareAppRequest = {
+    userIds: string[];
+    appId: string;
+  };
+
+  type ShownApp = {
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    title: string;
+    desc?: string;
+    appData?: string;
+    historyData?: string;
+    stageSizeData?: string;
+    labels?: string[];
+  };
+
+  type ShownAppIncludeUser = {
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    title: string;
+    desc?: string;
+    appData?: string;
+    historyData?: string;
+    stageSizeData?: string;
+    labels?: string[];
+    users: ShownUser[];
+  };
+
   type ShownComIheritRelation = {
     createdAt: string;
     updatedAt: string;
-    id: number;
-    appId: number;
-    componentId: number;
-    fromId: number;
-    toId: number;
+    id: string;
+    appId: string;
+    componentId: string;
+    fromId: string;
+    toId: string;
   };
 
   type ShownComment = {
-    id: number;
+    id: string;
     createdAt: string;
     updatedAt: string;
     content?: string;
-    replyTo?: number;
+    replyTo?: string;
     likeNum?: number;
     dislikeNum?: number;
-    discussId: number;
+    discussId: string;
   };
 
   type ShownComponent = {
-    id: number;
+    id: string;
     createdAt: string;
     updatedAt: string;
     name: string;
     desc?: string;
-    app_id: number;
+    app_id: string;
     stage_data?: string;
     comIheritRelationId?: number;
     usedInPageIds?: number[];
   };
 
   type ShownDatabase = {
-    id: number;
+    id: string;
     createdAt: string;
     updatedAt: string;
     name: string;
@@ -538,7 +610,7 @@ declare namespace API {
   };
 
   type ShownDiscuss = {
-    id: number;
+    id: string;
     createdAt: string;
     updatedAt: string;
     title?: string;
@@ -551,23 +623,51 @@ declare namespace API {
     containerHeight: number;
     containerLeft: number;
     containerTop: number;
-    pageId: number;
+    pageId: string;
     resolved?: boolean;
   };
 
+  type ShownUser = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    nickname?: string;
+    password: string;
+    username: string;
+    email?: string;
+    avatar?: string;
+  };
+
+  type StringArrayResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: string[];
+  };
+
+  type UpdationApp = {
+    title?: string;
+    desc?: string;
+    appData?: string;
+    historyData?: string;
+    stageSizeData?: string;
+    labels?: string[];
+  };
+
   type UpdationComIheritRelation = {
-    appId?: number;
-    componentId?: number;
-    fromId?: number;
-    toId?: number;
+    appId?: string;
+    componentId?: string;
+    fromId?: string;
+    toId?: string;
   };
 
   type UpdationComment = {
     content?: string;
-    replyTo?: number;
+    replyTo?: string;
     likeNum?: number;
     dislikeNum?: number;
-    discussId?: number;
+    discussId?: string;
   };
 
   type UpdationDiscuss = {
@@ -581,12 +681,71 @@ declare namespace API {
     containerHeight?: number;
     containerLeft?: number;
     containerTop?: number;
-    pageId?: number;
+    pageId?: string;
     resolved?: boolean;
   };
 
+  type UpdationUser = {
+    nickname?: string;
+    password?: string;
+    username?: string;
+    email?: string;
+    avatar?: string;
+  };
+
+  type User = {
+    id: string;
+    nickname?: string;
+    password: string;
+    username: string;
+    email?: string;
+    avatar?: string;
+  };
+
+  type UserControllerDestroyParams = {
+    /** id  */
+    id: string;
+  };
+
+  type UserControllerIndexParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** title  */
+    title?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type UserControllerShowParams = {
+    /** id  */
+    id: string;
+  };
+
+  type UserControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type UserListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownUser[];
+  };
+
+  type UserShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownUser;
+  };
+
   type Version = {
-    id: number;
+    id: string;
     created_at: string;
     updated_at: string;
     name: string;

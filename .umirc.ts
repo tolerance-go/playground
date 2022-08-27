@@ -34,9 +34,5 @@ export default defineConfig({
       path: '/playground',
       component: './Playground',
     },
-    {
-      path: '/test',
-      component: './Test',
-    },
   ],
 });

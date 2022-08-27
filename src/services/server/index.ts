@@ -9,6 +9,7 @@ import * as ComponentController from './ComponentController';
 import * as DatabaseController from './DatabaseController';
 import * as DiscussController from './DiscussController';
 import * as PageController from './PageController';
+import * as UserController from './UserController';
 import * as VersionController from './VersionController';
 export default {
   AppController,
@@ -18,5 +19,6 @@ export default {
   DatabaseController,
   DiscussController,
   PageController,
+  UserController,
   VersionController,
 };

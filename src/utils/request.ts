@@ -167,16 +167,3 @@ export function request<T extends ServerResponseData>(
       throw error;
     });
 }
-
-// request<{
-//   success: boolean;
-//   data?: string;
-//   errorCode?: number;
-//   errorMessage?: string;
-//   showType?: ErrorShowType;
-// }>('asdf', {
-//   alwaysServerStructure: true,
-//   getResponse: true,
-// }).then(data => {
-
-// })

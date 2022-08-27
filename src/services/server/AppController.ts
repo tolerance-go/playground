@@ -19,7 +19,37 @@ export async function AppControllerIndex(
 
 /** 创建 app  POST /api/apps */
 export async function AppControllerCreate(body: API.CreationApp, options?: { [key: string]: any }) {
-  return request<API.BaseResponse>('/api/apps', {
+  return request<API.AppShowResponse>('/api/apps', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 获取列表  描述  GET /api/apps-include-user */
+export async function AppControllerIndexIncludeUser(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.AppControllerIndexIncludeUserParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.AppIncludeUserListResponse>('/api/apps-include-user', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 将 app 分享给其他用户  POST /api/apps-share */
+export async function AppControllerShareToUser(
+  body: API.ShareAppRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultResponse>('/api/apps-share', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -47,11 +77,11 @@ export async function AppControllerShow(
 export async function AppControllerUpdate(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.AppControllerUpdateParams,
-  body: string,
+  body: API.UpdationApp,
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponse>(`/api/apps/${param0}`, {
+  return request<API.AppShowResponse>(`/api/apps/${param0}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -69,7 +99,7 @@ export async function AppControllerDestroy(
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponse>(`/api/apps/${param0}`, {
+  return request<API.AppShowResponse>(`/api/apps/${param0}`, {
     method: 'DELETE',
     params: { ...queryParams },
     ...(options || {}),
@@ -84,7 +114,7 @@ export async function AppControllerUpdateHistory(
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponse>(`/api/apps/${param0}/history`, {
+  return request<API.AppShowResponse>(`/api/apps/${param0}/history`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -103,12 +133,24 @@ export async function AppControllerUpdateStageSize(
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponse>(`/api/apps/${param0}/stage-size`, {
+  return request<API.AppShowResponse>(`/api/apps/${param0}/stage-size`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 删除 app  DELETE /api/everyApp */
+export async function AppControllerBulkDestroy(body: number[], options?: { [key: string]: any }) {
+  return request<API.CountResponse>('/api/everyApp', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     data: body,
     ...(options || {}),
   });
