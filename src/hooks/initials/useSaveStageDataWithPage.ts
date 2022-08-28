@@ -9,7 +9,7 @@ export const useSaveStageDataWithPage = () => {
 
   const { activePageId } = useModel('page.pageList', (model) => {
     return {
-      activePageId: model?.activePageId,
+      activePageId: model?.selectedPageId,
     };
   });
 

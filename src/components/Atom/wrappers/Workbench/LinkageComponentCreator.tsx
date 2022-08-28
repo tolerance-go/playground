@@ -18,7 +18,7 @@ export const LinkageComponentCreator = (props: {
   }));
 
   const { setNormalStatus } = useModel(
-    'siderLeft.normalModeSubMode',
+    'workbench.normalModeSubMode',
     (model) => ({
       setNormalStatus: model.setNormalStatus,
     }),

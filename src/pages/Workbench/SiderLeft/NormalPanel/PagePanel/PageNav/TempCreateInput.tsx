@@ -6,9 +6,12 @@ import { Input, Spin } from 'antd';
 import { useRef } from 'react';
 
 export const TempInput = () => {
-  const { pushPath, setActivePageId } = useModel('page.pageList', (model) => ({
+  const { pushPath } = useModel('page.pageList', (model) => ({
     pushPath: model.pushPath,
-    setActivePageId: model.setActivePageId,
+  }));
+
+  const { choosePageId } = useModel('page.selectedPageId', (model) => ({
+    choosePageId: model.choosePageId,
   }));
 
   const { creatingMeta, stopTempInput } = useModel(
@@ -37,7 +40,7 @@ export const TempInput = () => {
       manual: true,
       onSuccess: (page) => {
         pushPath(page);
-        setActivePageId(page.id);
+        choosePageId(page.id);
         stopTempInput();
       },
     },

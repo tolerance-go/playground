@@ -19,7 +19,7 @@ export default function App() {
     siderRightMode: model.mode,
   }));
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
 
   const [activeKey, setActiveKey] = useState('settings');

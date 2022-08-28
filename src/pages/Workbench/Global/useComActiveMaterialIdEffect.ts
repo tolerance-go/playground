@@ -2,7 +2,7 @@ import { ElementTypeEnums, URL_STATE } from '@/constants/urlState';
 import { useModel, useSearchParams } from '@umijs/max';
 import { useUpdateEffect } from 'ahooks';
 import { useEffect } from 'react';
-import { useInitSatgeDataWithMaterial } from '../../../../hooks/initials/useInitSatgeDataWithMaterial';
+import { useInitSatgeDataWithMaterial } from '../../../hooks/initials/useInitSatgeDataWithMaterial';
 
 export const useComActiveMaterialIdEffect = () => {
   const [searchParams, setSearchParams] = useSearchParams();

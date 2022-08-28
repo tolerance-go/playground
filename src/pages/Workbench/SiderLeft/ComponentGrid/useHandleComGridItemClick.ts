@@ -6,7 +6,7 @@ import { ComGridItem } from './index';
 
 export const useHandleComGridItemClick = () => {
   const { mode: siderLeftMode } = useModel('workbench.siderLeftMode', (model) => ({
-    mode: model?.mode,
+    mode: model?.siderLeftMode,
   }));
 
   const { addComponentToStage, addComToStageSlot } = useModel(

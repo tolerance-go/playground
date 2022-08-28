@@ -338,6 +338,31 @@ declare namespace API {
     pageIds?: string[];
   };
 
+  type CreationWidget = {
+    name: string;
+    elementType: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type CreationWidgetGroup = {
+    name: string;
+    widgetLibId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type CreationWidgetLib = {
+    name: string;
+    widgetLibId?: string;
+    userId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
   type CreationWithRelationComponent = {
     fromComId: string;
     appId: string;
@@ -669,6 +694,121 @@ declare namespace API {
     avatar?: string;
   };
 
+  type ShownWidget = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    elementType: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type ShownWidgetGroup = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type ShownWidgetGroupIncludeLib = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+    widgetLib: ShownWidgetLib;
+  };
+
+  type ShownWidgetGroupIncludeLibListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetGroupIncludeLib[];
+  };
+
+  type ShownWidgetGroupIncludeWidgets = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+    widgets: ShownWidget[];
+  };
+
+  type ShownWidgetGroupIncludeWidgetsListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetGroupIncludeWidgets[];
+  };
+
+  type ShownWidgetIncludeGroupIncludeLib = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    elementType: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+    widgetGroup: ShownWidgetGroupIncludeLib;
+  };
+
+  type ShownWidgetIncludeGroupIncludeLibListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetIncludeGroupIncludeLib[];
+  };
+
+  type ShownWidgetLib = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    userId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type ShownWidgetLibIncludeGroupsIncludeWidgets = {
+    createdAt: string;
+    updatedAt: string;
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    userId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+    widgetGroups: ShownWidgetGroupIncludeWidgets[];
+  };
+
+  type ShownWidgetLibIncludeGroupsIncludeWidgetsListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetLibIncludeGroupsIncludeWidgets[];
+  };
+
   type StringArrayResponse = {
     success: boolean;
     errorCode?: number;
@@ -737,6 +877,31 @@ declare namespace API {
     username?: string;
     email?: string;
     avatar?: string;
+  };
+
+  type UpdationWidget = {
+    name?: string;
+    elementType?: string;
+    type?: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type UpdationWidgetGroup = {
+    name?: string;
+    widgetLibId?: string;
+    type?: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type UpdationWidgetLib = {
+    name?: string;
+    widgetLibId?: string;
+    userId?: string;
+    type?: string;
+    desc?: string;
+    labels?: string[];
   };
 
   type User = {
@@ -836,5 +1001,192 @@ declare namespace API {
     errorMessage?: string;
     showType?: number;
     data: Version;
+  };
+
+  type Widget = {
+    id: string;
+    name: string;
+    elementType: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type WidgetControllerBaseIndexParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetControllerCreateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetControllerIndexIncludeGroupAndLibParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** name  */
+    name?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type WidgetControllerIndexParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** name  */
+    name?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type WidgetControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetGroup = {
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type WidgetGroupControllerBaseIndexParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetGroupControllerCreateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetGroupControllerIndexIncludeWidgetsParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** name  */
+    name?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type WidgetGroupControllerIndexParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** name  */
+    name?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type WidgetGroupControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetGroupListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetGroup[];
+  };
+
+  type WidgetGroupShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetGroup;
+  };
+
+  type WidgetLib = {
+    id: string;
+    name: string;
+    widgetLibId?: string;
+    userId?: string;
+    type: string;
+    desc?: string;
+    labels?: string[];
+  };
+
+  type WidgetLibControllerBaseIndexParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetLibControllerCreateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetLibControllerIndexIncludeGroupsAndWidgetsParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** name  */
+    name?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type WidgetLibControllerIndexParams = {
+    /** limit  */
+    limit?: number;
+    /** offset  */
+    offset?: number;
+    /** name  */
+    name?: string;
+    /** labels  */
+    labels?: string;
+  };
+
+  type WidgetLibControllerUpdateParams = {
+    /** id  */
+    id: string;
+  };
+
+  type WidgetLibListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetLib[];
+  };
+
+  type WidgetLibShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidgetLib;
+  };
+
+  type WidgetListResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidget[];
+  };
+
+  type WidgetShowResponse = {
+    success: boolean;
+    errorCode?: number;
+    errorMessage?: string;
+    showType?: number;
+    data: ShownWidget;
   };
 }

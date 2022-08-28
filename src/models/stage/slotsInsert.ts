@@ -11,7 +11,7 @@ const useSlotsInsert = () => {
   const [focusSlotName, setFocusSlotName] = useState<string>();
 
   /**
-   * 插槽的位置
+   * 当前聚焦的插槽的位置
    * 如果存在前后能添加的插槽，需要判断一下位置
    */
   const [focusSlotPosition, setFocusSlotPosition] =

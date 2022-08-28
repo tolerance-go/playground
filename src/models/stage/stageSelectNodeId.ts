@@ -7,19 +7,19 @@ const useStageSelectNodeId = () => {
   const [stageSelectNodeId, setStageSelectNodeId, getStageSelectNodeId] =
     useGetState<string>();
 
-  const { openTargetFromTreeMenu } = useModel('layer.comsLayout', (model) => ({
+  const { openTargetFromTreeMenu } = useModel('workbench.comsLayout', (model) => ({
     openTargetFromTreeMenu: model?.openTargetFromTreeMenu,
   }));
 
   const { setNormalStatus } = useModel(
-    'siderLeft.normalModeSubMode',
+    'workbench.normalModeSubMode',
     (model) => ({
       setNormalStatus: model.setNormalStatus,
     }),
   );
 
   const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
-    setMode: model.setMode,
+    setMode: model.setSiderLeftMode,
   }));
 
   const { setStageSelectSlotGroupId } = useModel(
@@ -29,7 +29,7 @@ const useStageSelectNodeId = () => {
     }),
   );
 
-  const { setSelectedKeys } = useModel('layer.comsLayout', (model) => ({
+  const { setSelectedKeys } = useModel('workbench.comsLayout', (model) => ({
     setSelectedKeys: model?.setSelectedKeys,
   }));
 
@@ -79,7 +79,7 @@ const useStageSelectNodeId = () => {
   /** 当舞台选中组件，切换布局 */
   useEffect(() => {
     if (stageSelectNodeId) {
-      setMode('normal');
+      setMode('pages');
       setNormalStatus('layout');
     }
   }, [stageSelectNodeId]);

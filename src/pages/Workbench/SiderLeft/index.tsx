@@ -8,7 +8,7 @@ import NormalPanel from './NormalPanel';
 const { Sider } = Layout;
 
 export default function App() {
-  const { mode } = useModel('workbench.siderLeftMode');
+  const { siderLeftMode: mode } = useModel('workbench.siderLeftMode');
   const siderRef = useRef<HTMLDivElement>(null);
 
   const { siderLeftWidth } = useModel('workbench.workbenchIDESettings', (model) => ({
@@ -18,7 +18,7 @@ export default function App() {
   consola.info('siderLeftMode mode 变化', mode);
 
   const renderContent = () => {
-    if (mode === 'normal') {
+    if (mode === 'pages') {
       return <NormalPanel />;
     }
 

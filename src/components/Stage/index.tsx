@@ -18,7 +18,7 @@ const Elements: ElementCenter = {
   table: AtomTable,
 };
 
-export default function Stage(props: {}) {
+export default function Stage() {
   const { rootIds, stageComponentsModel } = useModel(
     'page.comsStructures',
     (model) => {
@@ -35,13 +35,13 @@ export default function Stage(props: {}) {
       .filter((item): item is ComponentStructure => item !== undefined);
   }, [rootIds, stageComponentsModel]);
 
+  const { stageMode } = useModel('stage.stageMode', (model) => ({
+    stageMode: model.stageMode,
+  }));
+
   if (!rootNodeModels) {
     return null;
   }
-
-  const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
-  }));
 
   consola.info('渲染跟节点组件', rootIds, stageComponentsModel);
 

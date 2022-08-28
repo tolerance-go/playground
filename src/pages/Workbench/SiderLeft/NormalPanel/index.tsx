@@ -1,12 +1,12 @@
 import { useModel } from '@umijs/max';
 import { Col, Divider, Row } from 'antd';
-import ComMaterial from '../ComMaterial';
+import ComMaterial from './ComMaterial';
 import ComTree from './ComTree';
 import PagePanel from './PagePanel';
 import Segmented from './Segmented';
 
 export default () => {
-  const { normalStatus } = useModel('siderLeft.normalModeSubMode', (model) => ({
+  const { normalStatus } = useModel('workbench.normalModeSubMode', (model) => ({
     normalStatus: model.normalStatus,
   }));
 

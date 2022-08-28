@@ -18,7 +18,7 @@ import { AtomWorkbenchWrapper } from './wrappers/Workbench';
  */
 export const Atom = (props: ComponentStructure) => {
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
 
   const elements = useContext(ElementsCxt);

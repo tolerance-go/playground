@@ -9,7 +9,7 @@ const useEventManager = () => {
     new EventManager(location.pathname !== '/playground'),
   );
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
 
   useUpdateEffect(() => {

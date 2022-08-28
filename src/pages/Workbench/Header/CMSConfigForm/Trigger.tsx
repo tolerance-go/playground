@@ -7,7 +7,7 @@ export const Trigger = () => {
     open: model.open,
   }));
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
   return (
     <Button

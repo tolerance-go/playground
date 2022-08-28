@@ -1,7 +1,7 @@
 import { useInitialState } from '@/hooks/useInitialState';
 import { PageControllerIndex } from '@/services/server/PageController';
-import { useModel } from '@umijs/max';
-import { useRequest } from 'ahooks';
+import { useModel, useSearchParams } from '@umijs/max';
+import { useRequest, useUpdateEffect } from 'ahooks';
 import { Menu, Skeleton } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import clsx from 'clsx';
@@ -13,14 +13,19 @@ import { TempInput } from './TempCreateInput';
 const PageNav = () => {
   const { initialState } = useInitialState();
 
-  const { activePageId, pageList, setList, setActivePageId } = useModel(
-    'page.pageList',
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { pageList, setList } = useModel('page.pageList', (model) => ({
+    pageList: model.pageList,
+    setList: model.setList,
+    getList: model.getList,
+  }));
+
+  const { selectedPageId, choosePageId } = useModel(
+    'page.selectedPageId',
     (model) => ({
-      activePageId: model.activePageId,
-      pageList: model.pageList,
-      setActivePageId: model.setActivePageId,
-      setList: model.setList,
-      getList: model.getList,
+      selectedPageId: model.selectedPageId,
+      choosePageId: model.choosePageId,
     }),
   );
 
@@ -43,17 +48,28 @@ const PageNav = () => {
     },
   );
 
+  /** 初始化 list */
   useLayoutEffect(() => {
     if (pageList === undefined) {
       run();
     }
   }, []);
 
+  /** 同步修改到 url */
+  useUpdateEffect(() => {
+    if (selectedPageId) {
+      searchParams.set('selectedPageId', selectedPageId);
+    } else {
+      searchParams.delete('selectedPageId');
+    }
+    setSearchParams(searchParams);
+  }, [selectedPageId]);
+
   return (
     <Skeleton loading={loading}>
       <div className={styles.wrap}>
         <Menu
-          selectedKeys={activePageId ? [activePageId] : undefined}
+          selectedKeys={selectedPageId ? [selectedPageId] : undefined}
           mode="inline"
           items={(pageList ?? [])
             .map((item) => {
@@ -61,7 +77,7 @@ const PageNav = () => {
                 label: <MenuItem item={item} />,
                 key: item.id,
                 className: clsx({
-                  'active-item': activePageId === String(item.id),
+                  'active-item': selectedPageId === String(item.id),
                 }),
               } as ItemType;
             })
@@ -76,7 +92,7 @@ const PageNav = () => {
                 : [],
             )}
           onClick={(info) => {
-            setActivePageId(info.key);
+            choosePageId(info.key);
           }}
         />
       </div>

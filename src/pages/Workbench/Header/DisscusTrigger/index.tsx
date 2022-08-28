@@ -4,8 +4,8 @@ import { Button } from 'antd';
 
 export const DisscusTrigger = () => {
   const { setMode, stageMode } = useModel('stage.stageMode', (model) => ({
-    setMode: model.setMode,
-    stageMode: model.mode,
+    setMode: model.setStageMode,
+    stageMode: model.stageMode,
   }));
   const { setPlaygroundMode } = useModel('playground', (model) => ({
     setPlaygroundMode: model.setMode,

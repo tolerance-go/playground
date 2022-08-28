@@ -2,7 +2,7 @@ import { useModel } from '@umijs/max';
 
 export const useGridData = () => {
   const { mode: siderLeftMode } = useModel('workbench.siderLeftMode', (model) => ({
-    mode: model?.mode,
+    mode: model?.siderLeftMode,
   }));
 
   return {

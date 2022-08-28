@@ -1,14 +1,17 @@
-import { PageControllerIndex } from '@/services/server/PageController';
 import { useGetImmer } from '@/utils/useGetImmer';
+import { useModel } from '@umijs/max';
 import { useMemoizedFn } from 'ahooks';
-import qs from 'qs';
-import { useState } from 'react';
 
 /** 路径管理 */
 const usePageList = () => {
-  /** 当前激活的 page path */
-  const [activePageId, setActivePageId] = useState<string>();
   const [list, setList, getList] = useGetImmer<API.ShownPage[]>();
+  const { selectedPageId, choosePageId } = useModel(
+    'page.selectedPageId',
+    (model) => ({
+      selectedPageId: model.selectedPageId,
+      choosePageId: model.choosePageId,
+    }),
+  );
 
   /** 尾部插入 */
   const pushPath = useMemoizedFn((item: API.ShownPage) => {
@@ -24,8 +27,8 @@ const usePageList = () => {
       }
     });
     // 如果删除的正在选中，同时清空选中
-    if (page.id === activePageId) {
-      setActivePageId(undefined);
+    if (page.id === selectedPageId) {
+      choosePageId(undefined);
     }
   });
 
@@ -52,36 +55,14 @@ const usePageList = () => {
     },
   );
 
-  /** 设置 versionId 对应的 pageList */
-  const setPageListByVersionId = useMemoizedFn(async (versionId?: number) => {
-    const query = qs.parse(location.search, {
-      ignoreQueryPrefix: true,
-    });
-    const { appId } = query;
-
-    const data = await PageControllerIndex({
-      appId: Number(appId),
-      // versionId: versionId,
-    });
-
-    setList(data);
-    if (data?.length) {
-      setActivePageId(data[0].id);
-    }
-  });
-
   return {
     pageList: list,
-    // fetchListLoading: result.loading,
-    activePageId,
     updatePath,
     getList,
     setList,
-    setPageListByVersionId,
     copyPath,
     deletePath,
     pushPath,
-    setActivePageId,
   };
 };
 

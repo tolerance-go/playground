@@ -5,7 +5,7 @@ import { useModel } from '@umijs/max';
 import { useMemoizedFn, usePrevious, useUpdateEffect } from 'ahooks';
 import { message } from 'antd';
 import { pick } from 'lodash';
-import { useSelectedDataListItem } from '../../../../hooks/selected/useSelectedDataListItem';
+import { useSelectedDataListItem } from '../../../hooks/selected/useSelectedDataListItem';
 
 export const useDataListUpdate = () => {
   const { selectedDataListItem, selectedDataId } = useSelectedDataListItem();

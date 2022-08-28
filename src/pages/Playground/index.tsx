@@ -2,7 +2,7 @@ import { DiscussInfos } from '@/components/DiscussInfos';
 import { PlaygroundHandlerBar } from '@/components/PlaygroundHandlerBar';
 import Stage from '@/components/Stage';
 import { DiscussDrawer } from './DiscussDrawer';
-import Executor from './Executor';
+import Global from './Global';
 
 export default function App() {
   return (
@@ -17,7 +17,7 @@ export default function App() {
       <DiscussDrawer>
         <DiscussInfos />
       </DiscussDrawer>
-      <Executor />
+      <Global />
       <Stage />
       <PlaygroundHandlerBar />
     </div>

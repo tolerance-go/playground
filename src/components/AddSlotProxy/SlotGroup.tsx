@@ -17,7 +17,7 @@ export default ({
   }));
 
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
 
   const { stageSelectSlotGroupId, setStageSelectSlotGroupId } = useModel(
@@ -28,7 +28,7 @@ export default ({
     }),
   );
 
-  const { setSelectedKeys } = useModel('layer.comsLayout', (model) => ({
+  const { setSelectedKeys } = useModel('workbench.comsLayout', (model) => ({
     setSelectedKeys: model?.setSelectedKeys,
   }));
 

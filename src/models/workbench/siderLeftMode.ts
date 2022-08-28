@@ -1,34 +1,38 @@
 import { useModel } from '@umijs/max';
-import { usePrevious, useUpdateLayoutEffect } from 'ahooks';
+import { useMemoizedFn, usePrevious, useUpdateLayoutEffect } from 'ahooks';
 import { useState } from 'react';
+
+export type SiderLeftMode = 'pages' | 'insert' | 'components';
 
 const useSiderLeftMode = () => {
   /**
    * insert 点击舞台组件等待插入
    * normal 显示 页面，布局，资源等
-   * components 组件市场
    */
-  const [mode, setMode] = useState<'normal' | 'components' | 'insert'>(
-    'normal',
-  );
+  const [siderLeftMode, setSiderLeftMode] = useState<SiderLeftMode>('pages');
 
-  const prevMode = usePrevious(mode);
+  const prevMode = usePrevious(siderLeftMode);
 
   const { cleanFocusSlotsInert } = useModel('stage.slotsInsert', (model) => {
     return {
-      cleanFocusSlotsInert: model?.cleanFocusSlotsInert,
+      cleanFocusSlotsInert: model.cleanFocusSlotsInert,
     };
   });
 
+  const switchSiderLeftMode = useMemoizedFn((mode: SiderLeftMode) => {
+    setSiderLeftMode(mode);
+  });
+
   useUpdateLayoutEffect(() => {
-    if (mode !== 'insert' && prevMode === 'insert') {
+    if (siderLeftMode !== 'insert' && prevMode === 'insert') {
       cleanFocusSlotsInert();
     }
-  }, [mode]);
+  }, [siderLeftMode]);
 
   return {
-    mode,
-    setMode,
+    siderLeftMode,
+    setSiderLeftMode,
+    switchSiderLeftMode,
   };
 };
 

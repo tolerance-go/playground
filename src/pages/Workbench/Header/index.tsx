@@ -1,70 +1,57 @@
-import { AppstoreAddOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Avatar, Button, Col, Divider, Row, Space } from 'antd';
-import Logo from '../Logo';
+import { Avatar, Col, Divider, Row, Space } from 'antd';
 import { AutoSaveTag } from './AutoSaveTag';
 import CenterArea from './CenterArea';
 import CMSConfigForm from './CMSConfigForm';
 import { DisscusTrigger } from './DisscusTrigger';
+import Logo from './Logo';
 // import EventInteraction from './EventInteraction';
+import { Layout } from 'antd';
+import InsertComponentTrigger from './InsertComponentTrigger';
 import { PlayAction } from './PlayAction';
 import SaveToVersionBtn from './SaveToVersionBtn';
 import SettingsBtn from './SettingsBtn';
 
-// const optionsWithDisabled = [
-//   {
-//     label: '设计',
-//     value: '设计',
-//   },
-//   {
-//     label: '演示',
-//     value: '演示',
-//   },
-// ];
+const { Header } = Layout;
 
 const App = () => {
   // const navigate = useNavigate();
-  const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
-    setMode: model.setMode,
-  }));
 
-  const { headerHeight } = useModel('workbench.workbenchIDESettings', (model) => ({
-    headerHeight: model.headerHeight,
-  }));
-
-  const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
-  }));
+  const { headerHeight } = useModel(
+    'workbench.workbenchIDESettings',
+    (model) => ({
+      headerHeight: model.headerHeight,
+    }),
+  );
 
   return (
-    <div
+    <Header
       style={{
-        position: 'relative',
-        height: headerHeight,
+        background: '#fff',
+        borderBottom: '1px solid #f2f2f2',
+        padding: '0px 10px',
+        /** 原本 64 会影响内部元素高度 */
+        lineHeight: 'normal',
       }}
     >
-      <Row
-        justify="space-between"
-        align="middle"
+      <div
         style={{
-          height: '100%',
+          position: 'relative',
+          height: headerHeight,
         }}
       >
-        <Col>
-          <Logo />
-          <Divider type="vertical" />
-          <Space>
-            <Button
-              disabled={stageMode === 'playground'}
-              type="text"
-              icon={<AppstoreAddOutlined />}
-              onClick={() => {
-                setMode('components');
-              }}
-            >
-              组件
-            </Button>
-            {/* <Button disabled type="text" icon={<PlusCircleFilled />}>
+        <Row
+          justify="space-between"
+          align="middle"
+          style={{
+            height: '100%',
+          }}
+        >
+          <Col>
+            <Logo />
+            <Divider type="vertical" />
+            <Space>
+              {/* <Button disabled type="text" icon={<PlusCircleFilled />}>
               布局
             </Button>
             <Button disabled type="text" icon={<PlusCircleFilled />}>
@@ -73,27 +60,29 @@ const App = () => {
             <Button disabled type="text" icon={<PlusCircleFilled />}>
               文本
             </Button> */}
-            <CMSConfigForm />
-            <DisscusTrigger />
-            {/* <APIConfigForm /> */}
-          </Space>
-        </Col>
-        <Col>
-          <Space>
-            <AutoSaveTag />
-            {/* <Divider type="vertical" /> */}
-            {/* 事件交互 */}
-            {/* <EventInteraction /> */}
-            <PlayAction />
-            <SaveToVersionBtn />
-            <Divider type="vertical" />
-            <SettingsBtn />
-            <Avatar>User</Avatar>
-          </Space>
-        </Col>
-      </Row>
-      <CenterArea />
-    </div>
+              <InsertComponentTrigger />
+              <CMSConfigForm />
+              <DisscusTrigger />
+              {/* <APIConfigForm /> */}
+            </Space>
+          </Col>
+          <Col>
+            <Space>
+              <AutoSaveTag />
+              {/* <Divider type="vertical" /> */}
+              {/* 事件交互 */}
+              {/* <EventInteraction /> */}
+              <PlayAction />
+              <SaveToVersionBtn />
+              <Divider type="vertical" />
+              <SettingsBtn />
+              <Avatar>User</Avatar>
+            </Space>
+          </Col>
+        </Row>
+        <CenterArea />
+      </div>
+    </Header>
   );
 };
 

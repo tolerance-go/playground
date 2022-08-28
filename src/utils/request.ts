@@ -2,6 +2,16 @@ import { message, notification, Typography } from 'antd';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import React from 'react';
 
+enum ErrorShowType {
+  SILENT = 0,
+  WARN_MESSAGE = 1,
+  ERROR_MESSAGE = 2,
+  NOTIFICATION = 3,
+  WARN_NOTIFICATION = 4,
+  ERROR_NOTIFICATION = 5,
+  REDIRECT = 9,
+}
+
 const getNotifactionDescEle = (errorContent: string) => {
   return errorContent
     ? React.createElement(
@@ -55,16 +65,6 @@ const noticeServerErrorMessage = (
     }
   }
 };
-
-enum ErrorShowType {
-  SILENT = 0,
-  WARN_MESSAGE = 1,
-  ERROR_MESSAGE = 2,
-  NOTIFICATION = 3,
-  WARN_NOTIFICATION = 4,
-  ERROR_NOTIFICATION = 5,
-  REDIRECT = 9,
-}
 
 type ServerResponseStructure = {
   success: boolean;

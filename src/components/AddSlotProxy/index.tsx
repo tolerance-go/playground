@@ -19,11 +19,11 @@ export const AddSlotBtn = ({
   slots?: Record<string, string[]>;
 }) => {
   const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
-    setMode: model?.setMode,
+    setMode: model?.setSiderLeftMode,
   }));
 
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
 
   const {

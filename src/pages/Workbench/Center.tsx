@@ -7,11 +7,11 @@ const { Content } = Layout;
 
 export default () => {
   const { setMode } = useModel('workbench.siderLeftMode', (model) => ({
-    setMode: model.setMode,
+    setMode: model.setSiderLeftMode,
   }));
 
   const { stageMode } = useModel('stage.stageMode', (model) => ({
-    stageMode: model.mode,
+    stageMode: model.stageMode,
   }));
 
   return (
@@ -23,7 +23,7 @@ export default () => {
       }}
       onClick={() => {
         /** 点击舞台，回复左边栏状态 */
-        setMode('normal');
+        setMode('pages');
       }}
     >
       <Stage />

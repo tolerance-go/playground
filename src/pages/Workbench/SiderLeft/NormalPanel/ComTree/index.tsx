@@ -24,7 +24,7 @@ export default () => {
     setExpanedKeys,
     setSelectedKeys,
     showAllSlots,
-  } = useModel('layer.comsLayout', (model) => ({
+  } = useModel('workbench.comsLayout', (model) => ({
     expanedKeys: model?.expanedKeys,
     setExpanedKeys: model?.setExpanedKeys,
     selectedKeys: model?.selectedKeys,
