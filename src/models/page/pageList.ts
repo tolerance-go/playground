@@ -1,59 +1,56 @@
 import { PageControllerIndex } from '@/services/server/PageController';
+import { useGetImmer } from '@/utils/useGetImmer';
 import { useMemoizedFn } from 'ahooks';
-import produce from 'immer';
 import qs from 'qs';
 import { useState } from 'react';
 
 /** 路径管理 */
 const usePageList = () => {
   /** 当前激活的 page path */
-  const [activePageId, setActivePageId] = useState<number>();
-
-  /** 当前是否正在创建新的 path */
-  const [createPathing, setCreatePathing] = useState<boolean>(false);
-
-  const [list, setList] = useState<API.ShownPage[]>();
-
-  const [tempInputValue, setTempInputValue] = useState<string>();
+  const [activePageId, setActivePageId] = useState<string>();
+  const [list, setList, getList] = useGetImmer<API.ShownPage[]>();
 
   /** 尾部插入 */
-  const pushPath = useMemoizedFn((item: API.Page) => {
+  const pushPath = useMemoizedFn((item: API.ShownPage) => {
     setList((prev) => prev?.concat(item));
   });
 
   /** 删除 path */
-  const deletePath = useMemoizedFn((page: API.Page) => {
-    setList(
-      produce((draft) => {
-        const index = draft?.findIndex((item) => item.id === page.id);
-        if (index !== undefined && index > -1) {
-          draft?.splice(index, 1);
-        }
-      }),
-    );
+  const deletePath = useMemoizedFn((page: API.ShownPage) => {
+    setList((draft) => {
+      const index = draft?.findIndex((item) => item.id === page.id);
+      if (index !== undefined && index > -1) {
+        draft?.splice(index, 1);
+      }
+    });
+    // 如果删除的正在选中，同时清空选中
+    if (page.id === activePageId) {
+      setActivePageId(undefined);
+    }
+  });
+
+  /** 更新 path */
+  const updatePath = useMemoizedFn((id: string, page: API.UpdationPage) => {
+    setList((draft) => {
+      const target = draft?.find((item) => item.id === id);
+
+      if (target) {
+        Object.assign(target, page);
+      }
+    });
   });
 
   /** 复制 path */
-  const copyPath = useMemoizedFn((page: API.Page, newPage: API.Page) => {
-    setList(
-      produce((draft) => {
+  const copyPath = useMemoizedFn(
+    (page: API.ShownPage, newPage: API.ShownPage) => {
+      setList((draft) => {
         const index = draft?.findIndex((item) => item.id === page.id);
         if (index !== undefined && index > -1) {
           draft?.splice(index, 0, newPage);
         }
-      }),
-    );
-  });
-
-  /** 设置输入框的 value，根据 list 下标 */
-  const setTempInputValueByIndex = useMemoizedFn(() => {
-    setTempInputValue(`/page${(list ?? []).length}`);
-  });
-
-  /** 设置输入框 value，根据点击的对象 */
-  const setTempInputValueByTarget = useMemoizedFn((target: API.Page) => {
-    setTempInputValue(`${target.path}-2`);
-  });
+      });
+    },
+  );
 
   /** 设置 versionId 对应的 pageList */
   const setPageListByVersionId = useMemoizedFn(async (versionId?: number) => {
@@ -77,17 +74,13 @@ const usePageList = () => {
     pageList: list,
     // fetchListLoading: result.loading,
     activePageId,
-    createPathing,
-    tempInputValue,
+    updatePath,
+    getList,
     setList,
     setPageListByVersionId,
-    setTempInputValueByIndex,
-    setTempInputValue,
-    setTempInputValueByTarget,
     copyPath,
     deletePath,
     pushPath,
-    setCreatePathing,
     setActivePageId,
   };
 };

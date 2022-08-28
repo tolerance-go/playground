@@ -5,28 +5,30 @@ import { useRequest } from 'ahooks';
 import { Menu, Skeleton } from 'antd';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 import clsx from 'clsx';
+import { useLayoutEffect } from 'react';
 import styles from './index.less';
 import { MenuItem } from './MenuItem';
-import { TempInput } from './TempInput';
+import { TempInput } from './TempCreateInput';
 
 const PageNav = () => {
   const { initialState } = useInitialState();
 
-  const { pageList, setList } = useModel('page.pageList', (model) => ({
-    pageList: model.pageList,
-    setList: model.setList,
-  }));
-
-  const { activePageId, createPathing, setActivePageId } = useModel(
+  const { activePageId, pageList, setList, setActivePageId } = useModel(
     'page.pageList',
     (model) => ({
-      createPathing: model.createPathing,
       activePageId: model.activePageId,
+      pageList: model.pageList,
       setActivePageId: model.setActivePageId,
+      setList: model.setList,
+      getList: model.getList,
     }),
   );
 
-  const { loading } = useRequest(
+  const { creatingMeta } = useModel('page.pageCreatingMeta', (model) => ({
+    creatingMeta: model.creatingMeta,
+  }));
+
+  const { run, loading } = useRequest(
     async () => {
       return PageControllerIndex({
         appId: initialState.appId,
@@ -36,8 +38,16 @@ const PageNav = () => {
       onSuccess: (data) => {
         setList(data);
       },
+      loadingDelay: 300,
+      manual: true,
     },
   );
+
+  useLayoutEffect(() => {
+    if (pageList === undefined) {
+      run();
+    }
+  }, []);
 
   return (
     <Skeleton loading={loading}>
@@ -47,7 +57,6 @@ const PageNav = () => {
           mode="inline"
           items={(pageList ?? [])
             .map((item) => {
-              console.log(item.id, activePageId);
               return {
                 label: <MenuItem item={item} />,
                 key: item.id,
@@ -57,7 +66,7 @@ const PageNav = () => {
               } as ItemType;
             })
             .concat(
-              createPathing
+              creatingMeta.isCreating
                 ? [
                     {
                       key: 'creator',

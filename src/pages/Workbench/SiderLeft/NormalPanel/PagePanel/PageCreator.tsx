@@ -2,12 +2,10 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 
 export const PageCreator = () => {
-  const { setCreatePathing, setTempInputValueByIndex } = useModel(
-    'page.pageList',
+  const { setTempInputValueByIndex } = useModel(
+    'page.pageCreatingMeta',
     (model) => ({
-      setCreatePathing: model?.setCreatePathing,
-      setTempInputValue: model?.setTempInputValue,
-      setTempInputValueByIndex: model?.setTempInputValueByIndex,
+      setTempInputValueByIndex: model.setTempInputValueByIndex,
     }),
   );
 
@@ -17,7 +15,6 @@ export const PageCreator = () => {
         cursor: 'pointer',
       }}
       onClick={() => {
-        setCreatePathing(true);
         setTempInputValueByIndex();
       }}
     />

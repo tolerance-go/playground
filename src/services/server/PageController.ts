@@ -50,11 +50,11 @@ export async function PageControllerShow(
 export async function PageControllerUpdate(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.PageControllerUpdateParams,
-  body: string,
+  body: API.UpdationPage,
   options?: { [key: string]: any },
 ) {
   const { id: param0, ...queryParams } = params;
-  return request<API.BaseResponse>(`/api/pages/${param0}`, {
+  return request<API.PageShowResponse>(`/api/pages/${param0}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
